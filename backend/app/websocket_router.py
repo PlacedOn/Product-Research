@@ -4,9 +4,9 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from pydantic import ValidationError
 
 from app.config import get_settings
+from app.live_runtime import LiveInterviewRuntime
 from app.models import IncomingMessage, InterviewState
-from app.state_compressor import compress_state
-from app.utils import evolve_state_from_answer, generate_next_question, stream_tokens
+from app.utils import stream_tokens
 
 router = APIRouter()
 
@@ -49,21 +49,25 @@ async def _send_streamed_question(websocket: WebSocket, question: str, turn: int
 async def interview_socket(websocket: WebSocket, interview_id: str) -> None:
     session_manager = websocket.app.state.session_manager
     settings = getattr(websocket.app.state, "settings", get_settings())
+    runtime = getattr(websocket.app.state, "live_runtime", None)
+    if runtime is None:
+        runtime = LiveInterviewRuntime()
+        websocket.app.state.live_runtime = runtime
 
     await connection_registry.connect(interview_id=interview_id, websocket=websocket)
 
     try:
         state = await session_manager.get_state(interview_id)
         if state is None:
-            state = InterviewState(
-                interview_id=interview_id,
-                turn=1,
-                last_question=settings.initial_question,
-                last_answer=None,
-            )
+            state = InterviewState(interview_id=interview_id)
+            state = await runtime.bootstrap_question(state)
             await session_manager.set_state(state)
             await _send_streamed_question(websocket, state.last_question, state.turn)
         elif not state.last_answer and state.last_question:
+            await _send_streamed_question(websocket, state.last_question, state.turn)
+        else:
+            state = await runtime.bootstrap_question(state)
+            await session_manager.set_state(state)
             await _send_streamed_question(websocket, state.last_question, state.turn)
 
         while True:
@@ -97,20 +101,14 @@ async def interview_socket(websocket: WebSocket, interview_id: str) -> None:
                     "last_message_id": incoming.message_id,
                 }
             )
-            evolved = evolve_state_from_answer(answered_state, incoming.content)
-            compressed = compress_state(evolved)
-            next_question = generate_next_question(compressed)
-
-            next_state = evolved.model_copy(
-                update={
-                    "turn": evolved.turn + 1,
-                    "last_question": next_question,
-                    "last_answer": None,
-                }
+            next_state = await runtime.process_answer(
+                state=answered_state,
+                answer=incoming.content,
+                message_id=incoming.message_id,
             )
 
             await session_manager.set_state(next_state)
-            await _send_streamed_question(websocket, next_question, next_state.turn)
+            await _send_streamed_question(websocket, next_state.last_question, next_state.turn)
 
     except WebSocketDisconnect:
         pass

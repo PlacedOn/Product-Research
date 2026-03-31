@@ -21,5 +21,14 @@ class InterviewState(BaseModel):
     last_question: str = ""
     last_answer: str | None = None
     skill_vector: list[float] = Field(default_factory=lambda: [0.5, 0.5, 0.5])
+    sigma2: list[float] = Field(default_factory=lambda: [0.5, 0.5, 0.5])
     performance: dict[str, Any] = Field(default_factory=dict)
     last_message_id: str | None = None
+    question_history: list[str] = Field(default_factory=list)
+    answer_history: list[str] = Field(default_factory=list)
+    current_mode: str = "new"
+    current_skill: str | None = None
+    current_difficulty: str = "medium"
+    latest_trust_score: float = 0.0
+    anomaly_flag: bool = False
+    candidate_snapshot: dict[str, Any] = Field(default_factory=dict)

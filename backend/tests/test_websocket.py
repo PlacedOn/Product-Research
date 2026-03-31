@@ -52,7 +52,8 @@ def test_websocket_connect_send_answer_and_receive_response() -> None:
 
             second_question = _receive_final_question(ws)
             assert second_question["turn"] == 2
-            assert "production incident" in second_question["content"].lower()
+            assert isinstance(second_question["content"], str)
+            assert second_question["content"].strip()
 
 
 def test_disconnect_reconnect_and_duplicate_idempotency() -> None:
