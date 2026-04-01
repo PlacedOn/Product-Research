@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.config import get_settings
+from app.interaction_router import router as interaction_router
 from app.live_runtime import LiveInterviewRuntime
 from app.session_manager import SessionManager
 from app.websocket_router import router as websocket_router
@@ -25,6 +26,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AI Interview Backbone", lifespan=lifespan)
 app.include_router(websocket_router)
+app.include_router(interaction_router)
 
 
 @app.get("/health")
