@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import Any
 
 from fastapi import APIRouter, Request, WebSocket, WebSocketDisconnect
+from pydantic import BaseModel, Field
 
 from app.live_runtime import LiveInterviewRuntime
 from app.models import InterviewState
@@ -11,6 +13,12 @@ from app.models import InterviewState
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
+
+from backend.llm.generator import generate_question
+from backend.llm.judge import evaluate_answer
+from backend.pipeline.context_builder import build_context
+from backend.pipeline.question_strategy import decide_question_type
+from backend.schemas.generator_schema import CandidateProfile, JobProfile
 
 from interaction_layer.communication.websocket_manager import WebSocketManager
 from interaction_layer.config import InteractionConfig
@@ -34,6 +42,73 @@ _tts = MockTTS(_config)
 _presence = PresenceMonitor(_config)
 _persona = PersonaEngine()
 _recovery = RecoveryManager()
+_interview_pipeline_state: dict[str, dict[str, Any]] = {}
+
+
+class GenerateQuestionRequest(BaseModel):
+    session_id: str = "default"
+    candidate: CandidateProfile
+    job: JobProfile
+
+
+class EvaluateAnswerRequest(BaseModel):
+    session_id: str = "default"
+    question: str = Field(min_length=1)
+    answer: str = Field(min_length=1)
+
+
+def _pick_focus_skill(state: dict[str, Any], context: dict[str, Any]) -> str:
+    covered = set(state.get("covered_skills", []))
+
+    for skill in context.get("target_skills", []):
+        normalized = str(skill).strip().lower()
+        if normalized and normalized not in covered:
+            return normalized
+
+    gaps = context.get("skill_gaps", [])
+    if gaps:
+        return str(gaps[0]).strip().lower()
+
+    current = str(state.get("current_skill", "")).strip().lower()
+    if current:
+        return current
+
+    targets = context.get("target_skills", [])
+    if targets:
+        return str(targets[0]).strip().lower()
+
+    return "backend fundamentals"
+
+
+def _ensure_interview_state(session_id: str, candidate: CandidateProfile, job: JobProfile) -> dict[str, Any]:
+    candidate_payload = candidate.model_dump()
+    job_payload = job.model_dump()
+    context = build_context(candidate_payload, job_payload)
+
+    state = _interview_pipeline_state.get(session_id)
+    if state is None:
+        initial_focus = (
+            context["target_skills"][0]
+            if context.get("target_skills")
+            else (context["skill_gaps"][0] if context.get("skill_gaps") else "backend fundamentals")
+        )
+        state = {
+            "asked_questions": [],
+            "covered_skills": [],
+            "current_skill": str(initial_focus).strip().lower(),
+            "round": 1,
+            "candidate": candidate_payload,
+            "job": job_payload,
+            "context": context,
+        }
+        _interview_pipeline_state[session_id] = state
+        return state
+
+    state["candidate"] = candidate_payload
+    state["job"] = job_payload
+    state["context"] = context
+    state["current_skill"] = _pick_focus_skill(state, context)
+    return state
 
 
 async def _backend_process_turn(app, payload: TurnPayload) -> BackendTurnResponse:
@@ -80,6 +155,86 @@ async def _stream_persona_audio(session_id: str, backend_text: str):
 @router.post("/process-turn", response_model=BackendTurnResponse)
 async def process_turn(payload: TurnPayload, request: Request) -> BackendTurnResponse:
     return await _backend_process_turn(request.app, payload)
+
+
+@router.post("/generate-question")
+async def generate_question_endpoint(payload: GenerateQuestionRequest) -> dict:
+    state = _ensure_interview_state(payload.session_id, payload.candidate, payload.job)
+    strategy = decide_question_type(state)
+
+    previous_context = [
+        {
+            "question": entry.get("question", ""),
+            "skill": entry.get("skill", ""),
+            "score": entry.get("score"),
+            "missing_concepts": entry.get("missing_concepts", []),
+        }
+        for entry in state["asked_questions"][-5:]
+    ]
+
+    result = await generate_question(
+        context={
+            "candidate": payload.candidate.model_dump(),
+            "job": payload.job.model_dump(),
+            "focus_skill": state["current_skill"],
+        },
+        strategy=strategy,
+        previous_qna=previous_context,
+    )
+
+    asked_entry = {
+        "question": result.question,
+        "skill": result.skill,
+        "difficulty": result.difficulty,
+        "type": result.type,
+        "strategy": strategy,
+        "round": state["round"],
+    }
+    state["asked_questions"].append(asked_entry)
+    if result.skill not in state["covered_skills"]:
+        state["covered_skills"].append(result.skill)
+    state["last_strategy"] = strategy
+    state["next_strategy"] = None
+    state["round"] += 1
+
+    return {
+        **result.model_dump(),
+        "strategy": strategy,
+        "round": asked_entry["round"],
+        "tags": [result.skill],
+    }
+
+
+@router.post("/evaluate-answer")
+async def evaluate_answer_endpoint(payload: EvaluateAnswerRequest) -> dict:
+    result = await evaluate_answer(question=payload.question, answer=payload.answer)
+    state = _interview_pipeline_state.get(payload.session_id)
+
+    if state is not None:
+        state["last_score"] = result.score
+        state["last_missing_concepts"] = result.missing_concepts
+
+        if state.get("asked_questions"):
+            state["asked_questions"][-1]["score"] = result.score
+            state["asked_questions"][-1]["missing_concepts"] = result.missing_concepts
+
+        if result.score < 0.5:
+            state["next_strategy"] = "follow_up"
+        elif result.score > 0.8:
+            state["next_strategy"] = "deep_dive"
+        else:
+            state["next_strategy"] = None
+
+        if result.missing_concepts:
+            state["current_skill"] = str(result.missing_concepts[0]).strip().lower()
+        else:
+            state["current_skill"] = _pick_focus_skill(state, state.get("context", {}))
+
+    return {
+        **result.model_dump(),
+        "next_strategy": (state or {}).get("next_strategy"),
+        "current_skill": (state or {}).get("current_skill"),
+    }
 
 
 @router.websocket("/interaction/ws/{session_id}")

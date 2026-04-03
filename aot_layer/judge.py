@@ -1,15 +1,22 @@
-from aot_layer.mock_llm import SKILL_CONCEPTS
 from aot_layer.models import JudgeResult
+from backend.llm.judge import evaluate_answer
+
+_SKILL_QUESTION_HINTS: dict[str, str] = {
+    "caching": "Explain your caching strategy and its trade-offs.",
+    "concurrency": "Explain how you prevent race conditions in concurrent systems.",
+    "api_design": "Explain key API design choices and trade-offs.",
+}
 
 
 class Judge:
     async def evaluate(self, skill: str, answer: str) -> JudgeResult:
-        concepts = SKILL_CONCEPTS.get(skill, ["trade-off", "scalability", "reliability"])
+        prompt_question = _SKILL_QUESTION_HINTS.get(skill, f"Evaluate an answer for skill={skill}.")
+        evaluation = await evaluate_answer(question=prompt_question, answer=answer)
 
-        evidence = self._extract_evidence(answer=answer, concepts=concepts)
-        missing = self._identify_missing(concepts=concepts, evidence=evidence)
-        direction = self._classify(evidence=evidence, total_required=len(concepts))
-        confidence = self._assign_confidence(evidence=evidence, total_required=len(concepts))
+        direction = self._classify(score=evaluation.score)
+        confidence = round(evaluation.confidence, 2)
+        evidence = evaluation.strengths[:3]
+        missing = evaluation.missing_concepts[:3]
         probe_recommended, recovery_possible = self._decide(direction=direction, missing=missing)
 
         return JudgeResult(
@@ -22,22 +29,12 @@ class Judge:
             recovery_possible=recovery_possible,
         )
 
-    def _extract_evidence(self, answer: str, concepts: list[str]) -> list[str]:
-        lowered = answer.lower()
-        return [concept for concept in concepts if concept in lowered]
-
-    def _identify_missing(self, concepts: list[str], evidence: list[str]) -> list[str]:
-        return [concept for concept in concepts if concept not in evidence]
-
-    def _classify(self, evidence: list[str], total_required: int) -> str:
-        if len(evidence) == total_required:
+    def _classify(self, score: float) -> str:
+        if score >= 0.8:
             return "correct"
-        if len(evidence) > 0:
+        if score >= 0.4:
             return "partial"
         return "wrong"
-
-    def _assign_confidence(self, evidence: list[str], total_required: int) -> float:
-        return round(len(evidence) / max(total_required, 1), 2)
 
     def _decide(self, direction: str, missing: list[str]) -> tuple[bool, bool]:
         probe_recommended = direction == "partial" and len(missing) > 0
