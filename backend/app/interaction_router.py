@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import os
 import sys
 from typing import Any
@@ -9,6 +10,7 @@ from pydantic import BaseModel, Field
 
 from app.live_runtime import LiveInterviewRuntime
 from app.models import InterviewState
+from app.tts_service import MacTTSService, TTSServiceError
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 if ROOT_DIR not in sys.path:
@@ -55,6 +57,12 @@ class EvaluateAnswerRequest(BaseModel):
     session_id: str = "default"
     question: str = Field(min_length=1)
     answer: str = Field(min_length=1)
+
+
+class TTSSpeakRequest(BaseModel):
+    text: str = Field(min_length=1)
+    voice: str | None = None
+    rate: int = Field(default=185, ge=120, le=280)
 
 
 def _pick_focus_skill(state: dict[str, Any], context: dict[str, Any]) -> str:
@@ -235,6 +243,32 @@ async def evaluate_answer_endpoint(payload: EvaluateAnswerRequest) -> dict:
         "next_strategy": (state or {}).get("next_strategy"),
         "current_skill": (state or {}).get("current_skill"),
     }
+
+
+@router.get("/tts/voices")
+async def list_tts_voices() -> dict:
+    try:
+        voices = await asyncio.to_thread(MacTTSService.list_voices)
+    except TTSServiceError:
+        return {"voices": [], "default_voice": None}
+
+    default_voice = MacTTSService.resolve_voice(None, voices) if voices else None
+    return {"voices": voices, "default_voice": default_voice}
+
+
+@router.post("/tts/speak")
+async def synthesize_tts(payload: TTSSpeakRequest) -> dict:
+    try:
+        synthesized = await asyncio.to_thread(
+            MacTTSService.synthesize,
+            payload.text,
+            payload.voice,
+            payload.rate,
+        )
+    except TTSServiceError as exc:
+        return {"error": str(exc)}
+
+    return synthesized
 
 
 @router.websocket("/interaction/ws/{session_id}")

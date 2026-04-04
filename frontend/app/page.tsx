@@ -19,7 +19,8 @@ const navItems = [
 
 export default function InterviewPage() {
   const [questionTimer, setQuestionTimer] = useState(180);
-  const { state, toggleMic, toggleCam, pushToTalk, endInterview } = useInterviewSocket("candidate-live-1");
+  const { state, ttsVoices, selectedVoice, setSelectedVoice, toggleMic, toggleCam, pushToTalk, endInterview } =
+    useInterviewSocket("candidate-live-1");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -86,14 +87,11 @@ export default function InterviewPage() {
           <section className="relative flex min-h-[80vh] flex-col overflow-hidden rounded-xl border border-white/10 bg-[#090d13]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_52%,rgba(29,213,121,0.22),rgba(40,80,145,0.12)_42%,transparent_70%)]" />
 
-            <header className="relative z-10 flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <div>
-                <p className="inline-block rounded-sm bg-white/10 px-2 py-1 text-xl font-semibold leading-none tracking-tight text-slate-200 md:text-3xl lg:text-4xl">
-                  Stitch - Design with AI
-                </p>
-                <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-slate-500">Current Milestone</p>
-                <p className="text-2xl font-bold text-white">Question {questionIndex}/5</p>
-                {state.error ? <p className="mt-2 text-xs text-rose-300">{state.error}</p> : null}
+            <header className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-white/10 px-4 py-3 md:px-5 md:py-3.5">
+              <div className="min-w-0">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Current Milestone</p>
+                <p className="mt-1 text-xl font-bold text-white md:text-2xl">Question {questionIndex}/5</p>
+                {state.error ? <p className="mt-1.5 text-xs text-rose-300">{state.error}</p> : null}
               </div>
 
               <div className="flex items-center gap-2">
@@ -105,28 +103,32 @@ export default function InterviewPage() {
               </div>
             </header>
 
-            <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-8 pt-6 md:px-6">
-              <div className="mb-8 mt-auto">
-                <Persona state={state.personaState} />
+            <div className="relative z-10 grid flex-1 grid-cols-1 gap-4 px-4 pb-5 pt-4 md:gap-5 md:px-6 md:pb-6 md:pt-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
+              <div className="flex min-h-[460px] flex-col items-center justify-end pb-2 md:min-h-[500px]">
+                <div className="mb-6 mt-auto md:mb-8">
+                  <Persona state={state.personaState} />
+                </div>
+
+                <QuestionCard question={state.question} tags={state.questionTags} />
+
+                <div className="mt-5 md:mt-7">
+                  <ControlDock
+                    micOn={state.micOn}
+                    camOn={state.camOn}
+                    ttsVoices={ttsVoices}
+                    selectedVoice={selectedVoice}
+                    onVoiceChange={setSelectedVoice}
+                    onToggleMic={toggleMic}
+                    onToggleCam={toggleCam}
+                    onPushToTalk={pushToTalk}
+                    onEnd={endInterview}
+                  />
+                </div>
               </div>
 
-              <QuestionCard question={state.question} tags={state.questionTags} />
-
-              <div className="mt-7">
-                <ControlDock
-                  micOn={state.micOn}
-                  camOn={state.camOn}
-                  onToggleMic={toggleMic}
-                  onToggleCam={toggleCam}
-                  onPushToTalk={pushToTalk}
-                  onEnd={endInterview}
-                />
+              <div className="min-h-[260px] md:min-h-[320px] lg:pt-3">
+                <TranscriptPanel items={state.transcript} progress={progress} className="h-full" />
               </div>
-            </div>
-
-            <div className="pointer-events-none absolute bottom-28 right-4 z-20 hidden w-[290px] md:right-6 lg:block">
-              <div className="mb-2 ml-auto h-10 w-28 rounded-xl border border-sky-400/20 bg-[#0e2034]/70" />
-              <TranscriptPanel items={state.transcript} className="pointer-events-auto" progress={progress} />
             </div>
           </section>
         </div>

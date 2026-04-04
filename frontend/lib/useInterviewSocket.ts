@@ -32,12 +32,26 @@ interface EvaluateAnswerResponse {
   missing_concepts: string[];
 }
 
+interface TTSVoicesResponse {
+  voices: string[];
+  default_voice: string | null;
+}
+
+interface TTSSpeakResponse {
+  audio_base64?: string;
+  mime_type?: string;
+  voice?: string;
+  error?: string;
+}
+
 function stamp(): string {
   return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
 export function useInterviewSocket(sessionId: string) {
   const [state, setState] = useState<InterviewSocketState>(initialState);
+  const [ttsVoices, setTtsVoices] = useState<string[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<string>("");
 
   const candidateProfile = useMemo(
     () => ({
@@ -95,6 +109,49 @@ export function useInterviewSocket(sessionId: string) {
     [apiBase],
   );
 
+  const loadTTSVoices = useCallback(async () => {
+    try {
+      const response = await fetch(`${apiBase}/tts/voices`);
+      if (!response.ok) {
+        return;
+      }
+      const payload = (await response.json()) as TTSVoicesResponse;
+      const voices = payload.voices ?? [];
+      setTtsVoices(voices);
+      if (!selectedVoice && payload.default_voice) {
+        setSelectedVoice(payload.default_voice);
+      }
+    } catch {
+      setTtsVoices([]);
+    }
+  }, [apiBase, selectedVoice]);
+
+  const playQuestionAudio = useCallback(
+    async (question: string) => {
+      try {
+        const spoken = await postJSON<TTSSpeakResponse>("/tts/speak", {
+          text: question,
+          voice: selectedVoice || null,
+          rate: 185,
+        });
+
+        if (spoken.error || !spoken.audio_base64 || !spoken.mime_type) {
+          return;
+        }
+
+        if (spoken.voice && spoken.voice !== selectedVoice) {
+          setSelectedVoice(spoken.voice);
+        }
+
+        const audio = new Audio(`data:${spoken.mime_type};base64,${spoken.audio_base64}`);
+        await audio.play();
+      } catch {
+        return;
+      }
+    },
+    [postJSON, selectedVoice],
+  );
+
   const fetchQuestion = useCallback(
     async () => {
       setState((prev) => ({ ...prev, personaState: "thinking", error: null }));
@@ -119,13 +176,15 @@ export function useInterviewSocket(sessionId: string) {
         timestamp: stamp(),
       });
 
+      void playQuestionAudio(next.question);
+
       setTimeout(() => {
         setState((prev) => ({ ...prev, personaState: prev.micOn ? "listening" : "idle" }));
       }, 250);
 
       return next;
     },
-    [addTranscript, candidateProfile, jobProfile, postJSON, sessionId],
+    [addTranscript, candidateProfile, jobProfile, playQuestionAudio, postJSON, sessionId],
   );
 
   const evaluateCurrentAnswer = useCallback(
@@ -165,6 +224,10 @@ export function useInterviewSocket(sessionId: string) {
       });
     }
   }, [addTranscript, fetchQuestion]);
+
+  useEffect(() => {
+    void loadTTSVoices();
+  }, [loadTTSVoices]);
 
   useEffect(() => {
     void connect();
@@ -230,6 +293,9 @@ export function useInterviewSocket(sessionId: string) {
 
   return {
     state,
+    ttsVoices,
+    selectedVoice,
+    setSelectedVoice,
     connect,
     toggleMic,
     toggleCam,
