@@ -75,7 +75,10 @@ Return JSON only:
   "confidence": 0.0-1.0,
   "strengths": ["..."],
   "weaknesses": ["..."],
-  "missing_concepts": ["..."]
+    "missing_concepts": ["..."],
+    "intent": "no_understanding | partial_understanding | clear_understanding",
+    "depth": "shallow | basic | good | strong",
+    "clarity": "poor | okay | clear"
 }}
 
 Question: {question}
@@ -111,6 +114,41 @@ def _analyze_answer(answer: str) -> dict[str, bool | int]:
         "keyword_only": keyword_only,
         "vague": vague,
     }
+
+
+def _depth_from_score(score: float) -> str:
+    if score < 0.35:
+        return "shallow"
+    if score < 0.6:
+        return "basic"
+    if score < 0.8:
+        return "good"
+    return "strong"
+
+
+def _clarity_from_signals(signals: dict[str, bool | int]) -> str:
+    token_count = int(signals["token_count"])
+    if bool(signals["very_short"]) or bool(signals["keyword_only"]) or bool(signals["vague"]):
+        return "poor"
+    if bool(signals["has_explanation"]) and bool(signals["has_mechanism"]) and token_count >= 12:
+        return "clear"
+    return "okay"
+
+
+def _intent_from_signals(signals: dict[str, bool | int], score: float) -> str:
+    if bool(signals["very_short"]) or bool(signals["keyword_only"]):
+        return "no_understanding"
+
+    has_substance = bool(signals["has_explanation"]) or bool(signals["has_mechanism"])
+    if has_substance and score >= 0.72 and (bool(signals["has_tradeoff"]) or int(signals["token_count"]) >= 18):
+        return "clear_understanding"
+
+    if has_substance:
+        return "partial_understanding"
+
+    if score < 0.35:
+        return "no_understanding"
+    return "partial_understanding"
 
 
 def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
@@ -152,6 +190,10 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
 
     score = _clip(score)
 
+    depth = _depth_from_score(score)
+    clarity = _clarity_from_signals(signals)
+    intent = _intent_from_signals(signals, score)
+
     if score < 0.4:
         confidence = min(confidence, _WEAK_CONFIDENCE_MAX)
         if "How the approach works" not in missing:
@@ -163,12 +205,28 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
     elif score >= 0.85:
         confidence = max(confidence, _STRONG_CONFIDENCE_MIN)
 
+    # Keep confidence bands aligned with the inferred depth bucket.
+    if depth == "shallow":
+        confidence = min(confidence, 0.55)
+    elif depth == "basic":
+        confidence = _clip(confidence, 0.5, 0.72)
+    elif depth == "good":
+        confidence = _clip(confidence, 0.65, 0.85)
+    else:
+        confidence = max(confidence, _STRONG_CONFIDENCE_MIN)
+
+    if clarity == "poor" and "Clear explanation of approach" not in missing:
+        missing.append("Clear explanation of approach")
+
     return JudgeOutput(
         score=round(score, 3),
         confidence=round(_clip(confidence), 3),
         strengths=evaluation.strengths,
         weaknesses=list(dict.fromkeys(weaknesses)),
         missing_concepts=list(dict.fromkeys(missing)),
+        intent=intent,
+        depth=depth,
+        clarity=clarity,
     )
 
 
@@ -185,6 +243,9 @@ def _fallback_judge_output(error: Exception) -> JudgeOutput:
             "Clear technical explanation",
             "Reasoning and trade-offs",
         ],
+        intent="no_understanding",
+        depth="shallow",
+        clarity="poor",
     )
 
 

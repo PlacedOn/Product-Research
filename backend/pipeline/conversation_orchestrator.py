@@ -41,5 +41,5 @@ job={job.model_dump()}
     return (
         f"Hi {candidate.name}, welcome. We'll walk through your experience for the "
         f"{job.role} role at {company}, then explore a few technical topics. "
-        "To start, could you give me a brief introduction about yourself?"
+        "To start, could you briefly introduce yourself?"
     )

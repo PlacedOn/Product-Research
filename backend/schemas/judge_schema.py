@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -12,6 +14,9 @@ class JudgeOutput(BaseModel):
     strengths: list[str] = Field(default_factory=list)
     weaknesses: list[str] = Field(default_factory=list)
     missing_concepts: list[str] = Field(default_factory=list)
+    intent: Literal["no_understanding", "partial_understanding", "clear_understanding"] = "partial_understanding"
+    depth: Literal["shallow", "basic", "good", "strong"] = "basic"
+    clarity: Literal["poor", "okay", "clear"] = "okay"
 
     @field_validator("score", "confidence", mode="before")
     @classmethod

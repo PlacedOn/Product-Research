@@ -18,6 +18,18 @@ def _score_to_mode(score: float) -> tuple[str, str, str]:
     return "challenge", "hard", "challenging"
 
 
+def _difficulty_from_depth(depth: str) -> str:
+    if depth == "shallow":
+        return "easy"
+    if depth == "basic":
+        return "medium"
+    if depth == "good":
+        return "medium"
+    if depth == "strong":
+        return "hard"
+    return "medium"
+
+
 def _pick_target_skill(context: dict[str, Any], fallback: str) -> str:
     interview_state = context.get("interview_state") or {}
     current_focus = str(interview_state.get("current_focus") or "").strip().lower()
@@ -50,20 +62,57 @@ def _normalize_difficulty(value: Any, fallback: str) -> str:
 
 async def plan_next_step(context: dict[str, Any]) -> PlanOutput:
     minimal_state = context.get("minimal_state") or {}
+    evaluation = context.get("evaluation") or {}
 
     score = _to_float(
         minimal_state.get("last_score", (context.get("evaluation") or {}).get("score", 0.5)),
         default=0.5,
     )
-    mode, difficulty, tone = _score_to_mode(score)
+    fallback_mode, fallback_difficulty, fallback_tone = _score_to_mode(score)
+
+    intent = str(evaluation.get("intent") or "").strip().lower()
+    clarity = str(evaluation.get("clarity") or "").strip().lower()
+    depth = str(evaluation.get("depth") or "").strip().lower()
+
+    mode_map = {
+        "no_understanding": "help",
+        "partial_understanding": "probe",
+        "clear_understanding": "challenge",
+    }
+    mode = mode_map.get(intent, fallback_mode)
+
+    tone_map = {
+        "help": "supportive",
+        "probe": "neutral",
+        "challenge": "challenging",
+    }
+    tone = tone_map.get(mode, fallback_tone)
+
+    depth_difficulty = _difficulty_from_depth(depth)
+    difficulty = _normalize_difficulty(minimal_state.get("difficulty"), depth_difficulty)
+
+    if clarity == "poor":
+        mode = "help"
+        tone = "supportive"
+        difficulty = "easy"
 
     requested_topic = str(minimal_state.get("topic") or "").strip().lower()
     target_skill = requested_topic or _pick_target_skill(context, fallback="backend fundamentals")
 
+    reason_parts = [f"Mode selected from score {score:.2f}"]
+    if intent in mode_map:
+        reason_parts.append(f"intent={intent}")
+    if depth in {"shallow", "basic", "good", "strong"}:
+        reason_parts.append(f"depth={depth}")
+    if clarity in {"poor", "okay", "clear"}:
+        reason_parts.append(f"clarity={clarity}")
+    if clarity == "poor":
+        reason_parts.append("clarification prioritized")
+
     return PlanOutput(
         action=mode,
         target_skill=target_skill,
-        reason=f"Mode selected from score {score:.2f}",
-        difficulty=_normalize_difficulty(minimal_state.get("difficulty"), difficulty),
+        reason=", ".join(reason_parts),
+        difficulty=difficulty,
         tone=tone,
     )

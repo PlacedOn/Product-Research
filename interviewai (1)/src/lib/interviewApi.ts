@@ -32,6 +32,9 @@ export interface EvaluateAnswerResponse {
   strengths: string[];
   weaknesses: string[];
   missing_concepts: string[];
+  intent?: 'no_understanding' | 'partial_understanding' | 'clear_understanding';
+  depth?: 'shallow' | 'basic' | 'good' | 'strong';
+  clarity?: 'poor' | 'okay' | 'clear';
   next_strategy?: string | null;
   current_skill?: string | null;
 }

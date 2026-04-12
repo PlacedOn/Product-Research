@@ -5,11 +5,11 @@ from backend.llm.generator import generate_question
 class QuestionGenerator:
     async def generate(self, request: QuestionRequest) -> QuestionOutput:
         action_by_mode = {
-            "new": "new_topic",
-            "probe": "follow_up",
-            "retry": "simplify",
+            "new": "probe",
+            "probe": "challenge",
+            "retry": "help",
         }
-        action = action_by_mode.get(request.mode, "new_topic")
+        action = action_by_mode.get(request.mode, "probe")
         tone = "supportive" if request.mode == "retry" else "neutral"
 
         generated = await generate_question(

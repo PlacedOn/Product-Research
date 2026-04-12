@@ -247,6 +247,7 @@ async def generate_question_endpoint(payload: GenerateQuestionRequest) -> dict:
     plan = await plan_next_step(
         {
             "minimal_state": minimal_state,
+            "evaluation": state.get("last_evaluation") or {},
             "candidate": payload.candidate.model_dump(),
             "job": payload.job.model_dump(),
             "interview_state": {
