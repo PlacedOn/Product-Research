@@ -6,7 +6,7 @@ from backend.llm.ollama_client import call_ollama
 from backend.schemas.generator_schema import GeneratorInput, PlanOutput, QuestionOutput
 from backend.utils.json_utils import extract_json
 
-_GENERATOR_MODEL = "llama3"
+_GENERATOR_MODEL = "llama3:8b-instruct-q4_0"
 
 
 def _default_question_type(action: str) -> str:
@@ -27,6 +27,41 @@ def _is_duplicate_question(candidate: str, *previous: str) -> bool:
     if not normalized_candidate:
         return False
     return any(normalized_candidate == _normalized_question(item) for item in previous if item)
+
+
+def _looks_like_interviewer_question(text: str) -> bool:
+    candidate = (text or "").strip().lower()
+    if not candidate:
+        return False
+
+    # Hard reject obvious answer-like starts from candidate perspective.
+    answer_like_starts = (
+        "i ",
+        "i'm ",
+        "im ",
+        "my ",
+        "we ",
+        "in my ",
+    )
+    if candidate.startswith(answer_like_starts):
+        return False
+
+    # Prefer explicit question punctuation, but also allow clear interviewer prompts.
+    if "?" in candidate:
+        return True
+
+    interviewer_prompt_starts = (
+        "tell me",
+        "walk me",
+        "can you",
+        "could you",
+        "how would",
+        "what would",
+        "why would",
+        "explain",
+        "describe",
+    )
+    return candidate.startswith(interviewer_prompt_starts)
 
 
 def _fallback_prompt_variants(action: str, skill: str) -> list[str]:
@@ -134,6 +169,14 @@ Set "type" to "{default_type}" unless it clearly does not fit.
         )
         payload = extract_json(output)
         result = QuestionOutput.model_validate(payload)
+        if not _looks_like_interviewer_question(result.question):
+            return _fallback_question(
+                parsed_context.plan,
+                parsed_context,
+                mode=mode,
+                skill=target_skill,
+                difficulty=difficulty,
+            )
         if _is_duplicate_question(result.question, parsed_context.last_question, parsed_context.previous_question):
             return _fallback_question(
                 parsed_context.plan,

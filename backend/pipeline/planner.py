@@ -1,6 +1,7 @@
 from typing import Any
 
 from backend.schemas.generator_schema import PlanOutput
+from backend.pipeline.jd_parser import build_skill_profile
 
 
 def _to_float(value: Any, default: float = 0.5) -> float:
@@ -53,6 +54,67 @@ def _pick_target_skill(context: dict[str, Any], fallback: str) -> str:
     return fallback
 
 
+def _skills_from_context(context: dict[str, Any]) -> list[str]:
+    ordered_skills: list[str] = []
+
+    candidate = context.get("candidate") or {}
+    for skill in candidate.get("skills", []):
+        normalized = str(skill).strip().lower()
+        if normalized and normalized not in ordered_skills:
+            ordered_skills.append(normalized)
+
+    job = context.get("job") or {}
+    for skill in job.get("required_skills", []):
+        normalized = str(skill).strip().lower()
+        if normalized and normalized not in ordered_skills:
+            ordered_skills.append(normalized)
+
+    for skill in job.get("preferred_skills", []):
+        normalized = str(skill).strip().lower()
+        if normalized and normalized not in ordered_skills:
+            ordered_skills.append(normalized)
+
+    return ordered_skills
+
+
+def _pick_priority_skill(context: dict[str, Any], fallback: str) -> str:
+    interview_state = context.get("interview_state") or {}
+    skill_scores_raw = interview_state.get("skill_scores") or {}
+    skill_scores = {
+        str(skill).strip().lower(): _to_float(score, 0.0)
+        for skill, score in skill_scores_raw.items()
+        if str(skill).strip()
+    }
+
+    covered = {str(skill).strip().lower() for skill in interview_state.get("covered_skills", [])}
+    job = context.get("job") or {}
+    role = str(job.get("role") or "").strip().lower()
+    jd_text = " ".join(
+        [
+            str(job.get("description") or ""),
+            " ".join(str(skill) for skill in job.get("required_skills", [])),
+            " ".join(str(skill) for skill in job.get("preferred_skills", [])),
+        ]
+    )
+    skill_profile = build_skill_profile(jd_text=jd_text, role=role)
+
+    available_skills = _skills_from_context(context)
+    for profile_skill in skill_profile:
+        if profile_skill not in available_skills:
+            available_skills.append(profile_skill)
+
+    if not available_skills:
+        return fallback
+
+    def _priority(skill: str) -> tuple[float, float]:
+        weight = float(skill_profile.get(skill, 0.3))
+        score = float(skill_scores.get(skill, 0.0))
+        uncovered = 1.0 if skill not in covered else 0.0
+        return (weight * (1.0 - score) + uncovered, weight)
+
+    return max(available_skills, key=_priority)
+
+
 def _normalize_difficulty(value: Any, fallback: str) -> str:
     normalized = str(value or "").strip().lower()
     if normalized in {"easy", "medium", "hard"}:
@@ -97,7 +159,10 @@ async def plan_next_step(context: dict[str, Any]) -> PlanOutput:
         difficulty = "easy"
 
     requested_topic = str(minimal_state.get("topic") or "").strip().lower()
-    target_skill = requested_topic or _pick_target_skill(context, fallback="backend fundamentals")
+    if requested_topic:
+        target_skill = requested_topic
+    else:
+        target_skill = _pick_priority_skill(context, fallback=_pick_target_skill(context, fallback="backend fundamentals"))
 
     reason_parts = [f"Mode selected from score {score:.2f}"]
     if intent in mode_map:

@@ -18,9 +18,13 @@ class OutgoingQuestion(BaseModel):
 class InterviewState(BaseModel):
     interview_id: str
     turn: int = 0
+    turn_count: int = 0
     last_question: str = ""
     last_answer: str | None = None
     skill_vector: list[float] = Field(default_factory=lambda: [0.5, 0.5, 0.5])
+    skill_scores: dict[str, float] = Field(default_factory=dict)
+    skill_coverage: float = 0.0
+    avg_confidence: float = 0.0
     sigma2: list[float] = Field(default_factory=lambda: [0.5, 0.5, 0.5])
     performance: dict[str, Any] = Field(default_factory=dict)
     last_message_id: str | None = None

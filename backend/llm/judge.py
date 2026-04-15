@@ -5,7 +5,7 @@ from backend.llm.ollama_client import call_ollama
 from backend.schemas.judge_schema import JudgeInput, JudgeOutput
 from backend.utils.json_utils import extract_json
 
-_JUDGE_MODEL = "llama3"
+_JUDGE_MODEL = "llama3:8b-instruct-q4_0"
 
 _WEAK_CONFIDENCE_MAX = 0.6
 _MEDIUM_CONFIDENCE_MIN = 0.5

@@ -27,6 +27,27 @@ from layer5.models import FitInput, InterviewTurn, RenderInput, SkillTurnSignal
 from layer5.renderer import ProfileRenderer
 from layer5.storage import CandidateRepository
 
+MIN_TURNS = 10
+MAX_TURNS = 15
+SKILL_SCORE_THRESHOLD = 0.7
+
+
+def should_end_interview(state: InterviewState) -> bool:
+    if state.turn_count < MIN_TURNS:
+        return False
+
+    if (
+        state.turn_count >= MIN_TURNS
+        and state.skill_coverage >= 0.7
+        and state.avg_confidence >= 0.7
+    ):
+        return True
+
+    if state.turn_count >= MAX_TURNS:
+        return True
+
+    return False
+
 
 class LiveInterviewRuntime:
     def __init__(self, config: AoTConfig | None = None, repository: CandidateRepository | None = None) -> None:
@@ -106,6 +127,95 @@ class LiveInterviewRuntime:
         aot_state.skill_vector[active_skill] = adjusted_confidence
         aot_state.sigma2[active_skill] = round(1.0 - adjusted_confidence, 2)
 
+        tracked_skill_scores = self._build_skill_scores(state.skill_scores, aot_state.skill_vector)
+        tracked_skill_scores[active_skill] = adjusted_confidence
+
+        next_turn_count = max(state.turn_count, 0) + 1
+        previous_confidence_total = max(state.avg_confidence, 0.0) * max(state.turn_count, 0)
+        next_avg_confidence = (previous_confidence_total + float(judge_result.confidence)) / next_turn_count
+
+        total_skills = max(len(tracked_skill_scores), 1)
+        covered_skills = sum(1 for score in tracked_skill_scores.values() if score >= SKILL_SCORE_THRESHOLD)
+        next_skill_coverage = covered_skills / total_skills
+
+        runtime_state = state.model_copy(
+            update={
+                "turn_count": next_turn_count,
+                "skill_scores": tracked_skill_scores,
+                "skill_coverage": round(next_skill_coverage, 4),
+                "avg_confidence": round(next_avg_confidence, 4),
+            }
+        )
+
+        if should_end_interview(runtime_state):
+            closing_message = "Thanks, I have enough information to evaluate your profile."
+            layer5_turns = self._layer5_turns_from_series(layer2_series)
+            aggregate = await self._aggregator.aggregate(layer5_turns)
+
+            candidate = await self._repo.save_from_aggregate(
+                candidate_id=state.interview_id,
+                embedding=aggregate.embedding,
+                skills=aggregate.skills,
+                metadata={
+                    "latest_trust": integrity.trust_score,
+                    "anomaly_flag": integrity.anomaly_flag,
+                    "answered_turns": len(answers),
+                },
+            )
+
+            fit = await self._matcher.predict(
+                FitInput(
+                    candidate_embedding=candidate.embedding,
+                    role_vector=candidate.embedding,
+                    preference_vector=None,
+                )
+            )
+            profile = await self._renderer.render(
+                RenderInput(candidate_id=candidate.candidate_id, skills=candidate.skills),
+                top_n=3,
+            )
+
+            snapshot = {
+                "aot_state": aot_state.model_dump(),
+                "fit": fit.model_dump(),
+                "profile": profile.model_dump(),
+                "latest_layer2": latest_layer2.model_dump(),
+            }
+
+            updated_questions = state.question_history[:] if state.question_history else []
+            if not updated_questions or updated_questions[-1] != closing_message:
+                updated_questions.append(closing_message)
+
+            return state.model_copy(
+                update={
+                    "turn": aot_state.turn_index + 1,
+                    "turn_count": next_turn_count,
+                    "last_question": closing_message,
+                    "last_answer": None,
+                    "last_message_id": message_id,
+                    "question_history": updated_questions,
+                    "answer_history": answers,
+                    "current_mode": "complete",
+                    "current_skill": aot_state.current_skill,
+                    "current_difficulty": aot_state.current_difficulty,
+                    "skill_vector": [aot_state.skill_vector.get(skill, 0.5) for skill in self._aot.config.skills],
+                    "skill_scores": tracked_skill_scores,
+                    "skill_coverage": round(next_skill_coverage, 4),
+                    "avg_confidence": round(next_avg_confidence, 4),
+                    "sigma2": [aot_state.sigma2.get(skill, 0.5) for skill in self._aot.config.skills],
+                    "performance": {
+                        "trust_score": integrity.trust_score,
+                        "anomaly_flag": integrity.anomaly_flag,
+                        "controller_action": "complete",
+                        "fit": fit.fit_score,
+                        "fit_interpretation": fit.interpretation,
+                    },
+                    "latest_trust_score": integrity.trust_score,
+                    "anomaly_flag": integrity.anomaly_flag,
+                    "candidate_snapshot": snapshot,
+                }
+            )
+
         end_decision = await self._aot.controller.decide_end(aot_state, judge_result)
         if end_decision.action == "probe":
             aot_state.probes_per_skill[active_skill] = aot_state.probes_per_skill.get(active_skill, 0) + 1
@@ -167,6 +277,7 @@ class LiveInterviewRuntime:
         return state.model_copy(
             update={
                 "turn": aot_state.turn_index + 1,
+                "turn_count": next_turn_count,
                 "last_question": next_question,
                 "last_answer": None,
                 "last_message_id": message_id,
@@ -176,6 +287,9 @@ class LiveInterviewRuntime:
                 "current_skill": aot_state.current_skill,
                 "current_difficulty": aot_state.current_difficulty,
                 "skill_vector": [aot_state.skill_vector.get(skill, 0.5) for skill in self._aot.config.skills],
+                "skill_scores": tracked_skill_scores,
+                "skill_coverage": round(next_skill_coverage, 4),
+                "avg_confidence": round(next_avg_confidence, 4),
                 "sigma2": [aot_state.sigma2.get(skill, 0.5) for skill in self._aot.config.skills],
                 "performance": {
                     "trust_score": integrity.trust_score,
@@ -271,3 +385,18 @@ class LiveInterviewRuntime:
         if len(values) > target:
             return values[:target]
         return values + [default] * (target - len(values))
+
+    def _build_skill_scores(self, existing: dict[str, float], aot_scores: dict[str, float]) -> dict[str, float]:
+        skill_scores: dict[str, float] = {}
+
+        for skill in self._aot.config.skills:
+            value = existing.get(skill)
+            if value is None:
+                value = aot_scores.get(skill, 0.0)
+            skill_scores[skill] = round(max(0.0, min(float(value), 1.0)), 4)
+
+        for skill, value in existing.items():
+            if skill not in skill_scores:
+                skill_scores[skill] = round(max(0.0, min(float(value), 1.0)), 4)
+
+        return skill_scores
