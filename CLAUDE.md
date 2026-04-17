@@ -27,7 +27,7 @@ PYTHONPATH=PlacedOn uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --re
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python3 -m pip install -r PlacedOn/backend/requirements.txt
 
 # Start Redis (required)
 redis-server
