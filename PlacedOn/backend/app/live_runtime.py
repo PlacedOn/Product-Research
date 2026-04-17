@@ -12,13 +12,11 @@ from aot_layer.config import AoTConfig
 from aot_layer.models import InterviewState as AoTInterviewState
 from aot_layer.models import QuestionRequest, StartInput
 from aot_layer.orchestrator import AoTOrchestrator
-from app.models import InterviewState
+from .models import InterviewState
 from layer2.adapter import CapabilityAdapter
 from layer2.ast_evaluator import ASTEvaluator
 from layer2.behavioral import BehavioralSignalTracker
 from layer2.models import Layer2Output
-from layer3.bias_classifier import BiasEnforcer
-from layer3.fallback import SafeQuestionPipeline
 from layer3.integrity import BehavioralIntegrityEngine
 from layer3.models import IntegrityInput
 from layer5.aggregator import AggregationEngine
@@ -51,6 +49,9 @@ def should_end_interview(state: InterviewState) -> bool:
 
 class LiveInterviewRuntime:
     def __init__(self, config: AoTConfig | None = None, repository: CandidateRepository | None = None) -> None:
+        from layer3.bias_classifier import BiasEnforcer
+        from layer3.fallback import SafeQuestionPipeline
+
         self._aot = AoTOrchestrator(config=config or AoTConfig())
         self._safe_pipeline = SafeQuestionPipeline(bias_enforcer=BiasEnforcer())
 

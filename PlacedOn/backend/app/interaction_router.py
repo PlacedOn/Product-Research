@@ -8,9 +8,9 @@ from typing import Any
 from fastapi import APIRouter, Request, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
-from app.live_runtime import LiveInterviewRuntime
-from app.models import InterviewState
-from app.tts_service import MacTTSService, TTSServiceError
+from .live_runtime import LiveInterviewRuntime
+from .models import InterviewState
+from .tts_service import MacTTSService, TTSServiceError
 
 CODE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 if CODE_ROOT not in sys.path:
