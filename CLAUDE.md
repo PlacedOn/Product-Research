@@ -9,16 +9,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Active implementation lives in:**
 - `PlacedOn/backend/` — FastAPI server (Python), the core interview engine
 - `PlacedOn/interaction_layer/` — Real-time voice/session/turn orchestration layer
+- `PlacedOn/aot_layer/` — Atom-of-thought interview decomposition and judge loop
+- `PlacedOn/layer2/` — Lower-level evaluation and adapter runtime
+- `PlacedOn/layer3/` — Bias and integrity checks
+- `PlacedOn/layer5/` — Aggregation and rendering runtime
 - No active frontend is currently checked into the repo root code tree.
 
-Documentation (strategy, specs, research) lives in `PlacedOn-Research/product/`, `PlacedOn-Research/business/`, `PlacedOn-Research/research/`, `PlacedOn-Research/Markovian-Reasoning/`.
+Documentation (strategy, specs, research, and reference material) lives across `PlacedOn-Research/product/`, `PlacedOn-Research/business/`, `PlacedOn-Research/research/`, `PlacedOn-Research/Markovian-Reasoning/`, `PlacedOn-Research/docs/`, `PlacedOn-Research/Inspo/`, `PlacedOn-Research/problems/`, `PlacedOn-Research/personas/`, and the top-level reference docs in `PlacedOn-Research/`.
 
 ## Development Commands
 
 ### Backend (FastAPI)
 
 ```bash
-cd PlacedOn/backend
+PYTHONPATH=PlacedOn uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
@@ -26,17 +33,14 @@ pip install -r requirements.txt
 redis-server
 # or: docker run --rm -p 6379:6379 redis:7
 
-# Run server
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
 # Run all tests
-python3 -m pytest -q
+PYTHONPATH=PlacedOn python3 -m pytest PlacedOn/backend/tests -q
 
 # Run a single test file
-python3 -m pytest tests/test_websocket.py -q
+PYTHONPATH=PlacedOn python3 -m pytest PlacedOn/backend/tests/test_websocket.py -q
 
 # Manual WebSocket test client
-python3 manual_ws_client.py --url http://127.0.0.1:8000 --interview-id demo-1
+PYTHONPATH=PlacedOn python3 PlacedOn/backend/manual_ws_client.py --url http://127.0.0.1:8000 --interview-id demo-1
 ```
 
 Environment variables (all optional, have defaults):
@@ -104,6 +108,8 @@ No active frontend is currently checked into the repo root code tree. If a front
 **LLM backend is Ollama (local), not OpenAI** — The current implementation calls a local Ollama instance with `llama3`. The product spec targets OpenAI GPT-4o-mini, but the implementation uses Ollama for development.
 
 **The interaction router imports from both `PlacedOn/backend/` and `PlacedOn/interaction_layer/`** using sys.path manipulation. The root of the repo must be in PYTHONPATH or the server must be run from the repo root.
+
+The `aot_layer/`, `layer2/`, `layer3/`, and `layer5/` packages are also part of the checked-in runtime tree and should be treated as live implementation modules when documenting or running the split repo.
 
 ## Product Documentation (for context)
 
