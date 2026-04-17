@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Active implementation lives in:**
 - `PlacedOn/backend/` — FastAPI server (Python), the core interview engine
 - `PlacedOn/interaction_layer/` — Real-time voice/session/turn orchestration layer
-- `PlacedOn/pre-interview/` — React + Vite + Tailwind frontend (pre-interview screen, Gemini API)
+- No active frontend is currently checked into the repo root code tree.
 
 Documentation (strategy, specs, research) lives in `PlacedOn-Research/product/`, `PlacedOn-Research/business/`, `PlacedOn-Research/research/`, `PlacedOn-Research/Markovian-Reasoning/`.
 
@@ -45,17 +45,6 @@ REDIS_URL=redis://localhost:6379/0
 SESSION_TTL_SECONDS=1800
 STREAM_DELAY_SECONDS=0.05
 INITIAL_QUESTION="Tell me about a backend system you designed recently."
-```
-
-### Frontend (pre-interview screen)
-
-```bash
-cd PlacedOn/pre-interview
-npm install
-# Set GEMINI_API_KEY in .env.local
-npm run dev        # runs on port 3000
-npm run build
-npm run lint       # tsc --noEmit
 ```
 
 ## Code Architecture
@@ -102,9 +91,9 @@ Sits above the backend. Handles real-time voice I/O, does NOT do reasoning. Comp
 - `monitoring/presence.py` — Camera/tab/latency presence snapshots.
 - `error_handling/recovery.py` — Silence and low-confidence recovery actions.
 
-### Frontend (`PlacedOn/pre-interview/src/`)
+### Frontend
 
-React + Vite + Tailwind CSS v4. Uses Gemini API (`@google/genai`) directly from client. Connects to backend at `http://localhost:8000` (CORS configured for port 3000). Uses `lucide-react` for icons and `motion` for animations.
+No active frontend is currently checked into the repo root code tree. If a frontend is added back later, document it here with the current checked-in path and commands.
 
 ## Important Architectural Notes
 
