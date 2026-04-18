@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router';
 import { 
   Sparkles, ChevronRight, User,
   Clock, Briefcase, Zap, Star, Shield, ArrowUpRight, 
-  MapPin, CheckCircle2, TrendingUp, Calendar, ArrowRight, Activity, ZapOff, Check, AlertCircle, Play
+  MapPin, CheckCircle2, TrendingUp, Calendar, ArrowRight, Activity, ZapOff, Check, AlertCircle, Play,
+  Search
 } from 'lucide-react';
 
 export function UserDashboard() {
@@ -11,11 +12,25 @@ export function UserDashboard() {
 
   return (
     <>
-      {/* Top Bento Grid: AI Matchmaker & Living Profile */}
+      {/* Global Search Bar (Pill style) */}
+      <div className="mb-10 flex justify-center w-full z-20 relative">
+        <div className="flex items-center w-full max-w-2xl bg-white rounded-full p-2 shadow-[0_16px_40px_rgba(30,35,60,0.08)] transition-transform focus-within:scale-[1.01] duration-300">
+          <input 
+            type="text"
+            placeholder="Search companies, roles..."
+            className="flex-1 bg-transparent border-none outline-none pl-6 pr-4 py-3 text-[18px] font-medium text-[#1F2430] placeholder:text-[#1F2430]/40 font-[Manrope,sans-serif]"
+          />
+          <button className="w-14 h-14 rounded-full bg-[#2D2A26] hover:bg-[#1F2430] transition-colors flex items-center justify-center text-white shadow-md flex-shrink-0">
+            <Search className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* Top Bento Grid: AI Matchmaker */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
         
-        {/* Hero 1: AI Matchmaker (Left) */}
-          <div className="lg:col-span-7 relative overflow-hidden rounded-[2.5rem] glass-card p-8 md:p-10 flex flex-col justify-between group">
+        {/* Hero 1: AI Matchmaker (Full width) */}
+          <div className="lg:col-span-12 relative overflow-hidden rounded-[2.5rem] glass-card p-8 md:p-10 flex flex-col justify-between group">
             {/* Glowing Orb */}
             <div className="absolute top-1/2 left-[70%] -translate-y-1/2 w-[350px] h-[350px] bg-gradient-to-tr from-[#3E63F5] to-[#B392F0] rounded-full blur-[80px] opacity-30 animate-pulse-glow pointer-events-none" />
             
@@ -88,83 +103,6 @@ export function UserDashboard() {
                 <div className="w-full h-2 rounded-full bg-[#1F2430]/5 mb-2 overflow-hidden"><div className="w-[85%] h-full bg-[#1F2430]/20 rounded-full" /></div>
                 <div className="w-full h-2 rounded-full bg-[#1F2430]/5 overflow-hidden"><div className="w-[60%] h-full bg-[#1F2430]/20 rounded-full" /></div>
               </div>
-            </div>
-          </div>
-
-          {/* Hero 2: The Living AI Profile (Right) */}
-          <div className="lg:col-span-5 relative overflow-hidden rounded-[2.5rem] glass-dark p-8 md:p-10 flex flex-col justify-between group">
-            {/* Top breaking badge */}
-            <div className="absolute top-0 right-8 px-4 py-1.5 rounded-b-xl bg-[#3E63F5] text-white text-[12px] font-bold tracking-wide uppercase shadow-[0_8px_16px_rgba(62,99,245,0.4)] flex items-center gap-1.5 z-20">
-              <Sparkles className="w-3.5 h-3.5" /> Top 5% Tier
-            </div>
-            
-            {/* Dark Mode Glowing Orbs inside the card */}
-            <div className="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-tr from-[#FF7A00] to-[#FF007A] rounded-full blur-[90px] opacity-20 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-[250px] h-[250px] bg-gradient-to-tr from-[#3E63F5] to-[#B392F0] rounded-full blur-[80px] opacity-20 pointer-events-none" />
-            
-            <div className="relative z-10 flex items-center justify-between mb-8">
-              <div>
-                <h3 className="font-[Manrope,sans-serif] text-[22px] font-bold text-white mb-1">Your AI Profile</h3>
-                <p className="text-[14px] font-medium text-white/50 flex items-center gap-1.5">
-                  <Shield className="w-3.5 h-3.5" /> Immutable truth, verified by AI.
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl flex items-center justify-center shadow-inner">
-                <User className="w-5 h-5 text-white/80" />
-              </div>
-            </div>
-
-            {/* Profile Stats / Radar Abstraction */}
-            <div className="relative z-10 flex-1 flex flex-col justify-center gap-4 mb-8">
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#3E63F5]/20 flex items-center justify-center text-[#8C9EFF]">
-                    <Activity className="w-4 h-4" />
-                  </div>
-                  <span className="text-[14px] font-bold text-white">Frontend Dev</span>
-                </div>
-                <span className="text-[13px] font-bold text-[#8C9EFF]">Expert</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#10B981]/20 flex items-center justify-center text-[#34D399]">
-                    <Check className="w-4 h-4" />
-                  </div>
-                  <span className="text-[14px] font-bold text-white">System Design</span>
-                </div>
-                <span className="text-[13px] font-bold text-[#34D399]">Strong</span>
-              </div>
-
-              {/* The "Weakness" that needs challenging */}
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md relative overflow-hidden group/weakness">
-                {/* Subtle red glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4183D]/10 to-transparent translate-x-[-100%] group-hover/weakness:animate-[shimmer_2s_infinite]" />
-                <div className="relative z-10 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#D4183D]/20 flex items-center justify-center text-[#F43F5E]">
-                    <AlertCircle className="w-4 h-4" />
-                  </div>
-                  <span className="text-[14px] font-bold text-white">Team Play</span>
-                </div>
-                <span className="relative z-10 text-[13px] font-bold text-[#F43F5E]">Developing</span>
-              </div>
-            </div>
-
-            {/* Challenge Button (The key interaction) */}
-            <div className="relative z-10 pt-5 border-t border-white/10">
-              <button className="w-full relative group/btn px-6 py-4 rounded-2xl bg-white text-[#1F2430] font-bold text-[15px] shadow-[0_8px_24px_rgba(255,255,255,0.15)] hover:bg-[#F3F2F0] hover:-translate-y-1 transition-all flex items-center justify-center gap-2 overflow-hidden">
-                <div className="absolute inset-0 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-[#1F2430]/5 to-transparent skew-x-[-20deg]" />
-                <Play className="w-4 h-4 fill-current" />
-                Challenge a Rating
-              </button>
-              <p className="text-[12px] text-center font-medium text-white/40 mt-3">
-                Take a 5-minute micro-interview to upgrade.
-              </p>
-            </div>
-            
-            {/* Floating Decorative Element */}
-            <div className="absolute right-[-20px] top-[40%] w-16 h-16 rounded-[1rem] bg-white/10 border border-white/20 backdrop-blur-2xl shadow-2xl flex items-center justify-center animate-float-fast rotate-[15deg]">
-              <div className="w-8 h-8 rounded-full border-[2px] border-[#FF7A00] border-t-transparent animate-spin" style={{ animationDuration: '3s' }} />
             </div>
           </div>
         </div>
