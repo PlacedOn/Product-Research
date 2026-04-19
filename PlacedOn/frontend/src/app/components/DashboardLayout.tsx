@@ -6,10 +6,10 @@ export function DashboardLayout() {
   const navigate = useNavigate();
 
   const dockItems = [
-    { icon: <Home size={22} strokeWidth={2.5} />, label: 'Home', onClick: () => navigate('/') },
-    { icon: <Briefcase size={22} strokeWidth={2.5} />, label: 'Applications', onClick: () => navigate('/applications') },
-    { icon: <User size={22} strokeWidth={2.5} />, label: 'Profile', onClick: () => navigate('/profile') },
-    { icon: <Settings size={22} strokeWidth={2.5} />, label: 'Settings', onClick: () => navigate('/settings') },
+    { icon: <Home size={22} strokeWidth={2.5} />, label: 'Home', onClick: () => navigate('/candidate') },
+    { icon: <Briefcase size={22} strokeWidth={2.5} />, label: 'Applications', onClick: () => navigate('/candidate/applications') },
+    { icon: <User size={22} strokeWidth={2.5} />, label: 'Profile', onClick: () => navigate('/candidate/profile') },
+    { icon: <Settings size={22} strokeWidth={2.5} />, label: 'Settings', onClick: () => navigate('/candidate/settings') },
   ];
 
   return (
@@ -112,7 +112,7 @@ export function DashboardLayout() {
               <Bell className="w-5 h-5" />
               <span className="absolute top-3 right-3 w-2 h-2 bg-[#3E63F5] rounded-full shadow-[0_0_8px_rgba(62,99,245,0.8)] animate-pulse" />
             </button>
-            <button className="w-11 h-11 rounded-[1.25rem] glass-card flex items-center justify-center text-[#1F2430]/60 hover:text-[#1F2430] hover:bg-white/80 transition-all hover:-translate-y-0.5 relative" onClick={() => navigate('/settings')}>
+            <button className="w-11 h-11 rounded-[1.25rem] glass-card flex items-center justify-center text-[#1F2430]/60 hover:text-[#1F2430] hover:bg-white/80 transition-all hover:-translate-y-0.5 relative" onClick={() => navigate('/candidate/settings')}>
               <Settings className="w-5 h-5" />
             </button>
           </div>
