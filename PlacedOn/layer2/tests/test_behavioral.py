@@ -9,9 +9,9 @@ def test_stable_answers_yield_higher_consistency() -> None:
     tracker = BehavioralSignalTracker()
 
     history = [
-        asyncio.run(adapter.process("I use cache ttl and invalidation with redis.")),
-        asyncio.run(adapter.process("I use cache ttl and invalidation with redis for read traffic.")),
-        asyncio.run(adapter.process("I use cache ttl and invalidation to keep reads consistent.")),
+        asyncio.run(adapter.process("I took ownership of the issue and aligned the team on a recovery plan.")),
+        asyncio.run(adapter.process("I owned the problem, coordinated stakeholders, and kept the recovery plan moving.")),
+        asyncio.run(adapter.process("I followed through on the plan and kept everyone aligned until the issue closed.")),
     ]
 
     signals = asyncio.run(tracker.track(history))
@@ -23,9 +23,9 @@ def test_sudden_semantic_change_raises_drift() -> None:
     tracker = BehavioralSignalTracker()
 
     history = [
-        asyncio.run(adapter.process("cache ttl invalidation redis")),
-        asyncio.run(adapter.process("cache key strategy for throughput")),
-        asyncio.run(adapter.process("I like cooking and football stories unrelated to backend.")),
+        asyncio.run(adapter.process("I kept the team aligned during the recovery and followed through on the plan.")),
+        asyncio.run(adapter.process("I owned the risk, checked assumptions, and kept communication clear.")),
+        asyncio.run(adapter.process("I like cooking and football stories unrelated to work.")),
     ]
 
     signals = asyncio.run(tracker.track(history))

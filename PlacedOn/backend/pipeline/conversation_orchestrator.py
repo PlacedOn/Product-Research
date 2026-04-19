@@ -62,6 +62,6 @@ job={job.model_dump()}
     company = job.company.strip() or "the company"
     return (
         f"Hi {candidate.name}, welcome. We'll walk through your experience for the "
-        f"{job.role} role at {company}, then explore a few technical topics. "
+        f"{job.role} role at {company}, then explore a few real work situations and decision points. "
         "To start, could you briefly introduce yourself?"
     )

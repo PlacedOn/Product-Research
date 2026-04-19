@@ -6,6 +6,24 @@ from sklearn.linear_model import LogisticRegression
 from layer3.config import Layer3Config
 from layer3.models import BiasAssessment
 
+_HIGH_RISK_PATTERNS = [
+    "how old",
+    "year were you born",
+    "married",
+    "relationship status",
+    "pregnant",
+    "children soon",
+    "religion",
+    "nationality",
+    "parents from",
+    "caste",
+    "ethnic background",
+    "gender identity",
+    "political party",
+    "disabilities",
+    "medical condition",
+]
+
 
 class BiasEnforcer:
     def __init__(self, config: Layer3Config | None = None) -> None:
@@ -30,6 +48,9 @@ class BiasEnforcer:
 
         matrix = self._vectorizer.transform([text])
         probability = float(self._model.predict_proba(matrix)[0][self._unsafe_index])
+        lowered = text.lower()
+        if any(pattern in lowered for pattern in _HIGH_RISK_PATTERNS):
+            probability = max(probability, 0.9)
         probability = round(max(0.0, min(probability, 1.0)), 4)
 
         return BiasAssessment(
@@ -39,6 +60,26 @@ class BiasEnforcer:
 
     def _train(self) -> None:
         safe_questions = [
+            "Tell me about a time you handled a difficult stakeholder conversation.",
+            "Describe a situation where you had to rebuild trust after a mistake.",
+            "Walk me through a time you showed ownership under pressure.",
+            "How do you respond when feedback challenges your approach?",
+            "Tell me about a conflict within your team and how you resolved it.",
+            "Describe a setback that tested your resilience.",
+            "How do you calibrate your confidence when you are unsure?",
+            "Tell me about a time you had to influence without formal authority.",
+            "How do you decide when to ask for help versus push through yourself?",
+            "Describe a decision where you balanced speed against quality.",
+            "Tell me about a project where you learned something unexpectedly.",
+            "How do you adapt when priorities change late in a project?",
+            "Describe a time you coached or mentored someone.",
+            "How do you keep communication clear across different stakeholders?",
+            "Tell me about a moment when you had to de-escalate tension on a team.",
+            "Describe how you reflect after a failure or missed target.",
+            "How do you make sure your work is reliable and repeatable?",
+            "Tell me about a time you had to make a judgment call with incomplete data.",
+            "How do you keep yourself accountable for outcomes?",
+            "Describe a situation where empathy changed how you handled a problem.",
             "Explain how you would optimize cache invalidation in a distributed system.",
             "How would you design a scalable queue processing architecture?",
             "Describe trade-offs between hash maps and balanced trees.",
@@ -62,6 +103,16 @@ class BiasEnforcer:
             "Are you pregnant or planning a pregnancy?",
             "Which political party do you support?",
             "What is your caste or ethnic background?",
+            "Do you have any chronic health issues that would affect attendance?",
+            "Are you neurodivergent or autistic?",
+            "Would your religion prevent you from working certain days?",
+            "What country are you really from?",
+            "Do you plan to get married soon?",
+            "Who do you live with and what is your family situation?",
+            "Are you taking medication for any condition?",
+            "Do you identify as transgender?",
+            "How much childcare support do you have at home?",
+            "Would your caste create issues with this client-facing role?",
         ]
 
         labels = [0] * len(safe_questions) + [1] * len(unsafe_questions)

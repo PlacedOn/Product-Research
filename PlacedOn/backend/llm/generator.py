@@ -5,11 +5,14 @@ from typing import Any
 from backend.llm.ollama_client import call_ollama
 from backend.schemas.generator_schema import GeneratorInput, PlanOutput, QuestionOutput
 from backend.utils.json_utils import extract_json
+from skill_taxonomy import display_skill, is_behavioral_skill
 
 _GENERATOR_MODEL = "llama3:8b-instruct-q4_0"
 
 
-def _default_question_type(action: str) -> str:
+def _default_question_type(action: str, skill: str) -> str:
+    if is_behavioral_skill(skill):
+        return "behavioral"
     if action == "challenge":
         return "system_design"
     if action == "help":
@@ -65,24 +68,45 @@ def _looks_like_interviewer_question(text: str) -> bool:
 
 
 def _fallback_prompt_variants(action: str, skill: str) -> list[str]:
+    label = display_skill(skill)
+    if is_behavioral_skill(skill):
+        prompts: dict[str, list[str]] = {
+            "help": [
+                f"Let's make this concrete. Tell me about a real situation where you showed {label}. What happened?",
+                f"Take one example that shows {label}. What was the situation, what did you do, and what changed?",
+                f"Pick a specific moment related to {label}. Walk me through it step by step.",
+            ],
+            "probe": [
+                f"Stay with that example on {label}. How did you decide what to do, and what signals guided you?",
+                f"Go one level deeper on {label}. What trade-offs or tensions did you have to manage?",
+                f"Walk me through how you handled {label} in practice and what you learned afterward.",
+            ],
+            "challenge": [
+                f"Imagine a harder version of that {label} situation with time pressure and competing stakeholders. How would you handle it?",
+                f"Defend your approach to {label} when the situation becomes more ambiguous or high-stakes.",
+                f"If your first attempt at {label} failed, what would you change next and why?",
+            ],
+        }
+        return prompts.get(action, [f"Tell me about a real example that shows {label}."])
+
     prompts: dict[str, list[str]] = {
         "help": [
-            f"Let's simplify this with one concrete Python example. How would you approach it step by step?",
-            f"No rush. Pick one {skill} scenario and walk me through your solution in clear steps.",
-            f"Let's break this down. For {skill}, what is step 1, step 2, and step 3 in your approach?",
+            f"Let's simplify this with one concrete example. How would you approach {label} step by step?",
+            f"No rush. Pick one {label} scenario and walk me through your solution in clear steps.",
+            f"Let's break this down. For {label}, what is step 1, step 2, and step 3 in your approach?",
         ],
         "probe": [
-            f"Let's go one level deeper on {skill}. Can you explain your approach step by step?",
-            f"In {skill}, what trade-off guides your approach? Explain your steps clearly.",
-            f"Walk me through your {skill} approach from first decision to final validation.",
+            f"Let's go one level deeper on {label}. Can you explain your approach step by step?",
+            f"In {label}, what trade-off guides your approach? Explain your steps clearly.",
+            f"Walk me through your {label} approach from first decision to final validation.",
         ],
         "challenge": [
-            f"Let's stress-test your {skill} approach under high scale. What are your exact steps?",
-            f"Assume one part of your {skill} design fails. How would you adapt, step by step?",
-            f"Defend your {skill} approach against latency and reliability constraints, step by step.",
+            f"Let's stress-test your {label} approach under realistic constraints. What are your exact steps?",
+            f"Assume one part of your {label} design fails. How would you adapt, step by step?",
+            f"Defend your {label} approach against reliability and trade-off constraints, step by step.",
         ],
     }
-    return prompts.get(action, [f"Let's continue with {skill}. Explain your approach step by step."])
+    return prompts.get(action, [f"Let's continue with {label}. Explain your approach step by step."])
 
 
 def _fallback_question(
@@ -112,7 +136,7 @@ def _fallback_question(
         question=question,
         skill=skill,
         difficulty=difficulty,
-        type=_default_question_type(mode),
+        type=_default_question_type(mode, skill),
     )
 
 
@@ -132,7 +156,7 @@ async def generate_question(
     mode = str(plan_payload.get("action") or parsed_context.plan.action)
     target_skill = str(plan_payload.get("target_skill") or parsed_context.plan.target_skill)
     difficulty = str(plan_payload.get("difficulty") or parsed_context.plan.difficulty)
-    default_type = _default_question_type(mode)
+    default_type = _default_question_type(mode, target_skill)
     prompt = f"""
 Generate one interview question in JSON.
 mode: {mode}

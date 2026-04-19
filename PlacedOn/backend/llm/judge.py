@@ -33,6 +33,15 @@ _MECHANISM_MARKERS = (
     "lock",
     "queue",
     "transaction",
+    "asked",
+    "aligned",
+    "followed up",
+    "listened",
+    "coached",
+    "delegated",
+    "de-escalated",
+    "prioritized",
+    "validated",
 )
 
 _TRADEOFF_MARKERS = (
@@ -47,6 +56,12 @@ _TRADEOFF_MARKERS = (
     "stale",
     "memory",
     "edge case",
+    "stakeholder",
+    "deadline",
+    "pressure",
+    "constraint",
+    "conflict",
+    "balance",
 )
 
 _TOOL_MARKERS = (
@@ -58,6 +73,19 @@ _TOOL_MARKERS = (
     "mysql",
     "memcached",
     "elasticsearch",
+    "slack",
+    "jira",
+    "1:1",
+    "retro",
+)
+
+_EXAMPLE_MARKERS = (
+    "for example",
+    "for instance",
+    "when i",
+    "one time",
+    "in that situation",
+    "the result",
 )
 
 
@@ -66,7 +94,10 @@ def build_judge_prompt(question: str, answer: str, prompt_template: str | None =
         return prompt_template.format(question=question, answer=answer)
 
     return f"""
-Evaluate the technical answer strictly.
+Evaluate the interview answer strictly.
+The answer may be technical or behavioral.
+Do not reward buzzwords, personality claims, or confidence style without evidence.
+Concrete examples, mechanisms, reasoning, and trade-offs should raise the score.
 Keyword-only answers without explanation must score below 0.4.
 
 Return JSON only:
@@ -99,10 +130,11 @@ def _analyze_answer(answer: str) -> dict[str, bool | int]:
     has_mechanism = any(marker in normalized for marker in _MECHANISM_MARKERS)
     has_tradeoff = any(marker in normalized for marker in _TRADEOFF_MARKERS)
     mentions_tool = any(marker in normalized for marker in _TOOL_MARKERS)
+    has_example = any(marker in normalized for marker in _EXAMPLE_MARKERS)
 
     very_short = token_count <= 3
-    keyword_only = token_count <= 6 and not has_explanation and not has_mechanism
-    vague = token_count < 12 and not has_explanation and not has_mechanism
+    keyword_only = token_count <= 6 and not has_explanation and not has_mechanism and not has_example
+    vague = token_count < 12 and not has_explanation and not has_mechanism and not has_example
 
     return {
         "token_count": token_count,
@@ -110,6 +142,7 @@ def _analyze_answer(answer: str) -> dict[str, bool | int]:
         "has_mechanism": has_mechanism,
         "has_tradeoff": has_tradeoff,
         "mentions_tool": mentions_tool,
+        "has_example": has_example,
         "very_short": very_short,
         "keyword_only": keyword_only,
         "vague": vague,
@@ -130,7 +163,11 @@ def _clarity_from_signals(signals: dict[str, bool | int]) -> str:
     token_count = int(signals["token_count"])
     if bool(signals["very_short"]) or bool(signals["keyword_only"]) or bool(signals["vague"]):
         return "poor"
-    if bool(signals["has_explanation"]) and bool(signals["has_mechanism"]) and token_count >= 12:
+    if (
+        bool(signals["has_explanation"])
+        and (bool(signals["has_mechanism"]) or bool(signals["has_example"]))
+        and token_count >= 12
+    ):
         return "clear"
     return "okay"
 
@@ -139,7 +176,11 @@ def _intent_from_signals(signals: dict[str, bool | int], score: float) -> str:
     if bool(signals["very_short"]) or bool(signals["keyword_only"]):
         return "no_understanding"
 
-    has_substance = bool(signals["has_explanation"]) or bool(signals["has_mechanism"])
+    has_substance = (
+        bool(signals["has_explanation"])
+        or bool(signals["has_mechanism"])
+        or bool(signals["has_example"])
+    )
     if has_substance and score >= 0.72 and (bool(signals["has_tradeoff"]) or int(signals["token_count"]) >= 18):
         return "clear_understanding"
 
@@ -165,24 +206,26 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
             score = min(score, 0.25)
         else:
             score = min(max(score, 0.25), 0.35)
-        weaknesses.append("Answer is too short to demonstrate technical understanding.")
+        weaknesses.append("Answer is too short to demonstrate substantive understanding.")
     elif bool(signals["keyword_only"]):
         if bool(signals["mentions_tool"]):
             score = min(score, 0.35)
-            weaknesses.append("Mentions keywords without explaining mechanism or reasoning.")
+            weaknesses.append("Mentions keywords without explaining mechanism, example, or reasoning.")
         else:
             score = min(max(score, 0.25), 0.35)
-            weaknesses.append("Generic statement lacks technical mechanism and reasoning.")
+            weaknesses.append("Generic statement lacks concrete evidence, mechanism, or reasoning.")
     elif bool(signals["vague"]):
         score = min(score, 0.50)
 
     # Mechanism-bearing answers should not collapse into shallow bands even if model is overly strict.
-    if bool(signals["has_mechanism"]) and int(signals["token_count"]) >= 6 and score < 0.4:
+    if (bool(signals["has_mechanism"]) or bool(signals["has_example"])) and int(signals["token_count"]) >= 6 and score < 0.4:
         score = 0.45
 
     # Reward depth indicators with small nudges to avoid brittle rubric-only behavior.
     if bool(signals["has_explanation"]) and bool(signals["has_mechanism"]):
         score += 0.04
+    if bool(signals["has_example"]):
+        score += 0.03
     if bool(signals["has_tradeoff"]):
         score += 0.05
     if int(signals["token_count"]) >= 35 and bool(signals["has_explanation"]):
@@ -198,8 +241,8 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
         confidence = min(confidence, _WEAK_CONFIDENCE_MAX)
         if "How the approach works" not in missing:
             missing.append("How the approach works")
-        if "Why this approach is appropriate" not in missing:
-            missing.append("Why this approach is appropriate")
+        if "Concrete example or reasoning" not in missing:
+            missing.append("Concrete example or reasoning")
     elif score < 0.7:
         confidence = _clip(confidence, _MEDIUM_CONFIDENCE_MIN, _MEDIUM_CONFIDENCE_MAX)
     elif score >= 0.85:
@@ -240,8 +283,8 @@ def _fallback_judge_output(error: Exception) -> JudgeOutput:
             f"Parsing error: {type(error).__name__}",
         ],
         missing_concepts=[
-            "Clear technical explanation",
-            "Reasoning and trade-offs",
+            "Clear explanation of the approach",
+            "Evidence, reasoning, and trade-offs",
         ],
         intent="no_understanding",
         depth="shallow",

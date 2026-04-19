@@ -3,6 +3,9 @@ import re
 from layer2.config import Layer2Config
 from layer2.embedding import cosine_similarity, embed_text
 from layer2.models import AdapterOutput, SkillState
+from skill_taxonomy import SKILL_KEYWORDS, SKILL_PROMPTS, signal_terms
+
+_SIGNAL_TERMS = signal_terms()
 
 
 class CapabilityAdapter:
@@ -54,11 +57,12 @@ class CapabilityAdapter:
         return SkillState(score=round(new_score, 4), uncertainty=round(uncertainty, 4))
 
     def _confidence(self, text: str) -> float:
-        tokens = re.findall(r"[a-zA-Z0-9_]+", text)
+        lowered = text.lower()
+        tokens = re.findall(r"[a-zA-Z0-9_]+", lowered)
         length_score = min(len(tokens) / 40.0, 1.0)
         clarity_score = 1.0 if text.strip().endswith((".", "!", "?")) else 0.8
-        technical_terms = len(re.findall(r"\b(cache|latency|complexity|hash|scale|queue|index)\b", text.lower()))
-        keyword_score = min(technical_terms / 4.0, 1.0)
+        signal_hits = sum(1 for term in _SIGNAL_TERMS if term in lowered)
+        keyword_score = min(signal_hits / 6.0, 1.0)
         return round(max(0.05, min((length_score * 0.5) + (clarity_score * 0.2) + (keyword_score * 0.3), 1.0)), 4)
 
     def _structural_score(self, text: str) -> float:
@@ -68,20 +72,10 @@ class CapabilityAdapter:
         return round(min((has_structure * 0.55) + (has_signal_words * 0.45), 1.0), 4)
 
     def _keyword_hits(self, text: str, skill: str) -> float:
-        skill_keywords = {
-            "caching": ["cache", "ttl", "invalidation", "redis", "cache key"],
-            "scalability": ["scale", "throughput", "shard", "partition", "latency"],
-            "dsa": ["array", "hash", "tree", "graph", "complexity"],
-        }
-        keywords = skill_keywords.get(skill, [skill])
+        keywords = SKILL_KEYWORDS.get(skill, [skill])
         text_lower = text.lower()
         hits = sum(1 for keyword in keywords if keyword in text_lower)
         return min(hits / max(len(keywords), 1), 1.0)
 
     def _skill_prompt(self, skill: str) -> str:
-        prompts = {
-            "caching": "design cache invalidation ttl consistency redis key strategy",
-            "scalability": "horizontal scalability throughput partitioning bottleneck reliability",
-            "dsa": "data structures algorithms complexity optimization hash tree graph",
-        }
-        return prompts.get(skill, skill)
+        return SKILL_PROMPTS.get(skill, skill)

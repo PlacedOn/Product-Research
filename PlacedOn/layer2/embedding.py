@@ -1,24 +1,52 @@
-import hashlib
 import math
 import re
+from collections import Counter
+from hashlib import blake2b
+
+_DIMENSION = 64
+
+_ALIASES = {
+    "persisted": "persistent",
+    "persevered": "persistent",
+    "ownership": "owned",
+    "owned": "owned",
+    "leader": "leadership",
+    "leading": "leadership",
+    "collaborative": "collaboration",
+    "collaborated": "collaboration",
+    "teammate": "team",
+    "stakeholders": "stakeholder",
+    "resilient": "resilience",
+    "stressful": "stress",
+    "learned": "learning",
+    "curious": "curiosity",
+    "validated": "validate",
+}
 
 
 def _tokens(text: str) -> list[str]:
-    return re.findall(r"[a-zA-Z0-9_]+", text.lower())
+    tokens = re.findall(r"[a-zA-Z0-9_]+", text.lower())
+    normalized = [_ALIASES.get(token, token) for token in tokens]
+    bigrams = [
+        f"{normalized[idx]}_{normalized[idx + 1]}"
+        for idx in range(len(normalized) - 1)
+    ]
+    return normalized + bigrams
 
 
 async def embed_text(text: str) -> list[float]:
     tokens = _tokens(text)
-    token_count = max(len(tokens), 1)
-    unique_count = max(len(set(tokens)), 1)
+    if not tokens:
+        return [0.0] * _DIMENSION
 
-    dimension = max(8, min(unique_count * 2 + (token_count % 5), 48))
-
-    values: list[float] = []
-    for idx in range(dimension):
-        digest = hashlib.sha256(f"{text}|{idx}".encode("utf-8")).hexdigest()
-        value = int(digest[:8], 16) / 0xFFFFFFFF
-        values.append((value * 2.0) - 1.0)
+    counts = Counter(tokens)
+    values = [0.0] * _DIMENSION
+    for token, count in counts.items():
+        digest = blake2b(token.encode("utf-8"), digest_size=8).digest()
+        bucket = int.from_bytes(digest[:4], "big") % _DIMENSION
+        sign = -1.0 if digest[4] % 2 else 1.0
+        weight = (1.0 + math.log1p(count)) * (1.35 if "_" in token else 1.0)
+        values[bucket] += sign * weight
 
     return _l2_normalize(values)
 

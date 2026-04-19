@@ -8,10 +8,10 @@ from layer2.models import Layer2Output
 
 async def _run_flow() -> tuple[Layer2Output, int]:
     answers = [
-        "I discuss cache ttl and invalidation policies.",
-        "I scale services using sharding and queue-based backpressure.",
+        "I owned a missed deadline and aligned stakeholders on the recovery plan.",
+        "Under pressure, I stayed calm, clarified priorities, and followed through every day.",
         "def f(items):\n    for x in items:\n        if x > 0:\n            return x\n    return None",
-        "I compare hash maps with trees using complexity trade-offs.",
+        "After the retro, I asked for feedback and changed the rollout checklist for the next launch.",
     ]
 
     adapter = CapabilityAdapter()
@@ -41,7 +41,7 @@ def test_full_flow_tracks_embeddings_and_behavior() -> None:
     output, code_hits = asyncio.run(_run_flow())
 
     assert output.embedding
-    assert "caching" in output.skills
+    assert "block_8_ownership" in output.skills
     assert output.behavioral_signals.confidence_signal > 0.0
     assert code_hits >= 1
     assert output.code_analysis is not None

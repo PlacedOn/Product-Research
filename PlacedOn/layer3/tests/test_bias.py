@@ -6,7 +6,7 @@ from layer3.bias_classifier import BiasEnforcer
 def test_safe_question_is_approved() -> None:
     classifier = BiasEnforcer()
     result = asyncio.run(
-        classifier.assess("Explain how you would optimize cache invalidation in a distributed system.")
+        classifier.assess("Tell me about a time you handled disagreement on your team and what you learned.")
     )
 
     assert 0.0 <= result.bias_score <= 1.0

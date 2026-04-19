@@ -10,9 +10,9 @@ def test_judge_returns_valid_structure(monkeypatch) -> None:
             {
                 "score": 0.74,
                 "confidence": 0.81,
-                "strengths": ["Clear trade-off articulation"],
-                "weaknesses": ["Missing failure-path detail"],
-                "missing_concepts": ["cache invalidation strategy"],
+                "strengths": ["Clear stakeholder reasoning"],
+                "weaknesses": ["Missing measurable outcome detail"],
+                "missing_concepts": ["specific result"],
             }
         )
 
@@ -20,8 +20,8 @@ def test_judge_returns_valid_structure(monkeypatch) -> None:
 
     result = asyncio.run(
         evaluate_answer(
-            question="How would you design a resilient cache layer?",
-            answer="I would use cache-aside with TTL and monitor hit ratio.",
+            question="Tell me about a time you handled disagreement on your team.",
+            answer="I listened first, surfaced the trade-offs, and aligned the team on one next step.",
         )
     )
 
@@ -66,8 +66,8 @@ def test_shallow_keyword_only_answer_is_capped(monkeypatch) -> None:
 
     result = asyncio.run(
         evaluate_answer(
-            question="How would you design caching?",
-            answer="Use Redis",
+            question="Tell me about your collaboration style.",
+            answer="I am collaborative.",
         )
     )
 
@@ -94,10 +94,11 @@ def test_tradeoff_rich_answer_can_be_upgraded(monkeypatch) -> None:
 
     result = asyncio.run(
         evaluate_answer(
-            question="How would you design caching?",
+            question="Tell me about a time you had to balance speed and quality.",
             answer=(
-                "I use cache-aside with TTL and invalidation hooks because stale reads can hurt correctness, "
-                "but shorter TTL increases load so I tune TTL by endpoint volatility and monitor hit ratio."
+                "When two teams wanted different launch dates, I aligned them around customer risk because rushing "
+                "would raise defect probability, but delaying too much would hurt revenue. I narrowed scope, "
+                "documented the trade-off, and we shipped three days later with no Sev-1 issues."
             ),
         )
     )
@@ -122,8 +123,8 @@ def test_basic_band_confidence_is_clamped(monkeypatch) -> None:
 
     result = asyncio.run(
         evaluate_answer(
-            question="How would you design caching?",
-            answer="I use Redis with TTL for frequently read data.",
+            question="How do you handle disagreement on a team?",
+            answer="I ask questions, summarize the disagreement, and agree on one next step.",
         )
     )
 

@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 from backend.pipeline.context_builder import build_context
 from backend.pipeline.conversation_orchestrator import generate_intro
@@ -34,42 +35,51 @@ def test_planner_returns_valid_plan(monkeypatch) -> None:
             {
                 "minimal_state": {
                     "last_score": 0.83,
-                    "topic": "caching",
                     "difficulty": "hard",
                 },
                 "candidate": {
                     "name": "A",
-                    "experience_years": 2,
-                    "skills": ["Node", "Caching"],
-                    "projects": ["Realtime API"],
+                    "experience_years": 5,
+                    "skills": ["Leadership", "Ownership"],
+                    "projects": ["Cross-functional launch"],
                     "education": "B.Tech",
                 },
                 "job": {
-                    "role": "Backend Engineer",
+                    "role": "Operations Manager",
                     "company": "PlacedOn",
                     "level": "mid",
-                    "required_skills": ["caching", "api design"],
+                    "required_skills": ["leadership", "ownership"],
+                    "preferred_skills": ["resilience"],
+                    "description": "Needs strong stakeholder management, ownership, and calm decision-making.",
                 },
-                "last_question": "How do you manage cache invalidation?",
-                "last_answer": "We use write-through and event-based invalidation.",
+                "last_question": "Tell me about a time you led through ambiguity.",
+                "last_answer": "I aligned the team, reset priorities, and kept stakeholders updated.",
                 "evaluation": {
                     "score": 0.83,
                     "confidence": 0.79,
-                    "strengths": ["trade-off clarity"],
+                    "strengths": ["clear stakeholder alignment"],
                     "weaknesses": ["none major"],
                     "missing_concepts": [],
+                    "intent": "clear_understanding",
+                    "depth": "strong",
+                    "clarity": "clear",
                 },
                 "interview_state": {
-                    "phase": "technical",
+                    "phase": "behavioral",
                     "history": [],
-                    "covered_skills": ["api design"],
-                    "current_focus": "caching",
+                    "covered_skills": ["block_8_ownership"],
+                    "current_focus": "",
+                    "skill_scores": {
+                        "block_6_leadership": 0.35,
+                        "block_8_ownership": 0.72,
+                        "block_5_resilience": 0.4,
+                    },
                 },
             }
         )
     )
     assert plan.action == "challenge"
-    assert plan.target_skill == "caching"
+    assert plan.target_skill in {"block_6_social", "block_6_leadership"}
     assert plan.difficulty == "hard"
 
 

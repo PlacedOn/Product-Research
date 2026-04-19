@@ -2,6 +2,7 @@ from typing import Any
 
 from backend.schemas.generator_schema import PlanOutput
 from backend.pipeline.jd_parser import build_skill_profile
+from skill_taxonomy import JD_SKILL_MAP
 
 
 def _to_float(value: Any, default: float = 0.5) -> float:
@@ -9,6 +10,11 @@ def _to_float(value: Any, default: float = 0.5) -> float:
         return float(value)
     except (TypeError, ValueError):
         return default
+
+
+def _normalize_skill(value: Any) -> str:
+    normalized = str(value or "").strip().lower()
+    return JD_SKILL_MAP.get(normalized, normalized)
 
 
 def _score_to_mode(score: float) -> tuple[str, str, str]:
@@ -33,21 +39,21 @@ def _difficulty_from_depth(depth: str) -> str:
 
 def _pick_target_skill(context: dict[str, Any], fallback: str) -> str:
     interview_state = context.get("interview_state") or {}
-    current_focus = str(interview_state.get("current_focus") or "").strip().lower()
+    current_focus = _normalize_skill(interview_state.get("current_focus"))
     if current_focus:
         return current_focus
 
-    covered = {str(skill).strip().lower() for skill in interview_state.get("covered_skills", [])}
+    covered = {_normalize_skill(skill) for skill in interview_state.get("covered_skills", [])}
 
     candidate = context.get("candidate") or {}
     for skill in candidate.get("skills", []):
-        normalized = str(skill).strip().lower()
+        normalized = _normalize_skill(skill)
         if normalized and normalized not in covered:
             return normalized
 
     job = context.get("job") or {}
     for skill in job.get("required_skills", []):
-        normalized = str(skill).strip().lower()
+        normalized = _normalize_skill(skill)
         if normalized and normalized not in covered:
             return normalized
 
@@ -59,18 +65,18 @@ def _skills_from_context(context: dict[str, Any]) -> list[str]:
 
     candidate = context.get("candidate") or {}
     for skill in candidate.get("skills", []):
-        normalized = str(skill).strip().lower()
+        normalized = _normalize_skill(skill)
         if normalized and normalized not in ordered_skills:
             ordered_skills.append(normalized)
 
     job = context.get("job") or {}
     for skill in job.get("required_skills", []):
-        normalized = str(skill).strip().lower()
+        normalized = _normalize_skill(skill)
         if normalized and normalized not in ordered_skills:
             ordered_skills.append(normalized)
 
     for skill in job.get("preferred_skills", []):
-        normalized = str(skill).strip().lower()
+        normalized = _normalize_skill(skill)
         if normalized and normalized not in ordered_skills:
             ordered_skills.append(normalized)
 
@@ -81,12 +87,12 @@ def _pick_priority_skill(context: dict[str, Any], fallback: str) -> str:
     interview_state = context.get("interview_state") or {}
     skill_scores_raw = interview_state.get("skill_scores") or {}
     skill_scores = {
-        str(skill).strip().lower(): _to_float(score, 0.0)
+        _normalize_skill(skill): _to_float(score, 0.0)
         for skill, score in skill_scores_raw.items()
-        if str(skill).strip()
+        if _normalize_skill(skill)
     }
 
-    covered = {str(skill).strip().lower() for skill in interview_state.get("covered_skills", [])}
+    covered = {_normalize_skill(skill) for skill in interview_state.get("covered_skills", [])}
     job = context.get("job") or {}
     role = str(job.get("role") or "").strip().lower()
     jd_text = " ".join(
@@ -158,11 +164,11 @@ async def plan_next_step(context: dict[str, Any]) -> PlanOutput:
         tone = "supportive"
         difficulty = "easy"
 
-    requested_topic = str(minimal_state.get("topic") or "").strip().lower()
+    requested_topic = _normalize_skill(minimal_state.get("topic"))
     if requested_topic:
         target_skill = requested_topic
     else:
-        target_skill = _pick_priority_skill(context, fallback=_pick_target_skill(context, fallback="backend fundamentals"))
+        target_skill = _pick_priority_skill(context, fallback=_pick_target_skill(context, fallback="block_8_ownership"))
 
     reason_parts = [f"Mode selected from score {score:.2f}"]
     if intent in mode_map:

@@ -13,7 +13,13 @@ from training.run_judge import run_judge_on_dataset
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Prompt-driven judge calibration pipeline")
     parser.add_argument("--dataset", required=True, help="Path to Kaggle-style dataset (.csv, .json, .jsonl)")
-    parser.add_argument("--question", default="Evaluate this technical answer.", help="Judge question context")
+    parser.add_argument("--question", default="Evaluate this interview answer.", help="Judge question context")
+    parser.add_argument(
+        "--domain",
+        choices=["behavioral", "technical", "mixed"],
+        default="mixed",
+        help="Prompt rubric domain",
+    )
     parser.add_argument("--iterations", type=int, default=3, help="Number of prompt-improvement rounds")
     parser.add_argument("--limit", type=int, default=120, help="Maximum samples to load")
     parser.add_argument("--model", default="llama3", help="Ollama model name")
@@ -26,19 +32,41 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_prompt(iteration: int, feedback: dict[str, Any] | None = None) -> str:
-    base_prompt = """
+def build_prompt(iteration: int, domain: str, feedback: dict[str, Any] | None = None) -> str:
+    domain_rules = {
+        "technical": """
 You are a strict evaluator for technical interview answers.
 
 Task:
-- Evaluate only answer quality signal: clarity, depth, completeness, and trade-offs.
+- Evaluate only answer quality signal: clarity, depth, completeness, mechanisms, and trade-offs.
 - Do not reward personality traits, confidence style, or verbosity alone.
 - Separate weak, partial, and strong answers with clear score boundaries.
+""".strip(),
+        "behavioral": """
+You are a strict evaluator for behavioral interview answers.
+
+Task:
+- Evaluate evidence of judgment, ownership, collaboration, resilience, and self-awareness.
+- Do not reward vague trait claims like "I am a leader" without a concrete example.
+- Reward clear situation, action, reasoning, trade-offs, and result detail.
+""".strip(),
+        "mixed": """
+You are a strict evaluator for interview answers.
+
+Task:
+- The answer may be technical or behavioral.
+- Evaluate clarity, depth, completeness, examples, mechanisms, and trade-offs.
+- Do not reward buzzwords, confidence style, or verbosity alone.
+""".strip(),
+    }
+
+    base_prompt = f"""
+{domain_rules[domain]}
 
 Scoring:
-- 0.0-0.3: weak answer, vague or mostly incorrect.
-- 0.4-0.7: partially correct, some useful content but missing key concepts.
-- 0.8-1.0: strong answer with specific implementation detail and trade-off reasoning.
+- 0.0-0.3: weak answer, vague, generic, or mostly incorrect.
+- 0.4-0.7: partially correct or partially evidenced, but missing key concepts.
+- 0.8-1.0: strong answer with concrete detail, sound reasoning, and trade-off awareness.
 
 Return ONLY JSON:
 {{
@@ -49,8 +77,8 @@ Return ONLY JSON:
   "missing_concepts": ["string"]
 }}
 
-Question: {question}
-Answer: {answer}
+Question: {{question}}
+Answer: {{answer}}
 """.strip()
 
     if iteration <= 1:
@@ -69,7 +97,8 @@ Additional calibration rules:
     prompt = f"{base_prompt}\n\n{rules_block}"
 
     if iteration >= 3:
-        few_shot_block = """
+        few_shot_examples = {
+            "technical": """
 Calibration examples:
 Example 1
 Answer: "Use Redis"
@@ -85,7 +114,48 @@ Example 3
 Answer: "Use distributed cache with consistency trade-offs, invalidation strategy, and fallback on cache miss"
 Expected score: 0.9
 Reason: covers architecture depth and trade-off reasoning.
-""".strip()
+""".strip(),
+            "behavioral": """
+Calibration examples:
+Example 1
+Answer: "I'm a strong leader and team player."
+Expected score: 0.25
+Reason: trait claims only, no concrete evidence.
+
+Example 2
+Answer: "I noticed two teammates were blocked, so I set up a working session and aligned ownership."
+Expected score: 0.68
+Reason: concrete action is present, but limited reflection and outcome detail.
+
+Example 3
+Answer: "A launch slipped by a week, so I reset scope with stakeholders, reassigned ownership, and ran daily check-ins. We shipped three days later with no Sev-1 issues, and I documented the escalation path we should have used earlier."
+Expected score: 0.9
+Reason: clear example, trade-offs, ownership, stakeholder handling, and result detail.
+""".strip(),
+            "mixed": """
+Calibration examples:
+Example 1
+Answer: "Use Redis"
+Expected score: 0.3
+Reason: technical buzzword only, no mechanism.
+
+Example 2
+Answer: "I'm very collaborative."
+Expected score: 0.25
+Reason: behavioral trait claim only, no evidence.
+
+Example 3
+Answer: "I used cache invalidation hooks because stale reads hurt correctness, but shorter TTL increased load, so I tuned policy by endpoint volatility."
+Expected score: 0.88
+Reason: concrete technical mechanism plus trade-offs.
+
+Example 4
+Answer: "When a teammate missed a deadline, I clarified priorities, rebalanced work, and followed up daily until we recovered the launch."
+Expected score: 0.84
+Reason: concrete behavioral example with ownership and coordination.
+""".strip(),
+        }
+        few_shot_block = few_shot_examples[domain]
         prompt = f"{prompt}\n\n{few_shot_block}"
 
     if feedback:
@@ -93,7 +163,7 @@ Reason: covers architecture depth and trade-off reasoning.
         if feedback.get("overscore_rate", 0.0) > 0.2:
             adaptive_rules.append("Apply a stronger penalty to generic or buzzword-only answers.")
         if feedback.get("underscore_rate", 0.0) > 0.2:
-            adaptive_rules.append("Do not under-score answers that include concrete mechanisms and trade-offs.")
+            adaptive_rules.append("Do not under-score answers that include concrete examples, mechanisms, or trade-offs.")
         if feedback.get("confidence_miscalibration", 0.0) > 0.2:
             adaptive_rules.append("Reduce confidence when key concepts are missing; increase only with explicit evidence.")
 
@@ -167,7 +237,7 @@ def main() -> None:
     best_failures: list[dict[str, Any]] = []
 
     for iteration in range(1, args.iterations + 1):
-        prompt = build_prompt(iteration=iteration, feedback=feedback)
+        prompt = build_prompt(iteration=iteration, domain=args.domain, feedback=feedback)
         records = asyncio.run(
             run_judge_on_dataset(
                 dataset=dataset,
