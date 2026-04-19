@@ -2,13 +2,14 @@ import asyncio
 
 from aot_layer.models import QuestionOutput, StartInput
 from interview_system.orchestrator import FullStackInterviewOrchestrator
+from skill_taxonomy import DEFAULT_AOT_SKILLS
 
 
 async def _answers(_: int, __: str, skill: str, mode: str) -> str:
     scripted = {
-        ("caching", "new"): "I use ttl and invalidation with event-based updates.",
-        ("caching", "probe"): "I add stale-while-revalidate and key versioning.",
-        ("concurrency", "new"): "I use idempotency keys and queue backpressure.",
+        ("block_4_grit", "new"): "I persisted through a six-month project despite repeated setbacks and frustration.",
+        ("block_4_grit", "probe"): "I kept going because I knew the outcome mattered, even when the team doubted the timeline.",
+        ("block_6_social", "new"): "I aligned two disagreeing stakeholders by listening to both sides and proposing a shared plan.",
     }
     return scripted.get((skill, mode), "I discuss trade-offs and reliability.")
 
@@ -26,15 +27,16 @@ async def _run_fullstack(force_unsafe_question: bool) -> tuple[bool, float, int]
 
         orchestrator._aot.generator.generate = unsafe_generate
 
+    skills = DEFAULT_AOT_SKILLS
     result = await orchestrator.run(
         candidate_id="cand-integration",
         start_input=StartInput(
-            skill_vector=[0.4, 0.5, 0.6],
-            sigma2=[0.9, 0.8, 0.3],
-            past_attempts_per_skill={"caching": 0, "concurrency": 0, "api_design": 0},
+            skill_vector=[0.4] * len(skills),
+            sigma2=[0.8] * len(skills),
+            past_attempts_per_skill={s: 0 for s in skills},
         ),
         answer_provider=_answers,
-        role_vector=[0.3, 0.2, 0.4],
+        role_vector=[0.3] * len(skills),
         max_turns=3,
     )
 
