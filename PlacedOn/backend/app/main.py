@@ -8,6 +8,7 @@ from .interaction_router import router as interaction_router
 from .live_runtime import LiveInterviewRuntime
 from .session_manager import SessionManager
 from .websocket_router import router as websocket_router
+from .api_routes import router as api_router
 
 
 @asynccontextmanager
@@ -37,6 +38,7 @@ app.add_middleware(
 )
 app.include_router(websocket_router)
 app.include_router(interaction_router)
+app.include_router(api_router)
 
 
 @app.get("/health")

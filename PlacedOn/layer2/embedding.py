@@ -1,57 +1,43 @@
+"""
+PlacedOn Layer 2 — Semantic Embedding Engine
+
+Replaces the broken blake2b hash-based embedding with real
+sentence-transformers SBERT (all-MiniLM-L6-v2).
+
+Output: 384-dimensional semantic vectors that actually understand meaning.
+"""
+
+from __future__ import annotations
+
+import asyncio
 import math
-import re
-from collections import Counter
-from hashlib import blake2b
+from functools import lru_cache
 
-_DIMENSION = 64
+from sentence_transformers import SentenceTransformer
 
-_ALIASES = {
-    "persisted": "persistent",
-    "persevered": "persistent",
-    "ownership": "owned",
-    "owned": "owned",
-    "leader": "leadership",
-    "leading": "leadership",
-    "collaborative": "collaboration",
-    "collaborated": "collaboration",
-    "teammate": "team",
-    "stakeholders": "stakeholder",
-    "resilient": "resilience",
-    "stressful": "stress",
-    "learned": "learning",
-    "curious": "curiosity",
-    "validated": "validate",
-}
+_MODEL_NAME = "all-MiniLM-L6-v2"
+_DIMENSION = 384
 
 
-def _tokens(text: str) -> list[str]:
-    tokens = re.findall(r"[a-zA-Z0-9_]+", text.lower())
-    normalized = [_ALIASES.get(token, token) for token in tokens]
-    bigrams = [
-        f"{normalized[idx]}_{normalized[idx + 1]}"
-        for idx in range(len(normalized) - 1)
-    ]
-    return normalized + bigrams
+@lru_cache(maxsize=1)
+def _load_model() -> SentenceTransformer:
+    """Load SBERT model once and cache it in memory."""
+    return SentenceTransformer(_MODEL_NAME)
 
 
 async def embed_text(text: str) -> list[float]:
-    tokens = _tokens(text)
-    if not tokens:
+    """Generate a 384-dim semantic embedding for the given text."""
+    text = (text or "").strip()
+    if not text:
         return [0.0] * _DIMENSION
 
-    counts = Counter(tokens)
-    values = [0.0] * _DIMENSION
-    for token, count in counts.items():
-        digest = blake2b(token.encode("utf-8"), digest_size=8).digest()
-        bucket = int.from_bytes(digest[:4], "big") % _DIMENSION
-        sign = -1.0 if digest[4] % 2 else 1.0
-        weight = (1.0 + math.log1p(count)) * (1.35 if "_" in token else 1.0)
-        values[bucket] += sign * weight
-
-    return _l2_normalize(values)
+    model = _load_model()
+    vector = await asyncio.to_thread(model.encode, text)
+    return vector.tolist()
 
 
 def cosine_similarity(left: list[float], right: list[float]) -> float:
+    """Compute cosine similarity between two vectors."""
     if not left or not right:
         return 0.0
 
@@ -71,11 +57,5 @@ def cosine_similarity(left: list[float], right: list[float]) -> float:
 
 
 def cosine_distance(left: list[float], right: list[float]) -> float:
+    """Cosine distance normalized to [0, 1]."""
     return 1.0 - ((cosine_similarity(left, right) + 1.0) / 2.0)
-
-
-def _l2_normalize(vector: list[float]) -> list[float]:
-    norm = math.sqrt(sum(value * value for value in vector))
-    if norm <= 0:
-        return vector
-    return [value / norm for value in vector]
