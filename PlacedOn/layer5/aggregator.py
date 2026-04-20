@@ -1,6 +1,6 @@
 import math
 
-from layer5.models import CandidateAggregate, InterviewTurn, SkillAggregate
+from layer5.models import AxisAggregate, CandidateAggregate, InterviewTurn, SkillAggregate
 
 
 class AggregationError(ValueError):
@@ -14,7 +14,8 @@ class AggregationEngine:
 
         embedding = self._aggregate_embedding(turns)
         skills = self._aggregate_skills(turns)
-        return CandidateAggregate(embedding=embedding, skills=skills)
+        axes = self._aggregate_axes(turns)
+        return CandidateAggregate(embedding=embedding, skills=skills, axes=axes)
 
     def _aggregate_embedding(self, turns: list[InterviewTurn]) -> list[float]:
         dims = len(turns[0].embedding)
@@ -131,6 +132,61 @@ class AggregationEngine:
             base_uncertainty *= 0.6
 
         return max(0.05, min(base_uncertainty, 1.0))
+
+    def _aggregate_axes(self, turns: list[InterviewTurn]) -> dict[str, AxisAggregate]:
+        all_axis_names: set[str] = set()
+        for turn in turns:
+            all_axis_names.update(turn.axes.keys())
+
+        results: dict[str, AxisAggregate] = {}
+        n_turns = len(turns)
+
+        for axis in sorted(all_axis_names):
+            turns_with_axis = [(idx, t) for idx, t in enumerate(turns) if t.axes.get(axis) is not None]
+            if not turns_with_axis:
+                continue
+
+            # Reuse the attention-residual weights from the general turn confidence
+            logits = []
+            for idx, turn in turns_with_axis:
+                depth_factor = (idx + 1) / n_turns
+                logit = turn.confidence + (depth_factor * 0.5)
+                logits.append(logit)
+
+            max_logit = max(logits)
+            exp_logits = [math.exp(l - max_logit) for l in logits]
+            sum_exp = sum(exp_logits)
+            weights = [e / sum_exp for e in exp_logits]
+
+            weighted_score = 0.0
+            confidences: list[float] = []
+            scores: list[float] = []
+            reasoning_bank: list[str] = []
+
+            for arr_idx, (idx, turn) in enumerate(turns_with_axis):
+                signal = turn.axes[axis]
+                weight = weights[arr_idx]
+                
+                weighted_score += signal.score * weight
+                confidences.append(turn.confidence)
+                scores.append(signal.score)
+                if signal.reasoning not in reasoning_bank:
+                    reasoning_bank.append(signal.reasoning)
+
+            uncertainty = self._compute_uncertainty(
+                confidences,
+                scores,
+                observed_count=len(scores),
+                total_turns=n_turns,
+            )
+
+            results[axis] = AxisAggregate(
+                score=round(max(0.0, min(weighted_score, 1.0)), 4),
+                uncertainty=round(max(0.0, min(uncertainty, 1.0)), 4),
+                reasoning_summary=reasoning_bank[:3]  # Top 3 context points
+            )
+
+        return results
 
     def _l2_normalize(self, vector: list[float]) -> list[float]:
         norm = math.sqrt(sum(value * value for value in vector))

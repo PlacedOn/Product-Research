@@ -10,11 +10,17 @@ class SkillTurnSignal(BaseModel):
     evidence: list[str] = Field(default_factory=list)
 
 
+class AxisSignal(BaseModel):
+    score: float = Field(ge=0.0, le=1.0)
+    reasoning: str
+
+
 class InterviewTurn(BaseModel):
     turn_index: int
     confidence: float = Field(ge=0.0, le=1.0)
     embedding: list[float]
     skills: dict[str, SkillTurnSignal] = Field(default_factory=dict)
+    axes: dict[str, AxisSignal] = Field(default_factory=dict)
 
 
 class SkillAggregate(BaseModel):
@@ -23,9 +29,16 @@ class SkillAggregate(BaseModel):
     evidence: list[str] = Field(default_factory=list)
 
 
+class AxisAggregate(BaseModel):
+    score: float = Field(ge=0.0, le=1.0)
+    uncertainty: float = Field(ge=0.0, le=1.0)
+    reasoning_summary: list[str] = Field(default_factory=list)
+
+
 class CandidateAggregate(BaseModel):
     embedding: list[float]
     skills: dict[str, SkillAggregate] = Field(default_factory=dict)
+    axes: dict[str, AxisAggregate] = Field(default_factory=dict)
 
 
 class CandidateState(BaseModel):

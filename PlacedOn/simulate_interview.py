@@ -6,8 +6,9 @@ from aot_layer.models import StartInput
 from aot_layer.orchestrator import AoTOrchestrator
 from layer2.embedding import embed_text
 from layer3.bias_classifier import BiasEnforcer
+from backend.llm.claude_axis import ClaudeAxisEvaluator
 from layer5.aggregator import AggregationEngine
-from layer5.models import CandidateState, InterviewTurn, SkillTurnSignal
+from layer5.models import AxisSignal, CandidateState, InterviewTurn, SkillTurnSignal
 
 # Mock Candidate and Config
 # We will simulate a mid-level backend engineer interview
@@ -18,6 +19,7 @@ class InterviewSimulator:
         self.orchestrator = AoTOrchestrator(config=AoTConfig(skills=SKILLS, total_turn_limit=8, max_retries_per_skill=1))
         self.bias_enforcer = BiasEnforcer()
         self.aggregator = AggregationEngine()
+        self.axis_evaluator = ClaudeAxisEvaluator()
         
     async def run_simulation(self):
         print("=== STAGE 1: Generating Starting State ===")
@@ -83,11 +85,19 @@ class InterviewSimulator:
                 confidence=log.judge.confidence,
                 evidence=["Simulated hit"]
             )
+            # Evaluate along Claude Axes
+            axis_result = await self.axis_evaluator.evaluate_answer(log.question, log.answer)
+            axes_signals = {
+                name: AxisSignal(score=data.score, reasoning=data.reasoning)
+                for name, data in axis_result.axes.items()
+            }
+            
             turn = InterviewTurn(
                 turn_index=log.turn,
                 confidence=log.judge.confidence,
                 embedding=embedding,
-                skills={log.skill: signal}
+                skills={log.skill: signal},
+                axes=axes_signals
             )
             turns.append(turn)
             
@@ -97,6 +107,12 @@ class InterviewSimulator:
         print("\n=== FINAL RESULTS (Learned Profile) ===")
         for skill_name, data in final_aggregate.skills.items():
             print(f"- {skill_name.ljust(15)} : Score={data.score:.2f} | Uncertainty={data.uncertainty:.2f}")
+
+        print("\n=== CLAUDE AXIS PROFILE ===")
+        for axis_name, data in final_aggregate.axes.items():
+            print(f"- {axis_name.ljust(15)} : Score={data.score:.2f} | Uncertainty={data.uncertainty:.2f}")
+            if data.reasoning_summary:
+                print(f"   Reasoning: {data.reasoning_summary[0]}")
 
         print("\nSimulation complete. Analyzing convergence...")
         for skill in SKILLS:
