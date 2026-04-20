@@ -6,6 +6,7 @@ import { DotGrid } from "./ui/DotGrid";
 import { Orb } from "./ui/Orb";
 import { AnimatedContent } from "./ui/AnimatedContent";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import Dock from "./Dock";
 
 const dockItems = [
   { icon: <Home size={20} strokeWidth={2.5} />, label: "Home", path: "/candidate" },
@@ -16,45 +17,15 @@ const dockItems = [
   { icon: <Settings size={20} strokeWidth={2.5} />, label: "Settings", path: "/candidate/settings" },
 ];
 
-function PillNav() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-1 p-2 bg-white/70 backdrop-blur-xl rounded-full border border-white/60 shadow-[0_16px_40px_rgba(30,35,60,0.1),inset_0_1px_1px_rgba(255,255,255,1)]">
-        {dockItems.map((item) => {
-          const isActive = location.pathname === item.path || (item.path !== '/candidate' && location.pathname.startsWith(item.path));
-          return (
-            <button
-              key={item.label}
-              onClick={() => navigate(item.path)}
-              className="relative px-5 py-2.5 rounded-full flex flex-col items-center gap-1 transition-all group outline-none focus:outline-none"
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="pillNavBackground"
-                  className="absolute inset-0 rounded-full bg-[#1F2430]"
-                  transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
-                />
-              )}
-              <div className={`relative z-10 flex items-center justify-center transition-colors duration-300 ${isActive ? "text-white" : "text-[#1F2430]/60 group-hover:text-[#1F2430]"}`}>
-                {item.icon}
-              </div>
-              <span className={`relative z-10 text-[10px] font-bold tracking-wide transition-all duration-300 ${isActive ? "text-white opacity-100 h-auto mt-0.5" : "text-[#1F2430]/0 opacity-0 h-0 overflow-hidden"}`}>
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 export function DashboardLayout() {
   const navigate = useNavigate();
   const [isAvailable, setIsAvailable] = useState(true);
+
+  const dockNavItems = dockItems.map((item) => ({
+    icon: item.icon,
+    label: item.label,
+    onClick: () => navigate(item.path),
+  }));
 
   return (
     <div className="min-h-screen w-full bg-[#F8F7F5] relative overflow-hidden font-[Inter,sans-serif] selection:bg-[#3E63F5] selection:text-white">
@@ -169,9 +140,14 @@ export function DashboardLayout() {
 
       </div>
 
-      {/* Floating Bottom Dock (PillNav) */}
+      {/* Floating Bottom Dock */}
       <AnimatedContent direction="vertical" distance={40} delay={0.2}>
-        <PillNav />
+        <Dock
+          items={dockNavItems}
+          panelHeight={68}
+          baseItemSize={50}
+          magnification={70}
+        />
       </AnimatedContent>
     </div>
   );
