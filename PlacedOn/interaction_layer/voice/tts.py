@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 import asyncio
 
@@ -7,7 +8,7 @@ from interaction_layer.models import AudioFrame
 
 
 class MockTTS:
-    def __init__(self, config: InteractionConfig | None = None) -> None:
+    def __init__(self, config:Optional[ InteractionConfig] = None) -> None:
         self._config = config or InteractionConfig()
         self._interrupted_sessions: set[str] = set()
 

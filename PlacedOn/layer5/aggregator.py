@@ -1,3 +1,4 @@
+from __future__ import annotations
 import math
 
 from layer5.models import CandidateAggregate, InterviewTurn, SkillAggregate

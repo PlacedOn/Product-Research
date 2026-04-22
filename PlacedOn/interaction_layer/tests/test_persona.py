@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 
 from interaction_layer.persona.persona_engine import PersonaEngine

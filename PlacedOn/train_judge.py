@@ -1,9 +1,10 @@
+from __future__ import annotations
+from typing import Any, Optional
 import argparse
 import asyncio
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
 from training.data_adapter import load_kaggle_dataset
 from training.evaluator import aggregate_metrics, select_failures, write_failures
@@ -32,7 +33,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_prompt(iteration: int, domain: str, feedback: dict[str, Any] | None = None) -> str:
+def build_prompt(iteration: int, domain: str, feedback:Optional[ dict[str, Any]] = None) -> str:
     domain_rules = {
         "technical": """
 You are a strict evaluator for technical interview answers.
@@ -232,7 +233,7 @@ def main() -> None:
     if not dataset:
         raise ValueError("No valid rows found after normalization")
 
-    feedback: dict[str, float] | None = None
+    feedback:Optional[ dict[str, float]] = None
     reports: list[dict[str, Any]] = []
     best_failures: list[dict[str, Any]] = []
 

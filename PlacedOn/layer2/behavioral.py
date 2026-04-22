@@ -1,3 +1,4 @@
+from __future__ import annotations
 from layer2.embedding import cosine_distance
 from layer2.models import AdapterOutput, BehavioralSignals
 

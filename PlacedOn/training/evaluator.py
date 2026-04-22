@@ -1,6 +1,7 @@
+from __future__ import annotations
+from typing import Any
 import json
 from pathlib import Path
-from typing import Any
 
 
 def evaluate_prediction(predicted: dict[str, Any], expected: dict[str, float]) -> dict[str, Any]:

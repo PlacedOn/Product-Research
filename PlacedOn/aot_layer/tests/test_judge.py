@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 
 from aot_layer.judge import Judge

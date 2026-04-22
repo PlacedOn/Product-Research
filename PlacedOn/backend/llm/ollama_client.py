@@ -1,5 +1,6 @@
+from __future__ import annotations
+from typing import Any, Optional
 import logging
-from typing import Any
 
 import requests
 
@@ -10,7 +11,7 @@ class OllamaError(Exception):
     pass
 
 
-def call_ollama(prompt: str, model: str = "llama3", options: dict[str, Any] | None = None) -> str:
+def call_ollama(prompt: str, model: str = "llama3", options:Optional[ dict[str, Any]] = None) -> str:
     logger.info("[OLLAMA] request sent")
     try:
         payload: dict[str, Any] = {

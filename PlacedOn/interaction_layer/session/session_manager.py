@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 import time
 
@@ -7,7 +8,7 @@ from interaction_layer.models import SessionState
 
 
 class InterviewSessionManager:
-    def __init__(self, config: InteractionConfig | None = None) -> None:
+    def __init__(self, config:Optional[ InteractionConfig] = None) -> None:
         self._config = config or InteractionConfig()
         self._sessions: dict[str, SessionState] = {}
 
@@ -24,10 +25,10 @@ class InterviewSessionManager:
         self._sessions[session_id] = state
         return state
 
-    async def get(self, session_id: str) -> SessionState | None:
+    async def get(self, session_id: str) ->Optional[ SessionState]:
         return self._sessions.get(session_id)
 
-    async def end_session(self, session_id: str) -> SessionState | None:
+    async def end_session(self, session_id: str) ->Optional[ SessionState]:
         state = self._sessions.get(session_id)
         if state is None:
             return None
@@ -35,7 +36,7 @@ class InterviewSessionManager:
         self._sessions[session_id] = ended
         return ended
 
-    async def touch(self, session_id: str, voice_activity: bool = False) -> SessionState | None:
+    async def touch(self, session_id: str, voice_activity: bool = False) ->Optional[ SessionState]:
         state = self._sessions.get(session_id)
         if state is None:
             return None
@@ -49,7 +50,7 @@ class InterviewSessionManager:
         self._sessions[session_id] = updated
         return updated
 
-    async def increment_turn(self, session_id: str) -> SessionState | None:
+    async def increment_turn(self, session_id: str) ->Optional[ SessionState]:
         state = self._sessions.get(session_id)
         if state is None:
             return None

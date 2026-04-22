@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 import math
 
 from layer5.config import Layer5Config
@@ -5,7 +7,7 @@ from layer5.models import FitInput, FitResult
 
 
 class FitMatcher:
-    def __init__(self, config: Layer5Config | None = None) -> None:
+    def __init__(self, config:Optional[ Layer5Config] = None) -> None:
         self._config = config or Layer5Config()
 
     async def predict(self, data: FitInput) -> FitResult:

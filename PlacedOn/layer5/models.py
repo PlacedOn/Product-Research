@@ -1,5 +1,6 @@
+from __future__ import annotations
+from typing import Any, Optional
 from datetime import datetime, timezone
-from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -39,7 +40,7 @@ class CandidateState(BaseModel):
 class FitInput(BaseModel):
     candidate_embedding: list[float]
     role_vector: list[float]
-    preference_vector: list[float] | None = None
+    preference_vector: Optional[list[float]] = None
 
 
 class FitResult(BaseModel):

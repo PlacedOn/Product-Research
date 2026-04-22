@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from skill_taxonomy import DEFAULT_TRACKED_SKILLS

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from aot_layer.models import InterviewState
 
 

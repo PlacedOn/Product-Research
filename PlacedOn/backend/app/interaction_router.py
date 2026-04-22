@@ -1,9 +1,9 @@
 from __future__ import annotations
+from typing import Any, Optional
 
 import asyncio
 import os
 import sys
-from typing import Any
 
 from fastapi import APIRouter, Request, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
@@ -65,7 +65,7 @@ class EvaluateAnswerRequest(BaseModel):
 
 class TTSSpeakRequest(BaseModel):
     text: str = Field(min_length=1)
-    voice: str | None = None
+    voice:Optional[ str] = None
     rate: int = Field(default=185, ge=120, le=280)
 
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 import os
 import sys
@@ -20,12 +21,16 @@ async def scripted_answer_provider(turn_idx: int, question: str, skill: str, mod
 
 
 async def run_demo() -> None:
-    orchestrator = FullStackInterviewOrchestrator()
+    from aot_layer.config import AoTConfig
+    
+    skills = ["caching", "concurrency", "api_design"]
+    config = AoTConfig(skills=skills)
+    orchestrator = FullStackInterviewOrchestrator(config=config)
 
     start = StartInput(
         skill_vector=[0.45, 0.42, 0.51],
         sigma2=[0.8, 0.7, 0.6],
-        past_attempts_per_skill={"caching": 0, "concurrency": 0, "api_design": 0},
+        past_attempts_per_skill={s: 0 for s in skills},
     )
 
     result = await orchestrator.run(

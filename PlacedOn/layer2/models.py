@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -31,10 +33,10 @@ class Layer2Output(BaseModel):
     skills: dict[str, SkillState]
     embedding: list[float]
     behavioral_signals: BehavioralSignals
-    code_analysis: CodeAnalysis | None = None
+    code_analysis:Optional[ CodeAnalysis] = None
 
 
 class TurnAssessment(BaseModel):
     text: str
     adapter_output: AdapterOutput
-    code_analysis: CodeAnalysis | None = None
+    code_analysis:Optional[ CodeAnalysis] = None

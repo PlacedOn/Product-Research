@@ -1,3 +1,4 @@
+from __future__ import annotations
 from aot_layer.models import JudgeResult
 from backend.llm.judge import evaluate_answer
 from skill_taxonomy import display_skill, is_behavioral_skill

@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 import asyncio
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
@@ -18,7 +20,7 @@ class ConnectionRegistry:
 
     async def connect(self, interview_id: str, websocket: WebSocket) -> None:
         await websocket.accept()
-        stale_socket: WebSocket | None = None
+        stale_socket:Optional[ WebSocket] = None
 
         async with self._lock:
             stale_socket = self._connections.get(interview_id)

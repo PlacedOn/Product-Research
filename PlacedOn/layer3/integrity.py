@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 from layer3.config import Layer3Config
 from layer3.models import IntegrityInput, IntegrityOutput
 
@@ -22,7 +24,7 @@ def _cosine_distance(left: list[float], right: list[float]) -> float:
 
 
 class BehavioralIntegrityEngine:
-    def __init__(self, config: Layer3Config | None = None) -> None:
+    def __init__(self, config:Optional[ Layer3Config] = None) -> None:
         self._config = config or Layer3Config()
 
     async def evaluate(self, data: IntegrityInput) -> IntegrityOutput:

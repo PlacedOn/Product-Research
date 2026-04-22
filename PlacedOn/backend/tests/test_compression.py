@@ -1,3 +1,4 @@
+from __future__ import annotations
 from app.models import InterviewState
 from app.state_compressor import compress_state
 

@@ -1,7 +1,8 @@
+from __future__ import annotations
+from typing import Any, Optional
 import csv
 import json
 from pathlib import Path
-from typing import Any
 
 _TEXT_KEYS = [
     "input_text",
@@ -37,7 +38,7 @@ _LABEL_MAP = {
 }
 
 
-def load_kaggle_dataset(dataset_path: str, limit: int | None = None) -> list[dict[str, Any]]:
+def load_kaggle_dataset(dataset_path: str, limit:Optional[ int] = None) -> list[dict[str, Any]]:
     """Load common Kaggle text datasets (.csv, .json, .jsonl) into a unified format."""
     path = Path(dataset_path)
     if not path.exists():
@@ -85,7 +86,7 @@ def _load_json(path: Path) -> list[dict[str, Any]]:
     raise ValueError("Unsupported JSON shape. Expected list[dict] or dict")
 
 
-def _normalize_record(record: dict[str, Any]) -> dict[str, Any] | None:
+def _normalize_record(record: dict[str, Any]) ->Optional[ dict[str, Any]]:
     input_text = _first_non_empty(record, _TEXT_KEYS)
     if not input_text:
         return None
@@ -111,14 +112,14 @@ def _normalize_record(record: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
-def _first_non_empty(record: dict[str, Any], keys: list[str]) -> Any | None:
+def _first_non_empty(record: dict[str, Any], keys: list[str]) ->Optional[ Any]:
     for key in keys:
         if key in record and record[key] not in (None, ""):
             return record[key]
     return None
 
 
-def _normalize_score(value: Any) -> float | None:
+def _normalize_score(value: Any) ->Optional[ float]:
     if value is None:
         return None
 

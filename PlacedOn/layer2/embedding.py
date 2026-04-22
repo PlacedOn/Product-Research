@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 PlacedOn Layer 2 — Semantic Embedding Engine
 
@@ -7,7 +8,6 @@ sentence-transformers SBERT (all-MiniLM-L6-v2).
 Output: 384-dimensional semantic vectors that actually understand meaning.
 """
 
-from __future__ import annotations
 
 import asyncio
 import math

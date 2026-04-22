@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 """
 PlacedOn Layer 3 — ABLEIST Bias Classifier
 
@@ -9,7 +11,6 @@ Expanded using the ABLEIST framework (arXiv:2510.10998):
 Total: 55 safe + 65 unsafe = 120 training examples
 """
 
-from __future__ import annotations
 
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -58,11 +59,20 @@ _HIGH_RISK_PATTERNS = [
     "mother tongue",
     "native place",
     "family business",
+    # Real-life industry-specific bias (Kaggle derived)
+    "notice period",
+    "last drawn salary",
+    "current ctc",
+    "buyout",
+    "bonded labor",
+    "gap years",
+    "career break due to marriage",
+    "returning mom",
 ]
 
 
 class BiasEnforcer:
-    def __init__(self, config: Layer3Config | None = None) -> None:
+    def __init__(self, config:Optional[ Layer3Config] = None) -> None:
         self._config = config or Layer3Config()
         self._vectorizer = HashingVectorizer(
             n_features=self._config.classifier_features,

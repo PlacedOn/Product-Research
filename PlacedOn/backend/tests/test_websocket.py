@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -10,7 +12,7 @@ class InMemorySessionManager:
     def __init__(self) -> None:
         self.storage: dict[str, InterviewState] = {}
 
-    async def get_state(self, interview_id: str) -> InterviewState | None:
+    async def get_state(self, interview_id: str) ->Optional[ InterviewState]:
         return self.storage.get(interview_id)
 
     async def set_state(self, state: InterviewState) -> None:

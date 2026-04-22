@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 
 from backend.llm.ollama_client import call_ollama

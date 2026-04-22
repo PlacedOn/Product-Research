@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 from layer3.bias_classifier import BiasEnforcer
 from layer3.config import Layer3Config
 from layer3.models import GuardrailDecision
@@ -21,8 +23,8 @@ class SafeQuestionPipeline:
     def __init__(
         self,
         bias_enforcer: BiasEnforcer,
-        fallback_generator: FallbackGenerator | None = None,
-        config: Layer3Config | None = None,
+        fallback_generator:Optional[ FallbackGenerator] = None,
+        config:Optional[ Layer3Config] = None,
     ) -> None:
         self._bias_enforcer = bias_enforcer
         self._fallback_generator = fallback_generator or FallbackGenerator()

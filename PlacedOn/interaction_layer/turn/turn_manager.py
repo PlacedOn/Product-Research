@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 import time
 from collections.abc import Awaitable, Callable
@@ -10,7 +11,7 @@ BackendClient = Callable[[TurnPayload], Awaitable[BackendTurnResponse]]
 
 
 class TurnManager:
-    def __init__(self, config: InteractionConfig | None = None) -> None:
+    def __init__(self, config:Optional[ InteractionConfig] = None) -> None:
         self._config = config or InteractionConfig()
         self._turns: dict[str, TurnState] = {}
 
@@ -46,7 +47,7 @@ class TurnManager:
         self._turns[event.session_id] = updated
         return updated
 
-    async def explicit_stop(self, session_id: str) -> TurnState | None:
+    async def explicit_stop(self, session_id: str) ->Optional[ TurnState]:
         state = self._turns.get(session_id)
         if state is None:
             return None

@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 """
 PlacedOn API Routes — Day 1-2 Endpoints
 
@@ -5,13 +7,11 @@ PlacedOn API Routes — Day 1-2 Endpoints
 /rating      — 90-day employer rating (green/yellow/red)
 """
 
-from __future__ import annotations
 
 import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel

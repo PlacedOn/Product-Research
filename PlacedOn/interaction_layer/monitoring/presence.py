@@ -1,9 +1,11 @@
+from __future__ import annotations
+from typing import Optional
 from interaction_layer.config import InteractionConfig
 from interaction_layer.models import PresenceState
 
 
 class PresenceMonitor:
-    def __init__(self, config: InteractionConfig | None = None) -> None:
+    def __init__(self, config:Optional[ InteractionConfig] = None) -> None:
         self._config = config or InteractionConfig()
 
     async def snapshot(self, camera_active: bool, tab_focused: bool, response_latency_ms: int) -> PresenceState:

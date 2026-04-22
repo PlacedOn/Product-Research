@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 import ast
 import re
 
@@ -5,7 +7,7 @@ from layer2.models import CodeAnalysis
 
 
 class ASTEvaluator:
-    async def analyze(self, text: str) -> CodeAnalysis | None:
+    async def analyze(self, text: str) ->Optional[ CodeAnalysis]:
         if not self._looks_like_code(text):
             return None
 

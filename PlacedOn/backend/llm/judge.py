@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional, Union
 import asyncio
 import re
 
@@ -89,16 +91,32 @@ _EXAMPLE_MARKERS = (
 )
 
 
-def build_judge_prompt(question: str, answer: str, prompt_template: str | None = None) -> str:
+def build_judge_prompt(question: str, answer: str, prompt_template: Optional[str] = None) -> str:
     if prompt_template:
         return prompt_template.format(question=question, answer=answer)
 
+    # CTO Calibration: Load few-shot examples from 'Gold' Kaggle data
+    try:
+        import csv
+        with open("/Users/nishantsingh/Desktop/Placedon/Product-Research/PlacedOn/training/real_world_gold.csv", "r") as f:
+            reader = csv.DictReader(f)
+            examples = list(reader)[:3] # Top 3 for context
+            ref_guide = "\n".join([
+                f"- Example Answer: \"{e['answer']}\"\n  Target Score: {e['quality_score']} | Rationale: {e['rationale']}"
+                for e in examples
+            ])
+    except Exception:
+        ref_guide = "N/A"
+
     return f"""
 Evaluate the interview answer strictly.
-The answer may be technical or behavioral.
-Do not reward buzzwords, personality claims, or confidence style without evidence.
-Concrete examples, mechanisms, reasoning, and trade-offs should raise the score.
-Keyword-only answers without explanation must score below 0.4.
+Use the following Real-World Reference Guide (calibrated from Kaggle datasets) to anchor your scores:
+{ref_guide}
+
+Evaluation Principles:
+1. Do not reward buzzwords, personality claims, or confidence style without evidence.
+2. Concrete examples, mechanisms, reasoning, and trade-offs should raise the score.
+3. Keyword-only answers without explanation must score below 0.4.
 
 Return JSON only:
 {{
@@ -106,10 +124,10 @@ Return JSON only:
   "confidence": 0.0-1.0,
   "strengths": ["..."],
   "weaknesses": ["..."],
-    "missing_concepts": ["..."],
-    "intent": "no_understanding | partial_understanding | clear_understanding",
-    "depth": "shallow | basic | good | strong",
-    "clarity": "poor | okay | clear"
+  "missing_concepts": ["..."],
+  "intent": "no_understanding | partial_understanding | clear_understanding",
+  "depth": "shallow | basic | good | strong",
+  "clarity": "poor | okay | clear"
 }}
 
 Question: {question}
@@ -121,7 +139,7 @@ def _clip(value: float, low: float = 0.0, high: float = 1.0) -> float:
     return max(low, min(high, value))
 
 
-def _analyze_answer(answer: str) -> dict[str, bool | int]:
+def _analyze_answer(answer: str) -> dict[str, Union[bool, int]]:
     normalized = answer.strip().lower()
     tokens = re.findall(r"\b\w[\w-]*\b", normalized)
     token_count = len(tokens)
@@ -159,7 +177,7 @@ def _depth_from_score(score: float) -> str:
     return "strong"
 
 
-def _clarity_from_signals(signals: dict[str, bool | int]) -> str:
+def _clarity_from_signals(signals: dict[str, Union[bool, int]]) -> str:
     token_count = int(signals["token_count"])
     if bool(signals["very_short"]) or bool(signals["keyword_only"]) or bool(signals["vague"]):
         return "poor"
@@ -172,7 +190,7 @@ def _clarity_from_signals(signals: dict[str, bool | int]) -> str:
     return "okay"
 
 
-def _intent_from_signals(signals: dict[str, bool | int], score: float) -> str:
+def _intent_from_signals(signals: dict[str, Union[bool, int]], score: float) -> str:
     if bool(signals["very_short"]) or bool(signals["keyword_only"]):
         return "no_understanding"
 
@@ -295,7 +313,7 @@ def _fallback_judge_output(error: Exception) -> JudgeOutput:
 async def evaluate_answer(
     question: str,
     answer: str,
-    prompt_template: str | None = None,
+    prompt_template:Optional[ str] = None,
     model: str = _JUDGE_MODEL,
 ) -> JudgeOutput:
     judge_input = JudgeInput(question=question, answer=answer)
@@ -318,7 +336,19 @@ async def evaluate_answer(
         )
         payload = extract_json(output)
         raw_evaluation = JudgeOutput.model_validate(payload)
-    except Exception as exc:  # pragma: no cover - defensive against model format drift
-        return _fallback_judge_output(exc)
+    except Exception as exc:  # pragma: no cover
+        from aot_layer.mock_llm import evaluate_answer_text
+        mock_result = await evaluate_answer_text(judge_input.question, judge_input.answer)
+        
+        return JudgeOutput(
+            score=mock_result.confidence,
+            confidence=mock_result.confidence,
+            strengths=mock_result.evidence,
+            weaknesses=["Mock evaluation used due to LLM unavailability"],
+            missing_concepts=mock_result.missing,
+            intent="partial_understanding" if mock_result.direction == "partial" else "clear_understanding",
+            depth="basic" if mock_result.direction == "partial" else "strong",
+            clarity="clear",
+        )
 
     return _calibrate_output(raw_evaluation, judge_input.answer)

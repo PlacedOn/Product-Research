@@ -1,14 +1,16 @@
+from __future__ import annotations
+from typing import Optional
 from aot_layer.config import AoTConfig
-from aot_layer.decomposer import Decomposer
+from aot_layer.dag_decomposer import DAGDecomposer
 from aot_layer.models import EndDecision, InterviewState, JudgeResult, StartDecision
-
 
 class Controller:
     def __init__(self, config: AoTConfig) -> None:
         self.config = config
+        self.decomposer = DAGDecomposer(target_sigma2=config.target_sigma2)
 
-    async def decide_start(self, state: InterviewState, decomposer: Decomposer) -> StartDecision:
-        decomposed_skill = await decomposer.pick_skill(state)
+    async def decide_start(self, state: InterviewState) -> StartDecision:
+        decomposed_skill = await self.decomposer.pick_skill(state)
         candidate_skill = self._rebalance_skill_if_needed(state, decomposed_skill)
         difficulty = self.difficulty_for_skill(state, candidate_skill)
         return StartDecision(target_skill=candidate_skill, difficulty=difficulty)
@@ -61,7 +63,7 @@ class Controller:
             return candidate_skill
         return self._next_skill_balanced(state=state, avoid_skill=candidate_skill)
 
-    def _next_skill_balanced(self, state: InterviewState, avoid_skill: str | None = None) -> str:
+    def _next_skill_balanced(self, state: InterviewState, avoid_skill:Optional[ str] = None) -> str:
         # True Markov: next skill is purely determined by the current state's uncertainty (sigma2)
         eligible_skills = [
             skill for skill in state.skills 

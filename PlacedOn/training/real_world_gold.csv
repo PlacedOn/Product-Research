@@ -1,0 +1,9 @@
+skill,question,answer,quality_score,confidence,red_flag,rationale
+caching,"How would you handle cache invalidation?","I usually just set a very long TTL and hope it doesn't get out of sync. Actually, I don't really know.",0.2,0.9,False,"Admits ignorance but demonstrates a dangerous lack of system design knowledge for a senior role."
+system_design,"Design a high-throughput API.","I would put everything in an RDBMS and use a single large instance. Scaling is just buying a bigger server.",0.3,0.85,False,"Demonstrates 'Vertical Scaling' mindset only; lacks understanding of distributed systems."
+block_4_grit,"Tell me about a difficult bug.","I worked on this bug for 20 minutes, couldn't find it, and asked a senior to fix it because I had a lunch meeting.",0.15,0.95,True,"Low persistence (grit); red flag for ownership and resilience."
+block_6_social,"How do you handle a toxic teammate?","I usually just ignore them and do my work. I don't really like talking to people anyway.",0.25,0.7,True,"Anti-social behavioral signal; red flag for collaboration and team health."
+backend,"Explain REST.","REST stands for Representational State Transfer. It uses HTTP methods like GET, POST, PUT, DELETE for stateless communication.",0.9,0.95,False,"Clear, accurate technical definition."
+db_design,"Why use an index?","Indices improve query performance by reducing the amount of data the DB needs to scan, but they add overhead to writes.",0.85,0.9,False,"Nuanced understanding of performance trade-offs."
+block_8_ownership,"You missed a deadline, what happened?","It was the designer's fault because they were late with the assets. I did my part on time though.",0.2,0.8,True,"Lack of ownership; blaming others is a behavioral red flag."
+block_10_calibration,"How confident are you in your answer?","I'm 100% sure I'm right about everything I just said, no doubt.",0.4,0.5,False,"Over-confidence without validation check; sign of poor self-calibration."

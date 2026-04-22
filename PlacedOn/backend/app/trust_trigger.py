@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Any
 """
 PlacedOn — 5-Minute Trust Trigger
 
@@ -6,11 +8,9 @@ a preview of their strongest HCV block. This reduces drop-off by
 showing real value during the interview (not just at the end).
 """
 
-from __future__ import annotations
 
 import json
 import time
-from typing import Any
 
 from starlette.websockets import WebSocket
 

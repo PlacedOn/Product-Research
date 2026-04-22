@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 import re
 
 from layer2.config import Layer2Config
@@ -9,7 +11,7 @@ _SIGNAL_TERMS = signal_terms()
 
 
 class CapabilityAdapter:
-    def __init__(self, config: Layer2Config | None = None) -> None:
+    def __init__(self, config:Optional[ Layer2Config] = None) -> None:
         self._config = config or Layer2Config()
         self._state: dict[str, SkillState] = {
             skill: SkillState(

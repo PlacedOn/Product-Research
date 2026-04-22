@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 from collections.abc import Awaitable, Callable
 
 from aot_layer.config import AoTConfig
@@ -11,7 +13,7 @@ AnswerProvider = Callable[[int, str, str, str], Awaitable[str]]
 
 
 class AoTOrchestrator:
-    def __init__(self, config: AoTConfig | None = None) -> None:
+    def __init__(self, config:Optional[ AoTConfig] = None) -> None:
         self.config = config or AoTConfig()
         self.controller = Controller(self.config)
         self.decomposer = Decomposer()
@@ -35,7 +37,7 @@ class AoTOrchestrator:
             retries_per_skill={skill: 0 for skill in skills},
         )
 
-        start_decision = await self.controller.decide_start(state, self.decomposer)
+        start_decision = await self.controller.decide_start(state)
         state.current_skill = start_decision.target_skill
         state.current_difficulty = start_decision.difficulty
         return state

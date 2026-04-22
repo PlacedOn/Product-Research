@@ -1,3 +1,4 @@
+from __future__ import annotations
 from skill_taxonomy import JD_SKILL_MAP, role_defaults
 
 

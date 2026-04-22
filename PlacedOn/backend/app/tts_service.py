@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 import base64
 import subprocess
@@ -29,7 +30,7 @@ class MacTTSService:
         return voices
 
     @staticmethod
-    def resolve_voice(requested_voice: str | None, available_voices: list[str]) -> str:
+    def resolve_voice(requested_voice:Optional[ str], available_voices: list[str]) -> str:
         preferred = ["Samantha", "Allison", "Ava", "Daniel", "Alex"]
         if requested_voice and requested_voice in available_voices:
             return requested_voice
@@ -41,7 +42,7 @@ class MacTTSService:
         return available_voices[0]
 
     @classmethod
-    def synthesize(cls, text: str, voice: str | None = None, rate: int = 185) -> dict[str, str]:
+    def synthesize(cls, text: str, voice:Optional[ str] = None, rate: int = 185) -> dict[str, str]:
         stripped_text = text.strip()
         if not stripped_text:
             raise TTSServiceError("Text is required for speech synthesis")
@@ -49,8 +50,8 @@ class MacTTSService:
         voices = cls.list_voices()
         selected_voice = cls.resolve_voice(voice, voices)
 
-        tmp_path: Path | None = None
-        wav_path: Path | None = None
+        tmp_path:Optional[ Path] = None
+        wav_path:Optional[ Path] = None
         try:
             with tempfile.NamedTemporaryFile(suffix=".aiff", delete=False) as tmp:
                 tmp_path = Path(tmp.name)

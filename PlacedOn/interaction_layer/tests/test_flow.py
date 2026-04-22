@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 
 from interaction_layer.models import AudioChunk, BackendTurnResponse

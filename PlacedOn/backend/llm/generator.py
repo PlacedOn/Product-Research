@@ -1,6 +1,7 @@
+from __future__ import annotations
+from typing import Any, Optional, Union
 import asyncio
 import re
-from typing import Any
 
 from backend.llm.ollama_client import call_ollama
 from backend.schemas.generator_schema import GeneratorInput, PlanOutput, QuestionOutput
@@ -111,10 +112,10 @@ def _fallback_prompt_variants(action: str, skill: str) -> list[str]:
 
 def _fallback_question(
     plan: PlanOutput,
-    context: GeneratorInput | None = None,
-    mode: str | None = None,
-    skill: str | None = None,
-    difficulty: str | None = None,
+    context:Optional[ GeneratorInput] = None,
+    mode:Optional[ str] = None,
+    skill:Optional[ str] = None,
+    difficulty:Optional[ str] = None,
 ) -> QuestionOutput:
     mode = mode or plan.action
     skill = skill or plan.target_skill
@@ -141,7 +142,7 @@ def _fallback_question(
 
 
 async def generate_question(
-    plan: PlanOutput | dict[str, Any],
+    plan: Union[PlanOutput, dict][str, Any],
     context: dict[str, Any],
 ) -> QuestionOutput:
     plan_payload = plan.model_dump() if isinstance(plan, PlanOutput) else plan
@@ -173,8 +174,8 @@ Return JSON only:
 {{
   "question": "string",
   "skill": "string",
-  "difficulty": "easy | medium | hard",
-  "type": "conceptual | system_design | behavioral"
+  "difficulty": "Union[easy, medium] | hard",
+  "type": "Union[conceptual, system_design] | behavioral"
 }}
 Set "type" to "{default_type}" unless it clearly does not fit.
 """
@@ -211,10 +212,11 @@ Set "type" to "{default_type}" unless it clearly does not fit.
             )
         return result
     except Exception:  # noqa: BLE001
-        return _fallback_question(
-            parsed_context.plan,
-            parsed_context,
-            mode=mode,
+        from aot_layer.mock_llm import generate_question_text
+        question = await generate_question_text(target_skill, difficulty, mode)
+        return QuestionOutput(
+            question=question,
             skill=target_skill,
             difficulty=difficulty,
+            type=default_type,
         )

@@ -1,12 +1,14 @@
+from __future__ import annotations
+from typing import Optional
 from layer5.config import Layer5Config
 from layer5.models import ProfileOutput, RenderInput, Trait
 
 
 class ProfileRenderer:
-    def __init__(self, config: Layer5Config | None = None) -> None:
+    def __init__(self, config:Optional[ Layer5Config] = None) -> None:
         self._config = config or Layer5Config()
 
-    async def render(self, data: RenderInput, top_n: int | None = None) -> ProfileOutput:
+    async def render(self, data: RenderInput, top_n:Optional[ int] = None) -> ProfileOutput:
         max_traits = top_n or self._config.top_traits_default
 
         ranked = sorted(

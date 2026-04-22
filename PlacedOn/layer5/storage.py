@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 from collections.abc import Mapping
 
 from layer5.models import CandidateState
@@ -10,7 +12,7 @@ class InMemoryVectorStorage:
     async def upsert_candidate(self, state: CandidateState) -> None:
         self._records[state.candidate_id] = state
 
-    async def get_candidate(self, candidate_id: str) -> CandidateState | None:
+    async def get_candidate(self, candidate_id: str) ->Optional[ CandidateState]:
         return self._records.get(candidate_id)
 
     async def list_candidates(self) -> list[CandidateState]:
@@ -45,13 +47,13 @@ class PgVectorStorageAdapter:
     ```
     """
 
-    def __init__(self, fallback_storage: InMemoryVectorStorage | None = None) -> None:
+    def __init__(self, fallback_storage:Optional[ InMemoryVectorStorage] = None) -> None:
         self._fallback = fallback_storage or InMemoryVectorStorage()
 
     async def upsert_candidate(self, state: CandidateState) -> None:
         await self._fallback.upsert_candidate(state)
 
-    async def get_candidate(self, candidate_id: str) -> CandidateState | None:
+    async def get_candidate(self, candidate_id: str) ->Optional[ CandidateState]:
         return await self._fallback.get_candidate(candidate_id)
 
     async def list_candidates(self) -> list[CandidateState]:
@@ -59,13 +61,13 @@ class PgVectorStorageAdapter:
 
 
 class CandidateRepository:
-    def __init__(self, backend: InMemoryVectorStorage | PgVectorStorageAdapter | None = None) -> None:
+    def __init__(self, backend: InMemoryVectorStorage |Optional[ PgVectorStorageAdapter] = None) -> None:
         self._backend = backend or PgVectorStorageAdapter()
 
     async def save(self, state: CandidateState) -> None:
         await self._backend.upsert_candidate(state)
 
-    async def get(self, candidate_id: str) -> CandidateState | None:
+    async def get(self, candidate_id: str) ->Optional[ CandidateState]:
         return await self._backend.get_candidate(candidate_id)
 
     async def all(self) -> list[CandidateState]:

@@ -1,4 +1,5 @@
-from typing import Any, Literal
+from __future__ import annotations
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -20,18 +21,18 @@ class InterviewState(BaseModel):
     turn: int = 0
     turn_count: int = 0
     last_question: str = ""
-    last_answer: str | None = None
+    last_answer:Optional[ str] = None
     skill_vector: list[float] = Field(default_factory=lambda: [0.5, 0.5, 0.5])
     skill_scores: dict[str, float] = Field(default_factory=dict)
     skill_coverage: float = 0.0
     avg_confidence: float = 0.0
     sigma2: list[float] = Field(default_factory=lambda: [0.5, 0.5, 0.5])
     performance: dict[str, Any] = Field(default_factory=dict)
-    last_message_id: str | None = None
+    last_message_id:Optional[ str] = None
     question_history: list[str] = Field(default_factory=list)
     answer_history: list[str] = Field(default_factory=list)
     current_mode: str = "new"
-    current_skill: str | None = None
+    current_skill:Optional[ str] = None
     current_difficulty: str = "medium"
     latest_trust_score: float = 0.0
     anomaly_flag: bool = False

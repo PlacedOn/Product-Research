@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Tests for Day 1-2 API endpoints: CSV ingestion, rating, JSONL export."""
 
 import asyncio

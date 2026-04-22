@@ -1,4 +1,5 @@
-from typing import Any
+from __future__ import annotations
+from typing import Any, Optional
 
 try:
     from redis.asyncio import Redis
@@ -9,7 +10,7 @@ from .models import InterviewState
 
 
 class SessionManager:
-    def __init__(self, redis_client: Redis | None, ttl_seconds: int = 1800) -> None:
+    def __init__(self, redis_client:Optional[ Redis], ttl_seconds: int = 1800) -> None:
         self._redis = redis_client
         self._ttl_seconds = ttl_seconds
         self._memory: dict[str, str] = {}
@@ -25,7 +26,7 @@ class SessionManager:
     def _key(interview_id: str) -> str:
         return f"interview:{interview_id}"
 
-    async def get_state(self, interview_id: str) -> InterviewState | None:
+    async def get_state(self, interview_id: str) ->Optional[ InterviewState]:
         key = self._key(interview_id)
         if self._redis is None:
             raw = self._memory.get(key)

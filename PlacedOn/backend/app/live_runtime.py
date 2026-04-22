@@ -1,8 +1,8 @@
 from __future__ import annotations
+from typing import Any, Optional
 
 import os
 import sys
-from typing import Any
 
 CODE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 if CODE_ROOT not in sys.path:
@@ -10,8 +10,9 @@ if CODE_ROOT not in sys.path:
 
 from aot_layer.config import AoTConfig
 from aot_layer.models import InterviewState as AoTInterviewState
-from aot_layer.models import QuestionRequest, StartInput
+from aot_layer.models import QuestionRequest, StartInput, JudgeResult as AoTJudgeResult
 from aot_layer.orchestrator import AoTOrchestrator
+from backend.llm.consensus_judge import ConsensusJudge
 from .models import InterviewState
 from layer2.adapter import CapabilityAdapter
 from layer2.ast_evaluator import ASTEvaluator
@@ -48,7 +49,7 @@ def should_end_interview(state: InterviewState) -> bool:
 
 
 class LiveInterviewRuntime:
-    def __init__(self, config: AoTConfig | None = None, repository: CandidateRepository | None = None) -> None:
+    def __init__(self, config:Optional[ AoTConfig] = None, repository:Optional[ CandidateRepository] = None) -> None:
         from layer3.bias_classifier import BiasEnforcer
         from layer3.fallback import SafeQuestionPipeline
 
@@ -63,6 +64,7 @@ class LiveInterviewRuntime:
         self._matcher = FitMatcher()
         self._renderer = ProfileRenderer()
         self._repo = repository or CandidateRepository()
+        self._consensus_judge = ConsensusJudge()
 
     async def bootstrap_question(self, state: InterviewState) -> InterviewState:
         if state.last_question and state.turn > 0:
@@ -122,18 +124,33 @@ class LiveInterviewRuntime:
         trust_factor = 0.7 + (0.3 * integrity.trust_score)
         adjusted_confidence = round(max(0.0, min(judge_result.confidence * trust_factor, 1.0)), 2)
 
+        # Sync with AoT Logic Phase 1 (Contract)
         aot_state.turn_index += 1
         aot_state.turns_per_skill[active_skill] = aot_state.turns_per_skill.get(active_skill, 0) + 1
         aot_state.consecutive_turns[active_skill] = aot_state.consecutive_turns.get(active_skill, 0) + 1
         aot_state.skill_vector[active_skill] = adjusted_confidence
         aot_state.sigma2[active_skill] = round(1.0 - adjusted_confidence, 2)
 
+        # Phase 2: Consensus Judge Integration (Real-Life Problem Safety)
+        consensus = await self._consensus_judge.check_drift(
+            question=state.last_question,
+            answer=answer,
+            previous_state=aot_state.compress_to_markov_state(),
+            proposed_state=aot_state.compress_to_markov_state()
+        )
+        
+        if consensus.any_drift_detected:
+            drift_penalty = 1.0 - consensus.drift_score
+            adjusted_confidence = round(adjusted_confidence * drift_penalty, 2)
+            aot_state.skill_vector[active_skill] = adjusted_confidence
+            aot_state.sigma2[active_skill] = round(1.0 - adjusted_confidence, 2)
+
         tracked_skill_scores = self._build_skill_scores(state.skill_scores, aot_state.skill_vector)
         tracked_skill_scores[active_skill] = adjusted_confidence
 
         next_turn_count = max(state.turn_count, 0) + 1
         previous_confidence_total = max(state.avg_confidence, 0.0) * max(state.turn_count, 0)
-        next_avg_confidence = (previous_confidence_total + float(judge_result.confidence)) / next_turn_count
+        next_avg_confidence = (previous_confidence_total + float(adjusted_confidence)) / next_turn_count
 
         total_skills = max(len(tracked_skill_scores), 1)
         covered_skills = sum(1 for score in tracked_skill_scores.values() if score >= SKILL_SCORE_THRESHOLD)

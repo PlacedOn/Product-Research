@@ -1,3 +1,4 @@
+from __future__ import annotations
 from backend.schemas.generator_schema import CandidateProfile, GeneratorInput, JobProfile, PlanOutput, QuestionOutput
 from backend.schemas.judge_schema import JudgeInput, JudgeOutput
 

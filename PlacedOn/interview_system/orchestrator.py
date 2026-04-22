@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 from collections.abc import Awaitable, Callable
 
@@ -19,12 +20,13 @@ from layer5.matcher import FitMatcher
 from layer5.models import FitInput, InterviewTurn, RenderInput, SkillTurnSignal
 from layer5.renderer import ProfileRenderer
 from layer5.storage import CandidateRepository
+from backend.llm.consensus_judge import ConsensusJudge
 
 AnswerProvider = Callable[[int, str, str, str], Awaitable[str]]
 
 
 class FullStackInterviewOrchestrator:
-    def __init__(self, config: AoTConfig | None = None, repository: CandidateRepository | None = None) -> None:
+    def __init__(self, config:Optional[ AoTConfig] = None, repository:Optional[ CandidateRepository] = None) -> None:
         self._aot = AoTOrchestrator(config=config or AoTConfig())
 
         self._adapter = CapabilityAdapter()
@@ -38,14 +40,15 @@ class FullStackInterviewOrchestrator:
         self._matcher = FitMatcher()
         self._renderer = ProfileRenderer()
         self._repo = repository or CandidateRepository()
+        self._consensus_judge = ConsensusJudge()
 
     async def run(
         self,
         candidate_id: str,
         start_input: StartInput,
         answer_provider: AnswerProvider,
-        role_vector: list[float] | None = None,
-        preference_vector: list[float] | None = None,
+        role_vector:Optional[ list[float]] = None,
+        preference_vector:Optional[ list[float]] = None,
         max_turns: int = 5,
     ) -> FullStackResult:
         state = await self._aot.initialize_state(start_input)
@@ -55,7 +58,7 @@ class FullStackInterviewOrchestrator:
         adapter_history = []
         embedding_history: list[list[float]] = []
         layer5_turns: list[InterviewTurn] = []
-        target_dim: int | None = None
+        target_dim:Optional[ int] = None
 
         while len(traces) < max_turns and state.turn_index < self._aot.config.total_turn_limit:
             turn_mode = mode
@@ -106,8 +109,25 @@ class FullStackInterviewOrchestrator:
             state.turn_index += 1
             state.turns_per_skill[active_skill] = state.turns_per_skill.get(active_skill, 0) + 1
             state.consecutive_turns[active_skill] = state.consecutive_turns.get(active_skill, 0) + 1
+            
+            # Phase 2: State Contraction (Atomic Update)
             state.skill_vector[active_skill] = adjusted_confidence
             state.sigma2[active_skill] = round(1.0 - adjusted_confidence, 2)
+
+            # Phase 3: Consensus Judge (Drift Check)
+            consensus = await self._consensus_judge.check_drift(
+                question=safe_question,
+                answer=answer,
+                previous_state=state.compress_to_markov_state(), # Note: ideally this should be a snapshot before contraction
+                proposed_state=state.compress_to_markov_state()
+            )
+            
+            if consensus.any_drift_detected or consensus.best_match != "C":
+                # Penalize confidence if state drift is detected
+                drift_penalty = 1.0 - consensus.drift_score
+                adjusted_confidence = round(adjusted_confidence * drift_penalty, 2)
+                state.skill_vector[active_skill] = adjusted_confidence
+                state.sigma2[active_skill] = round(1.0 - adjusted_confidence, 2)
 
             end_decision = await self._aot.controller.decide_end(state, judge_result)
             if end_decision.action == "probe":
@@ -156,6 +176,8 @@ class FullStackInterviewOrchestrator:
                     answer=answer,
                     judge_confidence=judge_result.confidence,
                     adjusted_confidence=adjusted_confidence,
+                    drift_score=consensus.drift_score,
+                    best_match=consensus.best_match,
                 )
             )
 

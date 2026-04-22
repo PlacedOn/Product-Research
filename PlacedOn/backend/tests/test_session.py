@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 import asyncio
 import time
 
@@ -10,14 +12,14 @@ class InMemoryRedis:
         self._store: dict[str, str] = {}
         self._expires_at: dict[str, float] = {}
 
-    async def get(self, key: str) -> str | None:
+    async def get(self, key: str) ->Optional[ str]:
         if key in self._expires_at and self._expires_at[key] <= time.monotonic():
             self._store.pop(key, None)
             self._expires_at.pop(key, None)
             return None
         return self._store.get(key)
 
-    async def set(self, key: str, value: str, ex: int | None = None) -> None:
+    async def set(self, key: str, value: str, ex:Optional[ int] = None) -> None:
         self._store[key] = value
         if ex is not None:
             self._expires_at[key] = time.monotonic() + ex

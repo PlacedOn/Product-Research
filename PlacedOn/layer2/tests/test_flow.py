@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 
 from layer2.adapter import CapabilityAdapter
