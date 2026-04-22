@@ -309,7 +309,7 @@ async def evaluate_answer(
             },
         )
         payload = extract_json(output)
-        raw_evaluation = JudgeOutput.parse_obj(payload)
+        raw_evaluation = JudgeOutput.model_validate(payload)
     except Exception as exc:  # pragma: no cover - defensive against model format drift
         return _fallback_judge_output(exc)
 

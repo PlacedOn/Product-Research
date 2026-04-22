@@ -144,9 +144,9 @@ async def generate_question(
     plan: Union[PlanOutput, Dict[str, Any]],
     context: Dict[str, Any],
 ) -> QuestionOutput:
-    plan_payload = plan.dict() if isinstance(plan, PlanOutput) else plan
+    plan_payload = plan.model_dump() if isinstance(plan, PlanOutput) else plan
 
-    parsed_context = GeneratorInput.parse_obj(
+    parsed_context = GeneratorInput.model_validate(
         {
             **context,
             "plan": plan_payload,
@@ -192,7 +192,7 @@ Set "type" to "{default_type}" unless it clearly does not fit.
             },
         )
         payload = extract_json(output)
-        result = QuestionOutput.parse_obj(payload)
+        result = QuestionOutput.model_validate(payload)
         if not _looks_like_interviewer_question(result.question):
             return _fallback_question(
                 parsed_context.plan,

@@ -1,6 +1,6 @@
 from typing import List, Literal
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class JudgeInput(BaseModel):
@@ -19,7 +19,8 @@ class JudgeOutput(BaseModel):
     clarity: Literal["poor", "okay", "clear"] = "okay"
     atomic_summary: str = ""
 
-    @validator("score", "confidence", pre=True)
+    @field_validator("score", "confidence", mode="before")
+    @classmethod
     def _coerce_range(cls, value: float) -> float:
         numeric = float(value)
         if numeric < 0.0:
