@@ -1,3 +1,5 @@
+from typing import Optional
+
 from aot_layer.config import AoTConfig
 from aot_layer.decomposer import Decomposer
 from aot_layer.models import EndDecision, InterviewState, JudgeResult, StartDecision
@@ -61,7 +63,7 @@ class Controller:
             return candidate_skill
         return self._next_skill_balanced(state=state, avoid_skill=candidate_skill)
 
-    def _next_skill_balanced(self, state: InterviewState, avoid_skill: str | None = None) -> str:
+    def _next_skill_balanced(self, state: InterviewState, avoid_skill: Optional[str] = None) -> str:
         # True Markov: next skill is purely determined by the current state's uncertainty (sigma2)
         eligible_skills = [
             skill for skill in state.skills 

@@ -1,11 +1,12 @@
 import asyncio
 import re
+from typing import Dict, Optional, Union
 
 from backend.llm.ollama_client import call_ollama
 from backend.schemas.judge_schema import JudgeInput, JudgeOutput
 from backend.utils.json_utils import extract_json
 
-_JUDGE_MODEL = "llama3:8b-instruct-q4_0"
+_JUDGE_MODEL = "gemma3:1b"
 
 _WEAK_CONFIDENCE_MAX = 0.6
 _MEDIUM_CONFIDENCE_MIN = 0.5
@@ -23,73 +24,44 @@ _EXPLANATION_MARKERS = (
 )
 
 _MECHANISM_MARKERS = (
-    "ttl",
-    "invalidation",
-    "cache key",
-    "eviction",
-    "retry",
-    "backoff",
-    "replication",
-    "lock",
-    "queue",
-    "transaction",
-    "asked",
-    "aligned",
-    "followed up",
-    "listened",
-    "coached",
-    "delegated",
-    "de-escalated",
-    "prioritized",
-    "validated",
+    "ttl", "invalidation", "cache key", "eviction", "retry", "backoff", "replication",
+    "lock", "queue", "transaction", "partition", "shard", "indexing",
+    # Psychological/Behavioral markers
+    "because", "therefore", "as a result", "which led to", "i decided", "i realised",
+    "i recognised", "my approach was", "the reason was", "what i changed was",
+    "i learned that", "the pattern i noticed", "i reflected on", "i understood",
+    "asked", "aligned", "followed up", "listened", "coached", "delegated",
+    "de-escalated", "prioritized", "validated", "owned", "accountability",
 )
 
 _TRADEOFF_MARKERS = (
-    "trade-off",
-    "tradeoff",
-    "however",
-    "but",
-    "latency",
-    "consistency",
-    "complexity",
-    "cost",
-    "stale",
-    "memory",
-    "edge case",
-    "stakeholder",
-    "deadline",
-    "pressure",
-    "constraint",
-    "conflict",
-    "balance",
+    "trade-off", "tradeoff", "however", "but", "latency", "consistency", "complexity",
+    "cost", "stale", "memory", "edge case", "stakeholder", "deadline", "pressure",
+    "constraint", "conflict", "balance",
+    # Psychological/Behavioral markers
+    "on one hand", "the cost was", "the risk was", "i had to balance", "i sacrificed",
+    "short term vs long term", "not ideal but", "i chose x over y", "despite the downside",
+)
+
+_DEPTH_INDICATORS = (
+    "specifically", "for example", "in that instance", "concretely", "the exact moment was",
+    "what i actually did", "the outcome was", "i measured", "i tracked", "i followed up",
+    "i verified", "to give you a concrete", "in practice", "when i applied",
+)
+
+_SHALLOW_INDICATORS = (
+    "i always try my best", "i am a hard worker", "i give 100 percent", "i am very passionate",
+    "i believe in teamwork", "i am a quick learner", "communication is key", "i work well under pressure",
+    "i am very motivated", "i always stay positive",
 )
 
 _TOOL_MARKERS = (
-    "redis",
-    "kafka",
-    "rabbitmq",
-    "mongodb",
-    "postgres",
-    "mysql",
-    "memcached",
-    "elasticsearch",
-    "slack",
-    "jira",
-    "1:1",
-    "retro",
-)
-
-_EXAMPLE_MARKERS = (
-    "for example",
-    "for instance",
-    "when i",
-    "one time",
-    "in that situation",
-    "the result",
+    "redis", "kafka", "rabbitmq", "mongodb", "postgres", "mysql", "memcached",
+    "elasticsearch", "slack", "jira", "1:1", "retro", "gh actions", "jenkins",
 )
 
 
-def build_judge_prompt(question: str, answer: str, prompt_template: str | None = None) -> str:
+def build_judge_prompt(question: str, answer: str, prompt_template: Optional[str] = None) -> str:
     if prompt_template:
         return prompt_template.format(question=question, answer=answer)
 
@@ -106,10 +78,11 @@ Return JSON only:
   "confidence": 0.0-1.0,
   "strengths": ["..."],
   "weaknesses": ["..."],
-    "missing_concepts": ["..."],
-    "intent": "no_understanding | partial_understanding | clear_understanding",
-    "depth": "shallow | basic | good | strong",
-    "clarity": "poor | okay | clear"
+  "missing_concepts": ["..."],
+  "intent": "no_understanding | partial_understanding | clear_understanding",
+  "depth": "shallow | basic | good | strong",
+  "clarity": "poor | okay | clear",
+  "atomic_summary": "a 1-sentence high-density summary of the core insight/state gained about the candidate's skill"
 }}
 
 Question: {question}
@@ -121,7 +94,7 @@ def _clip(value: float, low: float = 0.0, high: float = 1.0) -> float:
     return max(low, min(high, value))
 
 
-def _analyze_answer(answer: str) -> dict[str, bool | int]:
+def _analyze_answer(answer: str) -> Dict[str, Union[bool, int]]:
     normalized = answer.strip().lower()
     tokens = re.findall(r"\b\w[\w-]*\b", normalized)
     token_count = len(tokens)
@@ -130,7 +103,8 @@ def _analyze_answer(answer: str) -> dict[str, bool | int]:
     has_mechanism = any(marker in normalized for marker in _MECHANISM_MARKERS)
     has_tradeoff = any(marker in normalized for marker in _TRADEOFF_MARKERS)
     mentions_tool = any(marker in normalized for marker in _TOOL_MARKERS)
-    has_example = any(marker in normalized for marker in _EXAMPLE_MARKERS)
+    has_example = any(marker in normalized for marker in _DEPTH_INDICATORS)
+    has_shallow = any(marker in normalized for marker in _SHALLOW_INDICATORS)
 
     very_short = token_count <= 3
     keyword_only = token_count <= 6 and not has_explanation and not has_mechanism and not has_example
@@ -143,6 +117,7 @@ def _analyze_answer(answer: str) -> dict[str, bool | int]:
         "has_tradeoff": has_tradeoff,
         "mentions_tool": mentions_tool,
         "has_example": has_example,
+        "has_shallow": has_shallow,
         "very_short": very_short,
         "keyword_only": keyword_only,
         "vague": vague,
@@ -159,7 +134,7 @@ def _depth_from_score(score: float) -> str:
     return "strong"
 
 
-def _clarity_from_signals(signals: dict[str, bool | int]) -> str:
+def _clarity_from_signals(signals: Dict[str, Union[bool, int]]) -> str:
     token_count = int(signals["token_count"])
     if bool(signals["very_short"]) or bool(signals["keyword_only"]) or bool(signals["vague"]):
         return "poor"
@@ -172,7 +147,7 @@ def _clarity_from_signals(signals: dict[str, bool | int]) -> str:
     return "okay"
 
 
-def _intent_from_signals(signals: dict[str, bool | int], score: float) -> str:
+def _intent_from_signals(signals: Dict[str, Union[bool, int]], score: float) -> str:
     if bool(signals["very_short"]) or bool(signals["keyword_only"]):
         return "no_understanding"
 
@@ -196,30 +171,45 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
     signals = _analyze_answer(answer)
     score = float(evaluation.score)
     confidence = float(evaluation.confidence)
+    
+    print(f"[DEBUG] Raw Score: {score}, Tokens: {signals['token_count']}")
 
     weaknesses = list(evaluation.weaknesses)
     missing = list(evaluation.missing_concepts)
 
     # Keep model judgment primary; only hard-cap obvious shallow responses.
     if bool(signals["very_short"]):
+        old_score = score
         if bool(signals["mentions_tool"]):
             score = min(score, 0.25)
         else:
             score = min(max(score, 0.25), 0.35)
+        print(f"[DEBUG] Penalty (Very Short): {old_score} -> {score}")
         weaknesses.append("Answer is too short to demonstrate substantive understanding.")
     elif bool(signals["keyword_only"]):
+        old_score = score
         if bool(signals["mentions_tool"]):
             score = min(score, 0.35)
             weaknesses.append("Mentions keywords without explaining mechanism, example, or reasoning.")
         else:
             score = min(max(score, 0.25), 0.35)
             weaknesses.append("Generic statement lacks concrete evidence, mechanism, or reasoning.")
+        print(f"[DEBUG] Penalty (Keyword Only): {old_score} -> {score}")
     elif bool(signals["vague"]):
         score = min(score, 0.50)
+        print(f"[DEBUG] Penalty (Vague): capped at 0.50")
+
+    # Penalize purely shallow buzzword statements
+    if bool(signals["has_shallow"]) and not bool(signals["has_mechanism"]) and not bool(signals["has_example"]):
+        old_score = score
+        score = min(score, 0.45)
+        print(f"[DEBUG] Penalty (Shallow/Buzzword): {old_score} -> {score}")
+        weaknesses.append("Uses generic buzzwords without providing concrete evidence or mechanisms.")
 
     # Mechanism-bearing answers should not collapse into shallow bands even if model is overly strict.
     if (bool(signals["has_mechanism"]) or bool(signals["has_example"])) and int(signals["token_count"]) >= 6 and score < 0.4:
         score = 0.45
+        print(f"[DEBUG] Rescue (Has Mechanism): raised to 0.45")
 
     # Reward depth indicators with small nudges to avoid brittle rubric-only behavior.
     if bool(signals["has_explanation"]) and bool(signals["has_mechanism"]):
@@ -232,6 +222,7 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
         score += 0.03
 
     score = _clip(score)
+    print(f"[DEBUG] Final Calibrated Score: {score}")
 
     depth = _depth_from_score(score)
     clarity = _clarity_from_signals(signals)
@@ -270,6 +261,7 @@ def _calibrate_output(evaluation: JudgeOutput, answer: str) -> JudgeOutput:
         intent=intent,
         depth=depth,
         clarity=clarity,
+        atomic_summary=evaluation.atomic_summary,
     )
 
 
@@ -295,7 +287,7 @@ def _fallback_judge_output(error: Exception) -> JudgeOutput:
 async def evaluate_answer(
     question: str,
     answer: str,
-    prompt_template: str | None = None,
+    prompt_template: Optional[str] = None,
     model: str = _JUDGE_MODEL,
 ) -> JudgeOutput:
     judge_input = JudgeInput(question=question, answer=answer)
@@ -317,7 +309,7 @@ async def evaluate_answer(
             },
         )
         payload = extract_json(output)
-        raw_evaluation = JudgeOutput.model_validate(payload)
+        raw_evaluation = JudgeOutput.parse_obj(payload)
     except Exception as exc:  # pragma: no cover - defensive against model format drift
         return _fallback_judge_output(exc)
 

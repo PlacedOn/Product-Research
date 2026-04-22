@@ -1,4 +1,5 @@
 from collections.abc import Awaitable, Callable
+from typing import Optional
 
 from aot_layer.config import AoTConfig
 from aot_layer.controller import Controller
@@ -11,7 +12,7 @@ AnswerProvider = Callable[[int, str, str, str], Awaitable[str]]
 
 
 class AoTOrchestrator:
-    def __init__(self, config: AoTConfig | None = None) -> None:
+    def __init__(self, config: Optional[AoTConfig] = None) -> None:
         self.config = config or AoTConfig()
         self.controller = Controller(self.config)
         self.decomposer = Decomposer()
@@ -76,8 +77,31 @@ class AoTOrchestrator:
             state.consecutive_turns[active_skill] = (
                 state.consecutive_turns.get(active_skill, 0) + 1
             )
-            state.skill_vector[active_skill] = round(judge_result.confidence, 2)
-            state.sigma2[active_skill] = round(1.0 - judge_result.confidence, 2)
+            # --- BEGIN IMPROVED KALMAN UPDATE ---
+            current_score = state.skill_vector.get(active_skill, 0.5)
+            current_p = state.sigma2.get(active_skill, 0.8)
+            
+            # 1. Prediction (small drift Q=0.005)
+            p_prior = current_p + 0.005
+            
+            # 2. Measurement Noise R (lower confidence => higher R)
+            obs_score = judge_result.score
+            obs_confidence = judge_result.confidence
+            r = 0.2 * (2.0 - obs_confidence)
+            
+            # 3. Kalman Gain K
+            k = p_prior / (p_prior + r)
+            
+            # 4. Update
+            new_score = current_score + k * (obs_score - current_score)
+            new_p = (1.0 - k) * p_prior
+            
+            state.skill_vector[active_skill] = round(max(0.0, min(new_score, 1.0)), 3)
+            state.sigma2[active_skill] = round(max(0.01, min(new_p, 1.0)), 3)
+            # --- END IMPROVED KALMAN UPDATE ---
+
+            state.atomic_knowledge[active_skill] = judge_result.atomic_summary
+            state.latest_summary = judge_result.atomic_summary
 
             end_decision = await self.controller.decide_end(state, judge_result)
 

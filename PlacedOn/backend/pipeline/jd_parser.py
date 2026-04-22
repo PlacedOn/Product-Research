@@ -1,13 +1,20 @@
-from skill_taxonomy import JD_SKILL_MAP, role_defaults
+from skill_taxonomy import JD_SKILL_MAP, SKILL_ASPECTS, role_defaults
 
 
 def extract_skills_from_jd(jd_text: str) -> dict[str, int]:
     normalized_text = str(jd_text or "").lower()
     skills: dict[str, int] = {}
 
+    # Keyword based matching
     for keyword, skill in JD_SKILL_MAP.items():
         if keyword in normalized_text:
             skills[skill] = skills.get(skill, 0) + 1
+
+    # Aspect based matching (Multi-Aspect Alignment)
+    for skill, aspects in SKILL_ASPECTS.items():
+        for aspect in aspects:
+            if aspect in normalized_text:
+                skills[skill] = skills.get(skill, 0) + 2  # Higher weight for aspect match
 
     return skills
 

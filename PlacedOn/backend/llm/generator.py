@@ -1,13 +1,13 @@
 import asyncio
 import re
-from typing import Any
+from typing import Any, Dict, List, Optional, Union
 
 from backend.llm.ollama_client import call_ollama
 from backend.schemas.generator_schema import GeneratorInput, PlanOutput, QuestionOutput
 from backend.utils.json_utils import extract_json
 from skill_taxonomy import display_skill, is_behavioral_skill
 
-_GENERATOR_MODEL = "llama3:8b-instruct-q4_0"
+_GENERATOR_MODEL = "gemma3:1b"
 
 
 def _default_question_type(action: str, skill: str) -> str:
@@ -111,10 +111,10 @@ def _fallback_prompt_variants(action: str, skill: str) -> list[str]:
 
 def _fallback_question(
     plan: PlanOutput,
-    context: GeneratorInput | None = None,
-    mode: str | None = None,
-    skill: str | None = None,
-    difficulty: str | None = None,
+    context: Optional[GeneratorInput] = None,
+    mode: Optional[str] = None,
+    skill: Optional[str] = None,
+    difficulty: Optional[str] = None,
 ) -> QuestionOutput:
     mode = mode or plan.action
     skill = skill or plan.target_skill
@@ -141,12 +141,12 @@ def _fallback_question(
 
 
 async def generate_question(
-    plan: PlanOutput | dict[str, Any],
-    context: dict[str, Any],
+    plan: Union[PlanOutput, Dict[str, Any]],
+    context: Dict[str, Any],
 ) -> QuestionOutput:
-    plan_payload = plan.model_dump() if isinstance(plan, PlanOutput) else plan
+    plan_payload = plan.dict() if isinstance(plan, PlanOutput) else plan
 
-    parsed_context = GeneratorInput.model_validate(
+    parsed_context = GeneratorInput.parse_obj(
         {
             **context,
             "plan": plan_payload,
@@ -192,7 +192,7 @@ Set "type" to "{default_type}" unless it clearly does not fit.
             },
         )
         payload = extract_json(output)
-        result = QuestionOutput.model_validate(payload)
+        result = QuestionOutput.parse_obj(payload)
         if not _looks_like_interviewer_question(result.question):
             return _fallback_question(
                 parsed_context.plan,

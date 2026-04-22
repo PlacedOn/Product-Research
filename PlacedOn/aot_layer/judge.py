@@ -35,12 +35,14 @@ class Judge:
 
         return JudgeResult(
             direction=direction,
+            score=evaluation.score,
             confidence=confidence,
             evidence=evidence,
             missing=missing,
             probe_recommended=probe_recommended,
             probe_focus=missing[:2],
             recovery_possible=recovery_possible,
+            atomic_summary=evaluation.atomic_summary,
         )
 
     def _classify(self, score: float) -> str:

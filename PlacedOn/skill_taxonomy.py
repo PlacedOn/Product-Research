@@ -35,13 +35,23 @@ SKILL_LABELS = {
 }
 
 TECHNICAL_SKILL_KEYWORDS = {
-    "caching": ["cache", "ttl", "invalidation", "redis", "cache key"],
-    "system_design": ["scale", "throughput", "partition", "latency", "reliability"],
-    "db_design": ["database", "sql", "schema", "index", "query"],
-    "backend": ["api", "backend", "service", "queue", "worker"],
-    "frontend": ["react", "frontend", "state", "render", "component"],
-    "ui": ["accessibility", "design system", "usability", "interaction", "layout"],
-    "performance": ["profiling", "bundle", "latency", "render", "virtualization"],
+    "caching": ["cache", "ttl", "invalidation", "redis", "cache key", "eviction", "warm up"],
+    "system_design": ["scale", "throughput", "partition", "latency", "reliability", "availability", "cap theorem"],
+    "db_design": ["database", "sql", "schema", "index", "query", "normalization", "acid"],
+    "backend": ["api", "backend", "service", "queue", "worker", "grpc", "rest"],
+    "frontend": ["react", "frontend", "state", "render", "component", "virtual dom", "hooks"],
+    "ui": ["accessibility", "design system", "usability", "interaction", "layout", "visual hierarchy"],
+    "performance": ["profiling", "bundle", "latency", "render", "virtualization", "memory leak", "heap"],
+}
+
+# SEMA-Match: Multi-Aspect Decomposition
+SKILL_ASPECTS = {
+    "caching": ["latency reduction", "data consistency", "invalidation strategy"],
+    "system_design": ["scalability", "fault tolerance", "load balancing"],
+    "db_design": ["data integrity", "query optimization", "schema flexibility"],
+    "block_4_grit": ["persistence", "follow-through", "long-term focus"],
+    "block_8_ownership": ["proactivity", "accountability", "outcome-driven"],
+    "block_10_calibration": ["self-awareness", "uncertainty management", "ego-check"],
 }
 
 BEHAVIORAL_SKILL_KEYWORDS = {

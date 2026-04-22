@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import List, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, validator
 
 
 class JudgeInput(BaseModel):
@@ -11,15 +11,15 @@ class JudgeInput(BaseModel):
 class JudgeOutput(BaseModel):
     score: float = Field(ge=0.0, le=1.0)
     confidence: float = Field(ge=0.0, le=1.0)
-    strengths: list[str] = Field(default_factory=list)
-    weaknesses: list[str] = Field(default_factory=list)
-    missing_concepts: list[str] = Field(default_factory=list)
+    strengths: List[str] = Field(default_factory=list)
+    weaknesses: List[str] = Field(default_factory=list)
+    missing_concepts: List[str] = Field(default_factory=list)
     intent: Literal["no_understanding", "partial_understanding", "clear_understanding"] = "partial_understanding"
     depth: Literal["shallow", "basic", "good", "strong"] = "basic"
     clarity: Literal["poor", "okay", "clear"] = "okay"
+    atomic_summary: str = ""
 
-    @field_validator("score", "confidence", mode="before")
-    @classmethod
+    @validator("score", "confidence", pre=True)
     def _coerce_range(cls, value: float) -> float:
         numeric = float(value)
         if numeric < 0.0:

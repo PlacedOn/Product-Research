@@ -97,6 +97,16 @@ class BiasEnforcer:
     def _train(self) -> None:
         safe_questions = [
             # --- Behavioral interview questions (HCV-aligned) ---
+            "Tell me about a challenge you navigated using your own initiative.",
+            "How do you approach learning something completely new to you?",
+            "Describe a situation where you had to communicate across different working styles.",
+            "Walk me through how you handle high-pressure deadlines.",
+            "Tell me about a time you had to adapt your approach based on feedback.",
+            "What does taking ownership of a problem look like for you in practice?",
+            "Describe a failure and what you changed because of it.",
+            "How do you prioritise when multiple things are urgent?",
+            "Tell me about a time you disagreed with a decision and what you did.",
+            "What's the hardest skill you have taught yourself, and how?",
             "Tell me about a time you handled a difficult stakeholder conversation.",
             "Describe a situation where you had to rebuild trust after a mistake.",
             "Walk me through a time you showed ownership under pressure.",
@@ -151,6 +161,7 @@ class BiasEnforcer:
             "Is there any accommodation we can provide during this interview?",
             "How do you prefer to receive feedback?",
             "What communication format works best for you in meetings?",
+            "Are there any specific tools that assist your coding workflow?",
         ]
 
         unsafe_questions = [
@@ -182,6 +193,7 @@ class BiasEnforcer:
             "It is inspiring that someone like you is applying for this role.",
             "People with your background usually struggle — how did you manage?",
             "You have overcome so much — that must make you extra resilient.",
+            "At your experience level, do you still have the energy for this pace?",
             # --- Category 4: ABLEIST — Tokenism ---
             "We need someone from your background for our diversity numbers.",
             "Having someone like you would really help our inclusion metrics.",
@@ -190,12 +202,28 @@ class BiasEnforcer:
             "Our team lacks representation from your community.",
             # --- Category 5: India-specific intersectional bias ---
             "What is your caste or ethnic background?",
+            "Which community do you come from?",
+            "Which part of your family background shaped your work ethic?",
+            "Are you from a rural or urban background originally?",
+            "Tell me about your family's professional background.",
+            "Did your parents have professional careers?",
+            "Did your parents guide you in choosing this career?",
+            "How familiar was your family with this industry growing up?",
             "Would your caste create issues with this client-facing role?",
             "Which college tier did you graduate from?",
+            "We typically look for candidates from top-tier institutions.",
             "Your college is not from the top tier — how will you keep up?",
+            "Did you clear JEE or other competitive entrance exams?",
+            "Where did you rank in your college entrance exams?",
+            "Which board did you study under in school?",
+            "Were you in the top college of your state?",
             "Are you from a reserved category?",
             "Did you get admission through a quota?",
             "Where is your native place and what is your mother tongue?",
+            "How is your Hindi or English communication?",
+            "Are you planning to relocate permanently from your hometown?",
+            "Would you be comfortable working with people from different states?",
+            "How long have you been away from your home state?",
             "What country are you really from?",
             "How much childcare support do you have at home?",
             "Would your religion prevent you from working certain days?",
@@ -217,6 +245,12 @@ class BiasEnforcer:
             "Have you ever had depression?",
             "Do you take any psychiatric medication?",
         ]
+
+        labels = [0] * len(safe_questions) + [1] * len(unsafe_questions)
+        texts = safe_questions + unsafe_questions
+
+        features = self._vectorizer.transform(texts)
+        self._model.fit(features, labels)
 
         labels = [0] * len(safe_questions) + [1] * len(unsafe_questions)
         texts = safe_questions + unsafe_questions

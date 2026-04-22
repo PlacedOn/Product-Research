@@ -1,0 +1,138 @@
+{
+  "config": {
+    "simulated_minutes": 60,
+    "interviews_per_minute": 1,
+    "total_interviews": 60,
+    "rounds": 6,
+    "max_turns": 4,
+    "seed": 42
+  },
+  "summary": {
+    "final_holdout_mae": 0.1029,
+    "initial_pre_train_mae": 0.2082,
+    "final_pre_train_mae": 0.079,
+    "patch_recommendations": [
+      "Analysis: The model is rewarding 'Buzzword' answers because they use markers like 'specifically' \n        without actually citing a mechanism. \n        Patch: Update `_calibrate_output` in `backend/llm/judge.py` to hard-cap scores at 0.35 \n        if `has_shallow` is true, unless `has_mechanism` is ALSO true with high token count."
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "interviews": 10,
+      "batch_pre_train_mae": 0.2082,
+      "holdout_mae": 0.1079,
+      "sampling_weights": {
+        "buzzword_king": 0.283407,
+        "balanced_operator": 0.241172,
+        "deep_specialist": 0.258226,
+        "junior_generalist": 0.217195
+      },
+      "mistake_count": 9,
+      "archetype_error": {
+        "deep_specialist": 0.287,
+        "buzzword_king": 0.1625,
+        "junior_generalist": 0.0825,
+        "balanced_operator": 0.202
+      }
+    },
+    {
+      "round": 2,
+      "interviews": 10,
+      "batch_pre_train_mae": 0.1476,
+      "holdout_mae": 0.0882,
+      "sampling_weights": {
+        "buzzword_king": 0.31214,
+        "balanced_operator": 0.221829,
+        "deep_specialist": 0.239601,
+        "junior_generalist": 0.22643
+      },
+      "mistake_count": 9,
+      "archetype_error": {
+        "buzzword_king": 0.1464,
+        "junior_generalist": 0.1218,
+        "deep_specialist": 0.1764,
+        "balanced_operator": 0.1662
+      }
+    },
+    {
+      "round": 3,
+      "interviews": 10,
+      "batch_pre_train_mae": 0.1244,
+      "holdout_mae": 0.1511,
+      "sampling_weights": {
+        "buzzword_king": 0.339384,
+        "balanced_operator": 0.208438,
+        "deep_specialist": 0.21405,
+        "junior_generalist": 0.238128
+      },
+      "mistake_count": 8,
+      "archetype_error": {
+        "buzzword_king": 0.0757,
+        "balanced_operator": 0.1457,
+        "deep_specialist": 0.0893,
+        "junior_generalist": 0.1823
+      }
+    },
+    {
+      "round": 4,
+      "interviews": 10,
+      "batch_pre_train_mae": 0.1209,
+      "holdout_mae": 0.1177,
+      "sampling_weights": {
+        "buzzword_king": 0.340112,
+        "balanced_operator": 0.190531,
+        "deep_specialist": 0.186925,
+        "junior_generalist": 0.282432
+      },
+      "mistake_count": 5,
+      "archetype_error": {
+        "junior_generalist": 0.1974,
+        "deep_specialist": 0.0289,
+        "balanced_operator": 0.0769,
+        "buzzword_king": 0.1307
+      }
+    },
+    {
+      "round": 5,
+      "interviews": 10,
+      "batch_pre_train_mae": 0.1262,
+      "holdout_mae": 0.187,
+      "sampling_weights": {
+        "buzzword_king": 0.323613,
+        "balanced_operator": 0.184821,
+        "deep_specialist": 0.184978,
+        "junior_generalist": 0.306588
+      },
+      "mistake_count": 10,
+      "archetype_error": {
+        "balanced_operator": 0.1957,
+        "junior_generalist": 0.0881,
+        "deep_specialist": 0.2198,
+        "buzzword_king": 0.1228
+      }
+    },
+    {
+      "round": 6,
+      "interviews": 10,
+      "batch_pre_train_mae": 0.079,
+      "holdout_mae": 0.1029,
+      "sampling_weights": {
+        "buzzword_king": 0.352657,
+        "balanced_operator": 0.180671,
+        "deep_specialist": 0.17348,
+        "junior_generalist": 0.293192
+      },
+      "mistake_count": 6,
+      "archetype_error": {
+        "deep_specialist": 0.0872,
+        "junior_generalist": 0.0086,
+        "balanced_operator": 0.1332,
+        "buzzword_king": 0.0633
+      }
+    }
+  ],
+  "artifacts": {
+    "model_path": "training/simulation_room_model.pkl",
+    "log_path": "training/simulation_room_log.jsonl"
+  }
+}

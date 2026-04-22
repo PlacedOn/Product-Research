@@ -77,23 +77,21 @@ class AggregationEngine:
             sum_exp = sum(exp_logits)
             weights = [e / sum_exp for e in exp_logits]
 
-            weighted_scores = 0.0
-            confidences: list[float] = []
             observed_scores: list[float] = []
+            confidences: list[float] = []
             evidence_bank: list[str] = []
+            weighted_score = 0.0
 
-            for arr_idx, (idx, turn) in enumerate(turns_with_skill):
+            for arr_idx, (_idx, turn) in enumerate(turns_with_skill):
                 signal = turn.skills[skill]
-                weight = weights[arr_idx]
-                
-                weighted_scores += signal.score * weight
-                confidences.append(signal.confidence)
                 observed_scores.append(signal.score)
-                for item in signal.evidence:
-                    if item not in evidence_bank:
-                        evidence_bank.append(item)
+                confidences.append(signal.confidence)
+                weighted_score += signal.score * weights[arr_idx]
 
-            score = weighted_scores
+                for evidence in signal.evidence:
+                    if evidence not in evidence_bank:
+                        evidence_bank.append(evidence)
+
             uncertainty = self._compute_uncertainty(
                 confidences,
                 observed_scores,
@@ -102,7 +100,7 @@ class AggregationEngine:
             )
 
             results[skill] = SkillAggregate(
-                score=round(max(0.0, min(score, 1.0)), 4),
+                score=round(max(0.0, min(weighted_score, 1.0)), 4),
                 uncertainty=round(max(0.0, min(uncertainty, 1.0)), 4),
                 evidence=evidence_bank,
             )

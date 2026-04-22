@@ -47,23 +47,40 @@ class CapabilityAdapter:
         return max(0.0, min(score, 1.0))
 
     def _update_skill(self, current: SkillState, observed_score: float, confidence: float) -> SkillState:
-        gain = 0.25 + (0.5 * confidence)
-        new_score = ((1.0 - gain) * current.score) + (gain * observed_score)
+        # State: current.score (x)
+        # Uncertainty: current.uncertainty (P)
+        # Observation: observed_score (z)
+        # Confidence: measurement quality (controls R)
 
-        discrepancy = abs(observed_score - current.score)
-        uncertainty = current.uncertainty * (1.0 - (0.45 * confidence)) + (0.25 * discrepancy)
-        uncertainty = max(self._config.uncertainty_floor, min(uncertainty, 1.0))
+        # 1. Prediction (traits are stable, but allow small drift Q)
+        p_prior = current.uncertainty + self._config.process_noise_q
+        x_prior = current.score
 
-        return SkillState(score=round(new_score, 4), uncertainty=round(uncertainty, 4))
+        # 2. Measurement Noise (R)
+        # Higher confidence = lower R. Scale R_base by (2.0 - confidence).
+        r = self._config.measurement_noise_r_base * (2.0 - confidence)
+
+        # 3. Kalman Gain (K)
+        k = p_prior / (p_prior + r)
+
+        # 4. Update
+        new_score = x_prior + k * (observed_score - x_prior)
+        new_uncertainty = (1.0 - k) * p_prior
+
+        # Clamping
+        new_uncertainty = max(self._config.uncertainty_floor, min(new_uncertainty, 1.0))
+        new_score = max(0.0, min(new_score, 1.0))
+
+        return SkillState(score=round(new_score, 4), uncertainty=round(new_uncertainty, 4))
 
     def _confidence(self, text: str) -> float:
         lowered = text.lower()
         tokens = re.findall(r"[a-zA-Z0-9_]+", lowered)
-        length_score = min(len(tokens) / 40.0, 1.0)
-        clarity_score = 1.0 if text.strip().endswith((".", "!", "?")) else 0.8
+        length_score = min(len(tokens) / 35.0, 1.0)
+        clarity_score = 1.0 if text.strip().endswith((".", "!", "?")) else 0.9
         signal_hits = sum(1 for term in _SIGNAL_TERMS if term in lowered)
-        keyword_score = min(signal_hits / 6.0, 1.0)
-        return round(max(0.05, min((length_score * 0.5) + (clarity_score * 0.2) + (keyword_score * 0.3), 1.0)), 4)
+        keyword_score = min(signal_hits / 5.0, 1.0)
+        return round(max(0.01, min((length_score * 0.4) + (clarity_score * 0.3) + (keyword_score * 0.3), 1.0)), 4)
 
     def _structural_score(self, text: str) -> float:
         sentences = [part for part in re.split(r"[.!?]+", text) if part.strip()]
