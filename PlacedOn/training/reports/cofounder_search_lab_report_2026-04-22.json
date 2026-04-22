@@ -1,0 +1,1495 @@
+{
+  "config": {
+    "runtime_seconds": 600,
+    "episodes_per_trial": 4,
+    "max_turns": 6,
+    "seed": 42,
+    "skills": [
+      "block_6_leadership",
+      "block_8_ownership",
+      "block_6_social",
+      "block_10_calibration",
+      "system_design",
+      "backend"
+    ]
+  },
+  "summary": {
+    "trial_count": 12557,
+    "best_reward": 0.8235,
+    "best_selection_accuracy": 1.0,
+    "best_psychometric_mae": 0.2173,
+    "best_solve_rate": 0.5312
+  },
+  "parameter_coverage": {
+    "max_consecutive_per_skill": {
+      "seen_values": [
+        2,
+        3
+      ],
+      "tested_option_count": 2,
+      "total_option_count": 2
+    },
+    "max_probes_per_skill": {
+      "seen_values": [
+        1,
+        2,
+        3
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "max_retries_per_skill": {
+      "seen_values": [
+        1,
+        2
+      ],
+      "tested_option_count": 2,
+      "total_option_count": 2
+    },
+    "max_turns_per_skill": {
+      "seen_values": [
+        3,
+        4,
+        5
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "total_turn_limit": {
+      "seen_values": [
+        6,
+        8,
+        10
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "target_sigma2": {
+      "seen_values": [
+        0.14,
+        0.18,
+        0.22,
+        0.26
+      ],
+      "tested_option_count": 4,
+      "total_option_count": 4
+    },
+    "process_noise_q": {
+      "seen_values": [
+        0.002,
+        0.005,
+        0.008
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "measurement_noise_r_base": {
+      "seen_values": [
+        0.14,
+        0.2,
+        0.26
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "strategic_probe_score_floor": {
+      "seen_values": [
+        0.45,
+        0.52,
+        0.6
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "strategic_probe_score_ceiling": {
+      "seen_values": [
+        0.72,
+        0.78,
+        0.84
+      ],
+      "tested_option_count": 3,
+      "total_option_count": 3
+    },
+    "strategic_probe_missing_threshold": {
+      "seen_values": [
+        1,
+        2
+      ],
+      "tested_option_count": 2,
+      "total_option_count": 2
+    }
+  },
+  "best_trial": {
+    "config": {
+      "max_consecutive_per_skill": 3,
+      "max_probes_per_skill": 2,
+      "max_retries_per_skill": 1,
+      "max_turns_per_skill": 3,
+      "total_turn_limit": 6,
+      "target_sigma2": 0.14,
+      "process_noise_q": 0.002,
+      "measurement_noise_r_base": 0.14,
+      "strategic_probe_score_floor": 0.45,
+      "strategic_probe_score_ceiling": 0.78,
+      "strategic_probe_missing_threshold": 1
+    },
+    "selection_accuracy": 1.0,
+    "avg_selected_true_fit": 0.9619,
+    "avg_psychometric_mae": 0.2173,
+    "avg_solve_rate": 0.5312,
+    "avg_turns": 6,
+    "avg_reward": 0.8235,
+    "venture_reward": {
+      "HRX Culture Friction": 0.8235
+    },
+    "hardest_vectors": [
+      {
+        "skill": "block_10_calibration",
+        "mean_error": 0.639
+      },
+      {
+        "skill": "block_8_ownership",
+        "mean_error": 0.396
+      },
+      {
+        "skill": "block_6_social",
+        "mean_error": 0.2325
+      }
+    ],
+    "episodes": [
+      {
+        "venture": "HRX Culture Friction",
+        "stage": "team-reset",
+        "hidden_location": "the founder offsite cabin",
+        "selected_candidate": "Mira",
+        "selected_location": "the product war room",
+        "hidden_cofounder": "Mira",
+        "hidden_candidate_location": "the product war room",
+        "selection_accuracy": 1.0,
+        "selected_true_fit": 0.9729,
+        "selected_estimated_fit": 0.7377,
+        "avg_psychometric_mae": 0.25,
+        "avg_solve_rate": 0.5417,
+        "avg_turns": 6,
+        "reward": 0.8221,
+        "roster": [
+          {
+            "name": "Mira",
+            "archetype": "mission_aligned_operator",
+            "location": "the product war room",
+            "true_fit": 0.9729
+          },
+          {
+            "name": "Naina",
+            "archetype": "enterprise_trust_builder",
+            "location": "the compliance bunker",
+            "true_fit": 0.929
+          },
+          {
+            "name": "Aarav",
+            "archetype": "anti_fragile_builder",
+            "location": "the infra bunker",
+            "true_fit": 0.8116
+          },
+          {
+            "name": "Kabir",
+            "archetype": "charismatic_buzzword_seller",
+            "location": "the growth stage",
+            "true_fit": 0.668
+          }
+        ],
+        "action_mix": {
+          "move": 14,
+          "probe": 5,
+          "retry": 5
+        }
+      },
+      {
+        "venture": "HRX Culture Friction",
+        "stage": "team-reset",
+        "hidden_location": "the founder offsite cabin",
+        "selected_candidate": "Naina",
+        "selected_location": "the compliance bunker",
+        "hidden_cofounder": "Naina",
+        "hidden_candidate_location": "the compliance bunker",
+        "selection_accuracy": 1.0,
+        "selected_true_fit": 0.929,
+        "selected_estimated_fit": 0.7377,
+        "avg_psychometric_mae": 0.2077,
+        "avg_solve_rate": 0.5417,
+        "avg_turns": 6,
+        "reward": 0.8196,
+        "roster": [
+          {
+            "name": "Dev",
+            "archetype": "mercenary_cto",
+            "location": "the isolated lab",
+            "true_fit": 0.6175
+          },
+          {
+            "name": "Sara",
+            "archetype": "adaptive_generalist",
+            "location": "the founder offsite cabin",
+            "true_fit": 0.8884
+          },
+          {
+            "name": "Naina",
+            "archetype": "enterprise_trust_builder",
+            "location": "the compliance bunker",
+            "true_fit": 0.929
+          },
+          {
+            "name": "Kabir",
+            "archetype": "charismatic_buzzword_seller",
+            "location": "the growth stage",
+            "true_fit": 0.668
+          }
+        ],
+        "action_mix": {
+          "retry": 8,
+          "move": 13,
+          "probe": 3
+        }
+      },
+      {
+        "venture": "HRX Culture Friction",
+        "stage": "team-reset",
+        "hidden_location": "the founder offsite cabin",
+        "selected_candidate": "Mira",
+        "selected_location": "the product war room",
+        "hidden_cofounder": "Mira",
+        "hidden_candidate_location": "the product war room",
+        "selection_accuracy": 1.0,
+        "selected_true_fit": 0.9729,
+        "selected_estimated_fit": 0.7377,
+        "avg_psychometric_mae": 0.1983,
+        "avg_solve_rate": 0.4583,
+        "avg_turns": 6,
+        "reward": 0.8198,
+        "roster": [
+          {
+            "name": "Mira",
+            "archetype": "mission_aligned_operator",
+            "location": "the product war room",
+            "true_fit": 0.9729
+          },
+          {
+            "name": "Aarav",
+            "archetype": "anti_fragile_builder",
+            "location": "the infra bunker",
+            "true_fit": 0.8116
+          },
+          {
+            "name": "Kabir",
+            "archetype": "charismatic_buzzword_seller",
+            "location": "the growth stage",
+            "true_fit": 0.668
+          },
+          {
+            "name": "Dev",
+            "archetype": "mercenary_cto",
+            "location": "the isolated lab",
+            "true_fit": 0.6175
+          }
+        ],
+        "action_mix": {
+          "move": 13,
+          "probe": 4,
+          "retry": 7
+        }
+      },
+      {
+        "venture": "HRX Culture Friction",
+        "stage": "team-reset",
+        "hidden_location": "the founder offsite cabin",
+        "selected_candidate": "Mira",
+        "selected_location": "the product war room",
+        "hidden_cofounder": "Mira",
+        "hidden_candidate_location": "the product war room",
+        "selection_accuracy": 1.0,
+        "selected_true_fit": 0.9729,
+        "selected_estimated_fit": 0.7377,
+        "avg_psychometric_mae": 0.2132,
+        "avg_solve_rate": 0.5833,
+        "avg_turns": 6,
+        "reward": 0.8326,
+        "roster": [
+          {
+            "name": "Dev",
+            "archetype": "mercenary_cto",
+            "location": "the isolated lab",
+            "true_fit": 0.6175
+          },
+          {
+            "name": "Mira",
+            "archetype": "mission_aligned_operator",
+            "location": "the product war room",
+            "true_fit": 0.9729
+          },
+          {
+            "name": "Naina",
+            "archetype": "enterprise_trust_builder",
+            "location": "the compliance bunker",
+            "true_fit": 0.929
+          },
+          {
+            "name": "Kabir",
+            "archetype": "charismatic_buzzword_seller",
+            "location": "the growth stage",
+            "true_fit": 0.668
+          }
+        ],
+        "action_mix": {
+          "retry": 6,
+          "move": 14,
+          "probe": 4
+        }
+      }
+    ]
+  },
+  "top_trials": [
+    {
+      "config": {
+        "max_consecutive_per_skill": 3,
+        "max_probes_per_skill": 2,
+        "max_retries_per_skill": 1,
+        "max_turns_per_skill": 3,
+        "total_turn_limit": 6,
+        "target_sigma2": 0.14,
+        "process_noise_q": 0.002,
+        "measurement_noise_r_base": 0.14,
+        "strategic_probe_score_floor": 0.45,
+        "strategic_probe_score_ceiling": 0.78,
+        "strategic_probe_missing_threshold": 1
+      },
+      "selection_accuracy": 1.0,
+      "avg_selected_true_fit": 0.9619,
+      "avg_psychometric_mae": 0.2173,
+      "avg_solve_rate": 0.5312,
+      "avg_turns": 6,
+      "avg_reward": 0.8235,
+      "venture_reward": {
+        "HRX Culture Friction": 0.8235
+      },
+      "hardest_vectors": [
+        {
+          "skill": "block_10_calibration",
+          "mean_error": 0.639
+        },
+        {
+          "skill": "block_8_ownership",
+          "mean_error": 0.396
+        },
+        {
+          "skill": "block_6_social",
+          "mean_error": 0.2325
+        }
+      ],
+      "episodes": [
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.25,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8221,
+          "roster": [
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "move": 14,
+            "probe": 5,
+            "retry": 5
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2077,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8196,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Sara",
+              "archetype": "adaptive_generalist",
+              "location": "the founder offsite cabin",
+              "true_fit": 0.8884
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "retry": 8,
+            "move": 13,
+            "probe": 3
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.1983,
+          "avg_solve_rate": 0.4583,
+          "avg_turns": 6,
+          "reward": 0.8198,
+          "roster": [
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            }
+          ],
+          "action_mix": {
+            "move": 13,
+            "probe": 4,
+            "retry": 7
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2132,
+          "avg_solve_rate": 0.5833,
+          "avg_turns": 6,
+          "reward": 0.8326,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "retry": 6,
+            "move": 14,
+            "probe": 4
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "max_consecutive_per_skill": 3,
+        "max_probes_per_skill": 2,
+        "max_retries_per_skill": 1,
+        "max_turns_per_skill": 4,
+        "total_turn_limit": 6,
+        "target_sigma2": 0.14,
+        "process_noise_q": 0.002,
+        "measurement_noise_r_base": 0.14,
+        "strategic_probe_score_floor": 0.45,
+        "strategic_probe_score_ceiling": 0.78,
+        "strategic_probe_missing_threshold": 1
+      },
+      "selection_accuracy": 1.0,
+      "avg_selected_true_fit": 0.9378,
+      "avg_psychometric_mae": 0.1993,
+      "avg_solve_rate": 0.5312,
+      "avg_turns": 6,
+      "avg_reward": 0.8214,
+      "venture_reward": {
+        "HRX Culture Friction": 0.8202,
+        "HRX Seed Maze": 0.825
+      },
+      "hardest_vectors": [
+        {
+          "skill": "block_10_calibration",
+          "mean_error": 0.6058
+        },
+        {
+          "skill": "block_8_ownership",
+          "mean_error": 0.391
+        },
+        {
+          "skill": "block_6_social",
+          "mean_error": 0.215
+        }
+      ],
+      "episodes": [
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.1983,
+          "avg_solve_rate": 0.4583,
+          "avg_turns": 6,
+          "reward": 0.8198,
+          "roster": [
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            }
+          ],
+          "action_mix": {
+            "retry": 7,
+            "move": 13,
+            "probe": 4
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2026,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8204,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            }
+          ],
+          "action_mix": {
+            "retry": 7,
+            "move": 13,
+            "probe": 4
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2026,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8204,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            }
+          ],
+          "action_mix": {
+            "retry": 7,
+            "move": 13,
+            "probe": 4
+          }
+        },
+        {
+          "venture": "HRX Seed Maze",
+          "stage": "seed",
+          "hidden_location": "the product war room",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9202,
+          "selected_estimated_fit": 0.7425,
+          "avg_psychometric_mae": 0.1935,
+          "avg_solve_rate": 0.5833,
+          "avg_turns": 6,
+          "reward": 0.825,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.704
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9202
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.6423
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.9016
+            }
+          ],
+          "action_mix": {
+            "probe": 7,
+            "move": 14,
+            "retry": 3
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "max_consecutive_per_skill": 3,
+        "max_probes_per_skill": 2,
+        "max_retries_per_skill": 1,
+        "max_turns_per_skill": 4,
+        "total_turn_limit": 6,
+        "target_sigma2": 0.14,
+        "process_noise_q": 0.002,
+        "measurement_noise_r_base": 0.14,
+        "strategic_probe_score_floor": 0.52,
+        "strategic_probe_score_ceiling": 0.78,
+        "strategic_probe_missing_threshold": 1
+      },
+      "selection_accuracy": 1.0,
+      "avg_selected_true_fit": 0.9246,
+      "avg_psychometric_mae": 0.1966,
+      "avg_solve_rate": 0.5312,
+      "avg_turns": 6,
+      "avg_reward": 0.8192,
+      "venture_reward": {
+        "HRX Seed Maze": 0.8179,
+        "HRX Culture Friction": 0.8204
+      },
+      "hardest_vectors": [
+        {
+          "skill": "block_10_calibration",
+          "mean_error": 0.5475
+        },
+        {
+          "skill": "block_8_ownership",
+          "mean_error": 0.391
+        },
+        {
+          "skill": "block_6_social",
+          "mean_error": 0.215
+        }
+      ],
+      "episodes": [
+        {
+          "venture": "HRX Seed Maze",
+          "stage": "seed",
+          "hidden_location": "the product war room",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9202,
+          "selected_estimated_fit": 0.7425,
+          "avg_psychometric_mae": 0.1879,
+          "avg_solve_rate": 0.4583,
+          "avg_turns": 6,
+          "reward": 0.8109,
+          "roster": [
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.914
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.704
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.6423
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9202
+            }
+          ],
+          "action_mix": {
+            "probe": 7,
+            "move": 13,
+            "retry": 4
+          }
+        },
+        {
+          "venture": "HRX Seed Maze",
+          "stage": "seed",
+          "hidden_location": "the product war room",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9202,
+          "selected_estimated_fit": 0.7425,
+          "avg_psychometric_mae": 0.1935,
+          "avg_solve_rate": 0.5833,
+          "avg_turns": 6,
+          "reward": 0.825,
+          "roster": [
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.6423
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.704
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9202
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.9016
+            }
+          ],
+          "action_mix": {
+            "move": 14,
+            "retry": 3,
+            "probe": 7
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2026,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8204,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "retry": 7,
+            "move": 13,
+            "probe": 4
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2026,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8204,
+          "roster": [
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            }
+          ],
+          "action_mix": {
+            "probe": 4,
+            "move": 13,
+            "retry": 7
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "max_consecutive_per_skill": 2,
+        "max_probes_per_skill": 3,
+        "max_retries_per_skill": 1,
+        "max_turns_per_skill": 4,
+        "total_turn_limit": 6,
+        "target_sigma2": 0.14,
+        "process_noise_q": 0.002,
+        "measurement_noise_r_base": 0.14,
+        "strategic_probe_score_floor": 0.45,
+        "strategic_probe_score_ceiling": 0.78,
+        "strategic_probe_missing_threshold": 1
+      },
+      "selection_accuracy": 1.0,
+      "avg_selected_true_fit": 0.9597,
+      "avg_psychometric_mae": 0.221,
+      "avg_solve_rate": 0.5,
+      "avg_turns": 6,
+      "avg_reward": 0.8188,
+      "venture_reward": {
+        "HRX Culture Friction": 0.8167,
+        "HRX Seed Maze": 0.825
+      },
+      "hardest_vectors": [
+        {
+          "skill": "block_10_calibration",
+          "mean_error": 0.5557
+        },
+        {
+          "skill": "block_8_ownership",
+          "mean_error": 0.401
+        },
+        {
+          "skill": "block_6_social",
+          "mean_error": 0.25
+        }
+      ],
+      "episodes": [
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.274,
+          "avg_solve_rate": 0.375,
+          "avg_turns": 6,
+          "reward": 0.7985,
+          "roster": [
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Sara",
+              "archetype": "adaptive_generalist",
+              "location": "the founder offsite cabin",
+              "true_fit": 0.8884
+            }
+          ],
+          "action_mix": {
+            "move": 14,
+            "probe": 2,
+            "retry": 8
+          }
+        },
+        {
+          "venture": "HRX Seed Maze",
+          "stage": "seed",
+          "hidden_location": "the product war room",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9202,
+          "selected_estimated_fit": 0.7425,
+          "avg_psychometric_mae": 0.1935,
+          "avg_solve_rate": 0.5833,
+          "avg_turns": 6,
+          "reward": 0.825,
+          "roster": [
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9202
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.6423
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.704
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.9016
+            }
+          ],
+          "action_mix": {
+            "move": 14,
+            "probe": 7,
+            "retry": 3
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2034,
+          "avg_solve_rate": 0.4583,
+          "avg_turns": 6,
+          "reward": 0.8191,
+          "roster": [
+            {
+              "name": "Sara",
+              "archetype": "adaptive_generalist",
+              "location": "the founder offsite cabin",
+              "true_fit": 0.8884
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "retry": 8,
+            "move": 13,
+            "probe": 3
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2132,
+          "avg_solve_rate": 0.5833,
+          "avg_turns": 6,
+          "reward": 0.8326,
+          "roster": [
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "move": 14,
+            "probe": 4,
+            "retry": 6
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "max_consecutive_per_skill": 2,
+        "max_probes_per_skill": 3,
+        "max_retries_per_skill": 1,
+        "max_turns_per_skill": 4,
+        "total_turn_limit": 6,
+        "target_sigma2": 0.14,
+        "process_noise_q": 0.002,
+        "measurement_noise_r_base": 0.14,
+        "strategic_probe_score_floor": 0.45,
+        "strategic_probe_score_ceiling": 0.78,
+        "strategic_probe_missing_threshold": 1
+      },
+      "selection_accuracy": 1.0,
+      "avg_selected_true_fit": 0.9509,
+      "avg_psychometric_mae": 0.2135,
+      "avg_solve_rate": 0.4896,
+      "avg_turns": 6,
+      "avg_reward": 0.8169,
+      "venture_reward": {
+        "HRX Culture Friction": 0.8169
+      },
+      "hardest_vectors": [
+        {
+          "skill": "block_10_calibration",
+          "mean_error": 0.664
+        },
+        {
+          "skill": "block_8_ownership",
+          "mean_error": 0.391
+        },
+        {
+          "skill": "block_6_social",
+          "mean_error": 0.215
+        }
+      ],
+      "episodes": [
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2077,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8196,
+          "roster": [
+            {
+              "name": "Sara",
+              "archetype": "adaptive_generalist",
+              "location": "the founder offsite cabin",
+              "true_fit": 0.8884
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            }
+          ],
+          "action_mix": {
+            "retry": 8,
+            "move": 13,
+            "probe": 3
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Naina",
+          "selected_location": "the compliance bunker",
+          "hidden_cofounder": "Naina",
+          "hidden_candidate_location": "the compliance bunker",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.929,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2077,
+          "avg_solve_rate": 0.5417,
+          "avg_turns": 6,
+          "reward": 0.8196,
+          "roster": [
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Naina",
+              "archetype": "enterprise_trust_builder",
+              "location": "the compliance bunker",
+              "true_fit": 0.929
+            },
+            {
+              "name": "Sara",
+              "archetype": "adaptive_generalist",
+              "location": "the founder offsite cabin",
+              "true_fit": 0.8884
+            }
+          ],
+          "action_mix": {
+            "retry": 8,
+            "move": 13,
+            "probe": 3
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.2401,
+          "avg_solve_rate": 0.4167,
+          "avg_turns": 6,
+          "reward": 0.8086,
+          "roster": [
+            {
+              "name": "Sara",
+              "archetype": "adaptive_generalist",
+              "location": "the founder offsite cabin",
+              "true_fit": 0.8884
+            },
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            }
+          ],
+          "action_mix": {
+            "retry": 7,
+            "move": 13,
+            "probe": 4
+          }
+        },
+        {
+          "venture": "HRX Culture Friction",
+          "stage": "team-reset",
+          "hidden_location": "the founder offsite cabin",
+          "selected_candidate": "Mira",
+          "selected_location": "the product war room",
+          "hidden_cofounder": "Mira",
+          "hidden_candidate_location": "the product war room",
+          "selection_accuracy": 1.0,
+          "selected_true_fit": 0.9729,
+          "selected_estimated_fit": 0.7377,
+          "avg_psychometric_mae": 0.1983,
+          "avg_solve_rate": 0.4583,
+          "avg_turns": 6,
+          "reward": 0.8198,
+          "roster": [
+            {
+              "name": "Mira",
+              "archetype": "mission_aligned_operator",
+              "location": "the product war room",
+              "true_fit": 0.9729
+            },
+            {
+              "name": "Aarav",
+              "archetype": "anti_fragile_builder",
+              "location": "the infra bunker",
+              "true_fit": 0.8116
+            },
+            {
+              "name": "Kabir",
+              "archetype": "charismatic_buzzword_seller",
+              "location": "the growth stage",
+              "true_fit": 0.668
+            },
+            {
+              "name": "Dev",
+              "archetype": "mercenary_cto",
+              "location": "the isolated lab",
+              "true_fit": 0.6175
+            }
+          ],
+          "action_mix": {
+            "move": 13,
+            "probe": 4,
+            "retry": 7
+          }
+        }
+      ]
+    }
+  ]
+}

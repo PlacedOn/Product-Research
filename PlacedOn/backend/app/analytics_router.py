@@ -1,6 +1,10 @@
-from fastapi import APIRouter
 import json
-import os
+import logging
+from pathlib import Path
+
+from fastapi import APIRouter
+
+LOGGER = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 
@@ -9,9 +13,9 @@ async def get_metrics():
     """
     Reads the background training simulation logs and yields an aggregated metric view.
     """
-    log_path = os.path.join(os.path.dirname(__file__), "../../training/simulation_log.jsonl")
+    log_path = Path(__file__).resolve().parents[2] / "training" / "simulation_log.jsonl"
     
-    if not os.path.exists(log_path):
+    if not log_path.exists():
         # Fallback empty metrics if file isn't generated yet
         return {"data": []}
 
@@ -20,7 +24,7 @@ async def get_metrics():
     increment = 0
 
     try:
-        with open(log_path, 'r') as f:
+        with log_path.open("r", encoding="utf-8") as f:
             lines = f.readlines()
             
             # Subsample lines or take the last N to simulate live convergence logic
@@ -37,9 +41,9 @@ async def get_metrics():
                         "raw_data": data.get("candidate")
                     })
                     increment += 1
-                except:
-                    pass
-    except Exception as e:
-        print(f"Failed to parse log: {e}")
+                except json.JSONDecodeError:
+                    continue
+    except OSError:
+        LOGGER.exception("Failed to parse analytics log from %s", log_path)
         
     return {"data": metrics}

@@ -81,13 +81,13 @@ class AoTOrchestrator:
             current_score = state.skill_vector.get(active_skill, 0.5)
             current_p = state.sigma2.get(active_skill, 0.8)
             
-            # 1. Prediction (small drift Q=0.005)
-            p_prior = current_p + 0.005
+            # 1. Prediction
+            p_prior = current_p + self.config.process_noise_q
             
             # 2. Measurement Noise R (lower confidence => higher R)
             obs_score = judge_result.score
             obs_confidence = judge_result.confidence
-            r = 0.2 * (2.0 - obs_confidence)
+            r = self.config.measurement_noise_r_base * (2.0 - obs_confidence)
             
             # 3. Kalman Gain K
             k = p_prior / (p_prior + r)

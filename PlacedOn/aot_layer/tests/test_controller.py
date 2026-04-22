@@ -67,3 +67,30 @@ def test_controller_skill_rotation_when_consecutive_limit_hit() -> None:
 
     assert start.target_skill != "caching"
     assert start.target_skill in state.skills
+
+
+def test_controller_uses_strategic_probe_for_incomplete_midscore_answer() -> None:
+    config = AoTConfig(
+        max_probes_per_skill=2,
+        strategic_probe_score_floor=0.5,
+        strategic_probe_score_ceiling=0.8,
+        strategic_probe_missing_threshold=2,
+    )
+    controller = Controller(config)
+    state = _base_state()
+    state.current_skill = "caching"
+
+    nuanced_but_incomplete = JudgeResult(
+        direction="correct",
+        score=0.68,
+        confidence=0.62,
+        evidence=["ttl", "invalidation"],
+        missing=["eviction policy", "failure mode"],
+        probe_recommended=False,
+        probe_focus=[],
+        recovery_possible=False,
+    )
+
+    decision = asyncio.run(controller.decide_end(state, nuanced_but_incomplete))
+    assert decision.action == "probe"
+    assert decision.next_mode == "probe"

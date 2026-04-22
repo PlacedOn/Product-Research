@@ -1,10 +1,12 @@
 import asyncio
+import logging
 
 from backend.llm.ollama_client import call_ollama
 from backend.schemas.generator_schema import CandidateProfile, JobProfile
 from backend.utils.json_utils import extract_json
 
 _INTRO_MODEL = "llama3"
+LOGGER = logging.getLogger(__name__)
 
 
 def _looks_like_intro_question(text: str) -> bool:
@@ -56,8 +58,8 @@ job={job.model_dump()}
         intro = str(payload.get("intro", "")).strip()
         if intro and _looks_like_intro_question(intro):
             return intro
-    except Exception:  # noqa: BLE001
-        pass
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug("Falling back to default intro prompt: %s", exc)
 
     company = job.company.strip() or "the company"
     return (

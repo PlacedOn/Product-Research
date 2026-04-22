@@ -1,0 +1,13 @@
+{
+  "max_consecutive_per_skill": 3,
+  "max_probes_per_skill": 2,
+  "max_retries_per_skill": 1,
+  "max_turns_per_skill": 3,
+  "total_turn_limit": 6,
+  "target_sigma2": 0.14,
+  "process_noise_q": 0.002,
+  "measurement_noise_r_base": 0.14,
+  "strategic_probe_score_floor": 0.45,
+  "strategic_probe_score_ceiling": 0.78,
+  "strategic_probe_missing_threshold": 1
+}

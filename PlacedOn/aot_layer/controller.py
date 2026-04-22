@@ -37,6 +37,9 @@ class Controller:
         ):
             return EndDecision(action="probe", next_mode="probe", next_skill=skill)
 
+        if self._should_strategic_probe(state=state, judge_result=judge_result, skill=skill):
+            return EndDecision(action="probe", next_mode="probe", next_skill=skill)
+
         if (
             judge_result.direction == "wrong"
             and judge_result.recovery_possible
@@ -80,3 +83,26 @@ class Controller:
         # Sort by highest uncertainty
         eligible_skills.sort(key=lambda s: state.sigma2.get(s, 1.0), reverse=True)
         return eligible_skills[0]
+
+    def _should_strategic_probe(
+        self,
+        state: InterviewState,
+        judge_result: JudgeResult,
+        skill: str,
+    ) -> bool:
+        if judge_result.direction not in {"partial", "correct"}:
+            return False
+
+        if len(judge_result.missing) < self.config.strategic_probe_missing_threshold:
+            return False
+
+        if state.sigma2.get(skill, 1.0) <= self.config.target_sigma2:
+            return False
+
+        if state.probes_per_skill.get(skill, 0) >= self.config.max_probes_per_skill:
+            return False
+
+        if state.consecutive_turns.get(skill, 0) >= self.config.max_consecutive_per_skill:
+            return False
+
+        return self.config.strategic_probe_score_floor <= judge_result.score <= self.config.strategic_probe_score_ceiling
