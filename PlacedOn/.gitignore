@@ -1,0 +1,6 @@
+# Placedon v1.2 Git Ignore
+logs/
+__pycache__/
+*.pyc
+external_hr_data.csv
+.DS_Store
