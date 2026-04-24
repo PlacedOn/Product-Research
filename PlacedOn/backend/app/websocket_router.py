@@ -48,7 +48,6 @@ async def _send_streamed_question(websocket: WebSocket, question: str, turn: int
 @router.websocket("/ws/{interview_id}")
 async def interview_socket(websocket: WebSocket, interview_id: str) -> None:
     session_manager = websocket.app.state.session_manager
-    settings = getattr(websocket.app.state, "settings", get_settings())
     runtime = getattr(websocket.app.state, "live_runtime", None)
     if runtime is None:
         runtime = LiveInterviewRuntime()
