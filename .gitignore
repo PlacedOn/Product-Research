@@ -21,3 +21,6 @@ PlacedOn/frontend/dist/
 
 # train_judge.py output artifacts
 /training/
+
+# Runtime logs
+*.log
