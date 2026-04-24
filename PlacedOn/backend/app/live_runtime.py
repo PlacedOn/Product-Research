@@ -99,7 +99,6 @@ class LiveInterviewRuntime:
 
     async def process_answer(self, state: InterviewState, answer: str, message_id: str) -> InterviewState:
         aot_state = await self._load_or_initialize_aot_state(state)
-        mode = state.current_mode or "new"
         active_skill = aot_state.current_skill
 
         judge_result = await self._aot.judge.evaluate(active_skill, answer)

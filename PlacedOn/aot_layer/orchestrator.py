@@ -102,12 +102,15 @@ class AoTOrchestrator:
             # 3. Kalman Gain K
             k = p_prior / (p_prior + r)
             
-            # --- BEGIN SEMANTIC SHOCK ---
-            # If the judge is DEFINITIVE about lack of skill (No Understanding), 
-            # we trigger a Bayesian Shock to collapse the state instantly.
-            if getattr(judge_result, "intent", "") == "no_understanding" and obs_confidence > 0.8:
-                k = 0.95  # Force aggressive state collapse (High-Intensity Shock)
-            # --- END SEMANTIC SHOCK ---
+            # Semantic shock: when the judge is highly confident the answer is
+            # wrong AND the candidate cannot recover, collapse the Kalman state
+            # aggressively so we stop overweighting the stale prior.
+            if (
+                judge_result.direction == "wrong"
+                and obs_confidence > 0.8
+                and not judge_result.recovery_possible
+            ):
+                k = 0.95
             
             # 4. Update
             new_score = current_score + k * (obs_score - current_score)

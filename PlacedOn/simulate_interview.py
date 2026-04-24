@@ -1,5 +1,4 @@
 import asyncio
-import json
 
 from aot_layer.config import AoTConfig
 from aot_layer.models import StartInput
@@ -8,7 +7,7 @@ from layer2.embedding import embed_text
 from layer3.bias_classifier import BiasEnforcer
 from backend.llm.claude_axis import ClaudeAxisEvaluator
 from layer5.aggregator import AggregationEngine
-from layer5.models import AxisSignal, CandidateState, InterviewTurn, SkillTurnSignal
+from layer5.models import AxisSignal, InterviewTurn, SkillTurnSignal
 
 # Mock Candidate and Config
 # We will simulate a mid-level backend engineer interview
@@ -23,13 +22,6 @@ class InterviewSimulator:
         
     async def run_simulation(self):
         print("=== STAGE 1: Generating Starting State ===")
-        # Initialize CandidateState
-        candidate = CandidateState(
-            candidate_id="sim_user_1",
-            embedding=[0.0] * 384,
-            skills={}
-        )
-        
         # Initial Vectors
         start = StartInput(
             skill_vector=[0.5] * len(SKILLS),
