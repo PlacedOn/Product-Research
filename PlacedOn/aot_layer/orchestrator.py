@@ -52,9 +52,19 @@ class AoTOrchestrator:
         mode = "new"
 
         while len(logs) < max_turns and state.turn_index < self.config.total_turn_limit:
-            turn_mode = mode
-            active_skill = state.current_skill
+            # Adaptive Sensing (Active Learning): Target the skill with highest uncertainty
+            active_skill = max(state.sigma2, key=lambda k: state.sigma2.get(k, 0.0))
+            
+            # Prevent excessive repetition (max 2 consecutive turns per skill)
+            if state.consecutive_turns.get(active_skill, 0) >= 2:
+                # Pick the second most uncertain skill
+                others = [s for s in self.config.skills if s != active_skill]
+                active_skill = max(others, key=lambda k: state.sigma2.get(k, 0.0))
+
+            state.current_skill = active_skill
             state.current_difficulty = self.controller.difficulty_for_skill(state, active_skill)
+            
+            turn_mode = mode
             question_out = await self.generator.generate(
                 QuestionRequest(
                     target_skill=active_skill,
@@ -91,6 +101,13 @@ class AoTOrchestrator:
             
             # 3. Kalman Gain K
             k = p_prior / (p_prior + r)
+            
+            # --- BEGIN SEMANTIC SHOCK ---
+            # If the judge is DEFINITIVE about lack of skill (No Understanding), 
+            # we trigger a Bayesian Shock to collapse the state instantly.
+            if getattr(judge_result, "intent", "") == "no_understanding" and obs_confidence > 0.8:
+                k = 0.95  # Force aggressive state collapse (High-Intensity Shock)
+            # --- END SEMANTIC SHOCK ---
             
             # 4. Update
             new_score = current_score + k * (obs_score - current_score)

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import argparse
 import asyncio
 import json
@@ -12,7 +13,7 @@ from training.run_judge import run_judge_on_dataset
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Prompt-driven judge calibration pipeline")
-    parser.add_argument("--dataset", required=True, help="Path to Kaggle-style dataset (.csv, .json, .jsonl)")
+    parser.add_argument("--dataset", default="training/real_eval_dataset.jsonl", help="Path to Kaggle-style dataset (.csv, .json, .jsonl)")
     parser.add_argument("--question", default="Evaluate this interview answer.", help="Judge question context")
     parser.add_argument(
         "--domain",
@@ -22,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--iterations", type=int, default=3, help="Number of prompt-improvement rounds")
     parser.add_argument("--limit", type=int, default=120, help="Maximum samples to load")
-    parser.add_argument("--model", default="llama3", help="Ollama model name")
+    parser.add_argument("--model", default="gemma3:1b", help="Ollama model name")
     parser.add_argument("--failure-path", default="training/failures.json", help="Failure log output path")
     parser.add_argument(
         "--report-path",

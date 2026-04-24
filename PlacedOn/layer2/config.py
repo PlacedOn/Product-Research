@@ -6,6 +6,7 @@ from skill_taxonomy import DEFAULT_TRACKED_SKILLS
 
 class Layer2Config(BaseModel):
     tracked_skills: List[str] = Field(default_factory=lambda: list(DEFAULT_TRACKED_SKILLS))
+    total_turn_limit: int = 12  # Increased for Peak Intelligence (Phase 2)
     base_score: float = 0.5
     base_uncertainty: float = 0.8
     uncertainty_floor: float = 0.01

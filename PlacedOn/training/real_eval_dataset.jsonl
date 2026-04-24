@@ -1,0 +1,50 @@
+{"question": "How would you optimize a slow API endpoint 0?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 1.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 2?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 3?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 4.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 5?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 6?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 7.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 8?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 9?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 10.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 11?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 12?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 13.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 14?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 15?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 16.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 17?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 18?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 19.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 20?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 21?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 22.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 23?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 24?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 25.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 26?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 27?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 28.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 29?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 30?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 31.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 32?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 33?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 34.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 35?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 36?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 37.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 38?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 39?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 40.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 41?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 42?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 43.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 44?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 45?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 46.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
+{"question": "How would you optimize a slow API endpoint 47?", "answer": "I would profile the code, add indexing on DB queries, implement a read-through cache, and potentially paginate the response.", "expected": {"quality_score": 0.9}, "domain": "mixed"}
+{"question": "How would you optimize a slow API endpoint 48?", "answer": "I would add Redis cache.", "expected": {"quality_score": 0.4}, "domain": "technical"}
+{"question": "Describe a time you had to overcome a challenge in 49.", "answer": "It was hard.", "expected": {"quality_score": 0.2}, "domain": "behavioral"}
