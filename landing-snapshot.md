@@ -1,0 +1,198 @@
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]:
+      - generic [ref=e7]: P
+      - generic [ref=e8]: PlacedOn
+    - generic [ref=e9]:
+      - link "How It Works" [ref=e10] [cursor=pointer]:
+        - /url: "#how"
+      - link "For Candidates" [ref=e11] [cursor=pointer]:
+        - /url: "#candidates"
+      - link "For Companies" [ref=e12] [cursor=pointer]:
+        - /url: "#companies"
+      - link "Trust" [ref=e13] [cursor=pointer]:
+        - /url: "#trust"
+    - generic [ref=e14]:
+      - button "Log In" [ref=e15]
+      - button "Start Interview" [ref=e16]:
+        - text: Start Interview
+        - img [ref=e17]
+  - generic [ref=e19]:
+    - generic [ref=e22]: The New Standard for Hiring
+    - generic [ref=e23]:
+      - paragraph [ref=e24]:
+        - generic [ref=e25]: Your
+        - generic [ref=e26]: skills
+        - generic [ref=e27]: should
+        - generic [ref=e28]: get
+        - generic [ref=e29]: you
+        - generic [ref=e30]: hired.
+      - paragraph [ref=e31]:
+        - generic [ref=e32]: Not
+        - generic [ref=e33]: your
+        - generic [ref=e34]: resume.
+    - paragraph [ref=e35]: Take a conversational AI interview. Get a verified skill profile. Let companies discover you based on demonstrated ability.
+    - generic [ref=e36]:
+      - button "Start Free Interview" [ref=e37]:
+        - text: Start Free Interview
+        - img [ref=e38]
+      - generic [ref=e40]:
+        - generic [ref=e41]
+        - generic [ref=e46]
+  - generic [ref=e52]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - generic [ref=e56]
+        - generic [ref=e59]: 14:22
+      - paragraph [ref=e61]: "\"Walk me through how you handled state management in that high-traffic e-commerce project.\""
+      - generic [ref=e62]:
+        - img [ref=e64]
+        - generic [ref=e76]: Speaking...
+    - img [ref=e77]
+    - generic [ref=e80]:
+      - generic [ref=e81]:
+        - img [ref=e82]
+        - text: High Signal
+      - generic [ref=e85]:
+        - img [ref=e88]
+        - generic [ref=e92]
+      - generic [ref=e95]:
+        - generic [ref=e96]
+        - generic [ref=e102]
+    - img [ref=e108]
+    - generic [ref=e111]:
+      - generic [ref=e112]:
+        - generic [ref=e113]
+        - generic [ref=e119]: New Match
+      - generic [ref=e120] [cursor=pointer]:
+        - generic [ref=e121]
+        - paragraph [ref=e125]: Matches your exact requirements for complex React state architecture.
+        - generic [ref=e126]
+  - generic [ref=e133]:
+    - generic [ref=e134]:
+      - img [ref=e136]
+      - heading "Verified Skills" [level=4] [ref=e139]
+      - paragraph [ref=e140]: No resume fluff
+    - generic [ref=e141]:
+      - img [ref=e143]
+      - heading "Bias-checked" [level=4] [ref=e146]
+      - paragraph [ref=e147]: Fair assessment
+    - generic [ref=e148]:
+      - img [ref=e150]
+      - heading "You Control Visibility" [level=4] [ref=e153]
+      - paragraph [ref=e154]: Stay anonymous
+    - generic [ref=e155]:
+      - img [ref=e157]
+      - heading "Evidence-backed" [level=4] [ref=e158]
+      - paragraph [ref=e159]: Real project context
+  - generic [ref=e160]:
+    - generic [ref=e161]:
+      - heading "How PlacedOn works" [level=2] [ref=e162]
+      - paragraph [ref=e163]: Three simple steps to bypass the resume pile and get hired for what you can actually do.
+    - generic [ref=e164]:
+      - generic [ref=e165]:
+        - generic [ref=e166]
+        - heading "Choose Path" [level=3] [ref=e172]
+        - paragraph [ref=e173]: Select your target role and configure your baseline experience level. No resume upload required.
+        - generic [ref=e174]
+      - generic [ref=e179]:
+        - generic [ref=e180]
+        - heading "Take Interview" [level=3] [ref=e186]
+        - paragraph [ref=e187]: Complete an adaptive AI interview. Focuses on real architecture and problem-solving instead of leetcode.
+        - generic [ref=e188]
+      - generic [ref=e193]:
+        - generic [ref=e194]
+        - heading "Publish Verified Profile" [level=3] [ref=e200]
+        - paragraph [ref=e201]: Review your generated high-signal profile, set your visibility to anonymous, and let matching employers request to meet you.
+        - generic [ref=e202]
+  - generic [ref=e208]:
+    - generic [ref=e209]:
+      - heading "Designed for you, not just for employers." [level=2] [ref=e210]
+      - paragraph [ref=e211]: We built PlacedOn because the standard hiring process is broken. Resumes don't show capability, and take-home tests are unpaid labor.
+      - generic [ref=e212]:
+        - generic [ref=e213]
+        - generic [ref=e220]
+        - generic [ref=e227]
+    - generic [ref=e234]:
+      - generic [ref=e236]:
+        - img [ref=e238]
+        - generic [ref=e241]
+      - paragraph [ref=e247]: "\"Your identity is hidden from employers. They only see your verified skills and match percentage. You decide when to reveal yourself.\""
+  - generic [ref=e248]:
+    - heading "Everything you need to stand out" [level=2] [ref=e250]
+    - generic [ref=e251]:
+      - generic [ref=e252]:
+        - img [ref=e254]
+        - heading "AI-inferred skills" [level=4] [ref=e256]
+        - paragraph [ref=e257]: We extract real capability from your project stories.
+      - generic [ref=e258]:
+        - img [ref=e260]
+        - heading "Generated summary" [level=4] [ref=e263]
+        - paragraph [ref=e264]: A professional summary written for you based on evidence.
+      - generic [ref=e265]:
+        - img [ref=e267]
+        - heading "Growth over time" [level=4] [ref=e270]
+        - paragraph [ref=e271]: Update your profile with micro-interviews as you learn.
+      - generic [ref=e272]:
+        - img [ref=e274]
+        - heading "Visibility controls" [level=4] [ref=e277]
+        - paragraph [ref=e278]: Stay hidden from current employers.
+      - generic [ref=e279]:
+        - img [ref=e281]
+        - heading "Offer tracking" [level=4] [ref=e284]
+        - paragraph [ref=e285]: Manage all your interview requests in one place.
+      - generic [ref=e286]:
+        - img [ref=e288]
+        - heading "Verified achievements" [level=4] [ref=e291]
+        - paragraph [ref=e292]: Badges that prove you can actually do the work.
+  - generic [ref=e293]:
+    - generic [ref=e294]:
+      - generic [ref=e295]: For Employers
+      - heading "Hire signal, not noise." [level=2] [ref=e296]
+      - paragraph [ref=e297]: Stop screening resumes. Start comparing verified capabilities.
+    - generic [ref=e298]:
+      - generic [ref=e301]:
+        - heading "Hire based on evidence" [level=4] [ref=e302]
+        - paragraph [ref=e303]: Review candidates based on actual interview performance.
+      - generic [ref=e306]:
+        - heading "Role-specific matching" [level=4] [ref=e307]
+        - paragraph [ref=e308]: Find exact fits for your specific tech stack and architectural needs.
+      - generic [ref=e311]:
+        - heading "Beyond keyword screening" [level=4] [ref=e312]
+        - paragraph [ref=e313]: Discover hidden gems that don't have perfect resumes but have perfect skills.
+      - generic [ref=e316]:
+        - heading "Candidate comparison" [level=4] [ref=e317]
+        - paragraph [ref=e318]: Compare technical strengths side-by-side with objective metrics.
+    - button "Start Hiring" [ref=e319]:
+      - text: Start Hiring
+      - img [ref=e320]
+  - generic [ref=e322]:
+    - heading "Start with one interview. Let your skills do the talking." [level=2] [ref=e323]:
+      - text: Start with one interview.
+      - text: Let your skills do the talking.
+    - paragraph [ref=e324]: Join thousands of candidates getting hired based on merit. It's free, secure, and takes ~30 minutes.
+    - generic [ref=e325]:
+      - button "Start Free Interview" [ref=e326]:
+        - text: Start Free Interview
+        - img [ref=e327]
+      - button "Learn How It Works" [ref=e329]
+  - contentinfo [ref=e330]:
+    - generic [ref=e331]:
+      - generic [ref=e332]:
+        - generic [ref=e333]: P
+        - generic [ref=e334]: PlacedOn
+      - paragraph [ref=e335]: The new standard for technical hiring.
+    - generic [ref=e336]:
+      - link "About" [ref=e337] [cursor=pointer]:
+        - /url: "#"
+      - link "Candidates" [ref=e338] [cursor=pointer]:
+        - /url: "#candidates"
+      - link "Companies" [ref=e339] [cursor=pointer]:
+        - /url: "#companies"
+      - link "Trust" [ref=e340] [cursor=pointer]:
+        - /url: "#trust"
+      - link "Pricing" [ref=e341] [cursor=pointer]:
+        - /url: "#"
+      - link "Contact" [ref=e342] [cursor=pointer]:
+        - /url: "#"
+    - paragraph [ref=e343]: © 2026 PlacedOn Inc.

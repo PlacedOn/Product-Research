@@ -1,0 +1,70 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: PlacedOn
+        - generic [ref=e9]:
+          - generic [ref=e10]: Frontend Engineer
+          - generic [ref=e11]: Question 2 of 5
+      - generic [ref=e12]:
+        - button "AI is listening" [ref=e13]:
+          - generic [ref=e17]: AI is listening
+        - generic [ref=e19]:
+          - generic [ref=e22]: 24:10 min left
+          - img [ref=e24]
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - button "Conversation" [ref=e31]:
+            - img [ref=e32]
+            - text: Conversation
+          - button "Whiteboard" [ref=e34]:
+            - img [ref=e35]
+            - text: Whiteboard
+          - button "Code IDE" [ref=e39]:
+            - img [ref=e40]
+            - text: Code IDE
+        - generic [ref=e45]:
+          - heading "“Walk me through how you’d approach finding why orders are reaching the wrong address.”" [level=1] [ref=e46]
+          - generic [ref=e47]: You have access to the Whiteboard above.
+        - generic [ref=e51]:
+          - button "Mic is on" [ref=e52]:
+            - img [ref=e54]
+            - generic [ref=e57]: Mic is on
+          - button "Notes & Resources" [ref=e59]:
+            - img [ref=e60]
+            - generic [ref=e63]: Notes & Resources
+          - button "Camera settings" [ref=e64]:
+            - img [ref=e65]
+            - generic [ref=e68]: Camera settings
+          - button "End" [ref=e70]:
+            - img [ref=e71]
+            - generic [ref=e73]: End
+        - generic [ref=e75] [cursor=pointer]:
+          - img "Candidate" [ref=e76]
+          - generic [ref=e77]:
+            - generic [ref=e78]: You
+            - img [ref=e80]
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - heading "Session" [level=3] [ref=e85]
+          - button [ref=e86]:
+            - img [ref=e87]
+        - generic [ref=e93]: Transcript
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: PlacedOn AI
+              - generic [ref=e99]: 14:10
+            - generic [ref=e100]: Welcome to PlacedOn. I'm excited to learn more about your experience.
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - generic [ref=e103]: You
+              - generic [ref=e104]: 14:12
+            - generic [ref=e105]: Thanks, it's great to be here.
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - generic [ref=e108]: PlacedOn AI
+              - generic [ref=e109]: 14:15
+            - generic [ref=e110]: Let's jump right in. Walk me through how you’d approach finding why orders are reaching the wrong address. Feel free to use the whiteboard.
+  - region "Notifications alt+T"

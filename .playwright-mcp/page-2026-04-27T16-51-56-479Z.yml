@@ -1,0 +1,149 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - banner [ref=e6]:
+        - generic [ref=e7]:
+          - img "Candidate" [ref=e11] [cursor=pointer]
+          - generic [ref=e14]:
+            - generic [ref=e15]:
+              - heading "Aisha Sharma" [level=1] [ref=e16]
+              - generic [ref=e17]:
+                - img [ref=e18]
+                - text: Verified
+            - paragraph [ref=e20]: Frontend Engineer
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]: Available
+            - button [ref=e24]
+          - button [ref=e26]:
+            - img [ref=e27]
+          - button [ref=e31]:
+            - img [ref=e32]
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - heading "Welcome back, Aisha" [level=1] [ref=e39]:
+              - paragraph [ref=e40]:
+                - generic [ref=e41]: Welcome
+                - generic [ref=e42]: back,
+                - generic [ref=e43]: Aisha
+            - paragraph [ref=e44]:
+              - text: Your profile is currently
+              - strong [ref=e45]: Candidate-controlled
+              - text: . Complete your review to get matched.
+          - generic [ref=e47]:
+            - img [ref=e48]
+            - textbox "Search companies, roles..." [ref=e51]
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - generic [ref=e56]: Next Best Action
+              - generic [ref=e58]: High Priority
+              - generic [ref=e59]:
+                - img [ref=e60]
+                - text: 30 mins
+            - heading "Ready for your technical interview" [level=2] [ref=e63]
+            - paragraph [ref=e64]: Complete a 30-minute conversation with our AI interviewer to generate your verified profile. No trick questions, just deep technical discussions.
+            - generic [ref=e65]:
+              - button "Start Interview" [ref=e66]:
+                - img [ref=e67]
+                - text: Start Interview
+              - button "Skip for now" [ref=e69]
+          - img [ref=e72]
+        - generic [ref=e76]:
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - heading "Profile Snapshot" [level=3] [ref=e80]:
+                - img [ref=e81]
+                - text: Profile Snapshot
+              - button "View Full" [ref=e84]:
+                - text: View Full
+                - img [ref=e85]
+            - generic [ref=e87]:
+              - generic [ref=e88]: AC
+              - generic [ref=e89]:
+                - heading "Aisha Sharma" [level=4] [ref=e90]
+                - paragraph [ref=e91]: Frontend Engineer • Bengaluru, India
+                - generic [ref=e92]:
+                  - generic [ref=e93]: Strong Evidence
+                  - generic [ref=e94]: 18 Skills
+                  - generic [ref=e95]: 3 Interviews
+            - paragraph [ref=e97]: "\"Aisha is a frontend-focused engineer who explains technical decisions clearly and approaches UI problems with structure. Shows strong thinking around component reuse and state management.\""
+          - generic [ref=e99]:
+            - img [ref=e101]
+            - heading "Share Profile" [level=3] [ref=e104]
+            - paragraph [ref=e105]: Send your verified profile directly to recruiters to bypass initial technical screens.
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - generic [ref=e109]: https://demo.placedon.ai/profile/aisha-sharma
+                - button [ref=e110]:
+                  - img [ref=e111]
+              - button "Send via Email" [ref=e114]:
+                - img [ref=e115]
+                - text: Send via Email
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - heading "Matches" [level=3] [ref=e121]:
+                - img [ref=e122]
+                - text: Matches
+              - generic [ref=e124]: "5"
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - img [ref=e127]
+                - text: 2 new matches available
+              - button "View All Matches" [ref=e129]
+          - generic [ref=e131]:
+            - heading "Pipeline" [level=3] [ref=e132]:
+              - img [ref=e133]
+              - text: Pipeline
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - img [ref=e139]
+                  - text: Active Applications
+                - generic [ref=e142]: "3"
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - img [ref=e145]
+                  - text: Upcoming Interviews
+                - generic [ref=e149]: "1"
+              - generic [ref=e150]:
+                - generic [ref=e151]:
+                  - img [ref=e152]
+                  - text: Pending Responses
+                - generic [ref=e155]: "2"
+            - button "View All Applications" [ref=e156]
+          - generic [ref=e158]:
+            - heading "Growth Activity" [level=3] [ref=e159]:
+              - img [ref=e160]
+              - text: Growth Activity
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - img [ref=e166]
+                - generic [ref=e169]:
+                  - generic [ref=e170]: Added stronger frontend execution evidence from structured interview snippets.
+                  - generic [ref=e171]: Recently
+              - generic [ref=e172]:
+                - img [ref=e174]
+                - generic [ref=e176]:
+                  - generic [ref=e177]: Improved collaboration confidence with cross-functional communication signals.
+                  - generic [ref=e178]: Recently
+              - generic [ref=e179]:
+                - img [ref=e181]
+                - generic [ref=e193]:
+                  - generic [ref=e194]: Clarified growth plan around accessibility and larger-system ownership.
+                  - generic [ref=e195]: Recently
+    - toolbar "Application dock" [ref=e198]:
+      - button [ref=e199] [cursor=pointer]:
+        - img [ref=e201]
+      - button [ref=e204] [cursor=pointer]:
+        - img [ref=e206]
+      - button [ref=e209] [cursor=pointer]:
+        - img [ref=e211]
+      - button [ref=e213] [cursor=pointer]:
+        - img [ref=e215]
+      - button [ref=e218] [cursor=pointer]:
+        - img [ref=e220]
+      - button [ref=e222] [cursor=pointer]:
+        - img [ref=e224]
+  - region "Notifications alt+T"

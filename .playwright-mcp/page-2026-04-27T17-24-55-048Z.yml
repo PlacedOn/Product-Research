@@ -1,0 +1,274 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]: P
+          - generic [ref=e8]: PlacedOn
+          - generic [ref=e9]: Employer
+        - generic [ref=e11]:
+          - generic [ref=e12] [cursor=pointer]: Discovery
+          - generic [ref=e13] [cursor=pointer]: Interviews
+          - generic [ref=e14] [cursor=pointer]: Settings
+    - generic [ref=e18]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Evidence-backed candidate discovery" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Find candidates based on verified interview performance, not resume claims.
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - img [ref=e27]
+              - generic [ref=e30]: Open Jobs
+            - generic [ref=e31]: "3"
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - img [ref=e34]
+              - generic [ref=e36]: Saved Profiles
+            - generic [ref=e37]: "1"
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - img [ref=e40]
+              - generic [ref=e43]: Intro Requests
+            - generic [ref=e44]: "12"
+      - generic [ref=e45]:
+        - generic [ref=e47]:
+          - heading "Active Roles" [level=3] [ref=e48]
+          - generic [ref=e49]:
+            - button "Senior Frontend Engineer Engineering" [ref=e50]:
+              - generic [ref=e51]: Senior Frontend Engineer
+              - generic [ref=e52]: Engineering
+            - button "Staff Frontend Engineer Core UI" [ref=e54]:
+              - generic [ref=e55]: Staff Frontend Engineer
+              - generic [ref=e56]: Core UI
+            - button "Product Designer Design" [ref=e57]:
+              - generic [ref=e58]: Product Designer
+              - generic [ref=e59]: Design
+          - button "Add New Role" [ref=e60]:
+            - img [ref=e61]
+            - text: Add New Role
+        - generic [ref=e64]:
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - img [ref=e68]
+              - textbox "Search traits, skills, or locations..." [ref=e71]
+            - generic [ref=e72]:
+              - button "Match > 90%" [ref=e73]:
+                - img [ref=e74]
+                - text: Match > 90%
+              - button "Remote Only" [ref=e76]
+              - button "All Filters" [ref=e77]:
+                - img [ref=e78]
+                - text: All Filters
+          - generic [ref=e80]:
+            - generic [ref=e82]:
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - img [ref=e87]
+                  - generic [ref=e90]:
+                    - 'heading "Candidate #0001" [level=3] [ref=e92]'
+                    - paragraph [ref=e94]:
+                      - img [ref=e95]
+                      - text: Interviewed 2 days ago
+                - generic [ref=e98]:
+                  - generic [ref=e99]:
+                    - img [ref=e100]
+                    - generic [ref=e102]: 96% Fit
+                  - generic [ref=e103]: For Senior Frontend Engineer
+              - generic [ref=e105]:
+                - generic [ref=e106]:
+                  - paragraph [ref=e107]:
+                    - img [ref=e108]
+                    - text: Verified Traits
+                  - generic [ref=e111]:
+                    - generic [ref=e112]: System Architecture
+                    - generic [ref=e113]: Performance Optimization
+                    - generic [ref=e114]: Mentorship
+                - generic [ref=e115]:
+                  - paragraph [ref=e116]:
+                    - img [ref=e117]
+                    - text: Technical Skills
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: React
+                    - generic [ref=e122]: TypeScript
+                    - generic [ref=e123]: State Management
+                    - generic [ref=e124]: WebGL
+              - generic [ref=e125]:
+                - generic [ref=e126]:
+                  - generic [ref=e127]:
+                    - img [ref=e128]
+                    - text: Remote (US)
+                  - generic [ref=e131]:
+                    - img [ref=e132]
+                    - text: 8 years
+                  - generic [ref=e135]: Available in 2 weeks
+                - generic [ref=e136]:
+                  - button "Pass" [ref=e137]
+                  - button [ref=e138]:
+                    - img [ref=e139]
+                  - button "Request Intro" [ref=e141]
+            - generic [ref=e143]:
+              - generic [ref=e144]:
+                - generic [ref=e145]:
+                  - img [ref=e148]
+                  - generic [ref=e151]:
+                    - 'heading "Candidate #0002" [level=3] [ref=e153]'
+                    - paragraph [ref=e155]:
+                      - img [ref=e156]
+                      - text: Interviewed 1 week ago
+                - generic [ref=e159]:
+                  - generic [ref=e160]:
+                    - img [ref=e161]
+                    - generic [ref=e163]: 92% Fit
+                  - generic [ref=e164]: For Frontend Engineer
+              - generic [ref=e166]:
+                - generic [ref=e167]:
+                  - paragraph [ref=e168]:
+                    - img [ref=e169]
+                    - text: Verified Traits
+                  - generic [ref=e172]:
+                    - generic [ref=e173]: Product Sense
+                    - generic [ref=e174]: Animation
+                    - generic [ref=e175]: UI Polish
+                - generic [ref=e176]:
+                  - paragraph [ref=e177]:
+                    - img [ref=e178]
+                    - text: Technical Skills
+                  - generic [ref=e181]:
+                    - generic [ref=e182]: React
+                    - generic [ref=e183]: Framer Motion
+                    - generic [ref=e184]: CSS Architecture
+              - generic [ref=e185]:
+                - generic [ref=e186]:
+                  - generic [ref=e187]:
+                    - img [ref=e188]
+                    - text: San Francisco, CA
+                  - generic [ref=e191]:
+                    - img [ref=e192]
+                    - text: 4 years
+                  - generic [ref=e195]: Available in Immediate
+                - generic [ref=e196]:
+                  - button "Pass" [ref=e197]
+                  - button [ref=e198]:
+                    - img [ref=e199]
+                  - button "Request Intro" [ref=e201]
+            - generic [ref=e203]:
+              - generic [ref=e204]:
+                - generic [ref=e205]:
+                  - img [ref=e208]
+                  - generic [ref=e211]:
+                    - 'heading "Candidate #0003" [level=3] [ref=e213]'
+                    - paragraph [ref=e214]:
+                      - img [ref=e215]
+                      - text: Interviewed 3 days ago
+                - generic [ref=e218]:
+                  - generic [ref=e219]:
+                    - img [ref=e220]
+                    - generic [ref=e222]: 89% Fit
+                  - generic [ref=e223]: For Staff Frontend Engineer
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - paragraph [ref=e227]:
+                    - img [ref=e228]
+                    - text: Verified Traits
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: Technical Strategy
+                    - generic [ref=e233]: Design Systems
+                    - generic [ref=e234]: Cross-team Comm
+                - generic [ref=e235]:
+                  - paragraph [ref=e236]:
+                    - img [ref=e237]
+                    - text: Technical Skills
+                  - generic [ref=e240]:
+                    - generic [ref=e241]: TypeScript
+                    - generic [ref=e242]: React
+                    - generic [ref=e243]: Node.js
+                    - generic [ref=e244]: Accessibility
+              - generic [ref=e245]:
+                - generic [ref=e246]:
+                  - generic [ref=e247]:
+                    - img [ref=e248]
+                    - text: Remote (Global)
+                  - generic [ref=e251]:
+                    - img [ref=e252]
+                    - text: 10+ years
+                  - generic [ref=e255]: Available in 4 weeks
+                - generic [ref=e256]:
+                  - button "Pass" [ref=e257]
+                  - button [ref=e258]:
+                    - img [ref=e259]
+                  - button "Request Intro" [ref=e261]
+            - generic [ref=e263]:
+              - generic [ref=e264]:
+                - generic [ref=e265]:
+                  - img [ref=e268]
+                  - generic [ref=e271]:
+                    - 'heading "Candidate #0004" [level=3] [ref=e273]'
+                    - paragraph [ref=e275]:
+                      - img [ref=e276]
+                      - text: Interviewed 12 hours ago
+                - generic [ref=e279]:
+                  - generic [ref=e280]:
+                    - img [ref=e281]
+                    - generic [ref=e283]: 85% Fit
+                  - generic [ref=e284]: For Frontend Developer
+              - generic [ref=e286]:
+                - generic [ref=e287]:
+                  - paragraph [ref=e288]:
+                    - img [ref=e289]
+                    - text: Verified Traits
+                  - generic [ref=e292]:
+                    - generic [ref=e293]: Fast Learner
+                    - generic [ref=e294]: Execution Speed
+                    - generic [ref=e295]: Testing
+                - generic [ref=e296]:
+                  - paragraph [ref=e297]:
+                    - img [ref=e298]
+                    - text: Technical Skills
+                  - generic [ref=e301]:
+                    - generic [ref=e302]: React
+                    - generic [ref=e303]: Next.js
+                    - generic [ref=e304]: Tailwind CSS
+              - generic [ref=e305]:
+                - generic [ref=e306]:
+                  - generic [ref=e307]:
+                    - img [ref=e308]
+                    - text: New York, NY
+                  - generic [ref=e311]:
+                    - img [ref=e312]
+                    - text: 2 years
+                  - generic [ref=e315]: Available in Immediate
+                - generic [ref=e316]:
+                  - button "Pass" [ref=e317]
+                  - button [ref=e318]:
+                    - img [ref=e319]
+                  - button "Request Intro" [ref=e321]
+        - generic [ref=e322]:
+          - generic [ref=e324]:
+            - img [ref=e326]
+            - heading "Evidence First, Bias Last" [level=3] [ref=e329]
+            - paragraph [ref=e330]: Candidates remain completely anonymous. You evaluate verified skills, match scores, and interview performance before seeing demographic data.
+            - generic [ref=e331]:
+              - generic [ref=e332]:
+                - img [ref=e333]
+                - text: Processed profile, no raw transcript
+              - generic [ref=e336]:
+                - img [ref=e337]
+                - text: Identity hidden until candidate approval
+              - generic [ref=e340]:
+                - img [ref=e341]
+                - text: Two-way opt-in for intro requests
+          - generic [ref=e345]:
+            - generic [ref=e346]:
+              - heading "Saved Shortlist" [level=3] [ref=e347]
+              - generic [ref=e348]: "1"
+            - generic [ref=e350]:
+              - generic [ref=e351]:
+                - img [ref=e353]
+                - generic [ref=e356]:
+                  - generic [ref=e357]: "Candidate #0003"
+                  - generic [ref=e358]: 90%+ Fit
+              - button [ref=e359]:
+                - img [ref=e360]
+            - button "Review Shortlist" [ref=e363]
+  - region "Notifications alt+T"
