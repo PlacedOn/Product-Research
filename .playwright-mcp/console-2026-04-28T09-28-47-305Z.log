@@ -1,0 +1,8 @@
+[      90ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-JLB5MZ4H.js?v=39592507:21606
+[     109ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[     151ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:8000/demo/hcv:0
+[     151ms] [WARNING] Backend unreachable at /demo/hcv, using mock data fallback @ http://127.0.0.1:5173/src/app/lib/demoApi.ts:45
+[     151ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:8000/demo/candidate:0
+[     151ms] [WARNING] Backend unreachable at /demo/candidate, using mock data fallback @ http://127.0.0.1:5173/src/app/lib/demoApi.ts:45
+[ 4743063ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5173/@vite/client:963
+[ 4743064ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034

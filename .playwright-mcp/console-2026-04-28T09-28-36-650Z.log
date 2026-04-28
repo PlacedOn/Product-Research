@@ -1,0 +1,7 @@
+[    7431ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-JLB5MZ4H.js?v=39592507:21606
+[    7495ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[    7602ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:8000/demo/hcv:0
+[    7603ms] [WARNING] Backend unreachable at /demo/hcv, using mock data fallback @ http://127.0.0.1:5173/src/app/lib/demoApi.ts:45
+[    7605ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:8000/demo/candidate:0
+[    7605ms] [WARNING] Backend unreachable at /demo/candidate, using mock data fallback @ http://127.0.0.1:5173/src/app/lib/demoApi.ts:45
+[    7918ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/favicon.ico:0

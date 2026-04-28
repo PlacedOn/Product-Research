@@ -85,6 +85,94 @@ export const mockHCV: HCVResponse = {
         'Conducted effective code reviews with constructive feedback',
       ],
     },
+    {
+      dimension: 'Component Architecture',
+      score: 0.83,
+      confidence: 0.89,
+      uncertainty: 0.11,
+      evidence_snippets: [
+        'Designed reusable component library used across 4 product surfaces',
+        'Replaced ad-hoc props with a typed slot pattern, cutting bug reports by ~30%',
+        'Documented composition rules so juniors could ship features without churn',
+      ],
+    },
+    {
+      dimension: 'Debugging Approach',
+      score: 0.81,
+      confidence: 0.86,
+      uncertainty: 0.14,
+      evidence_snippets: [
+        'Traced an intermittent hydration mismatch to a stale SSR cache layer',
+        'Built a minimal repro before changing code — caught a wrong assumption early',
+      ],
+    },
+    {
+      dimension: 'State Management',
+      score: 0.78,
+      confidence: 0.84,
+      uncertainty: 0.16,
+      evidence_snippets: [
+        'Migrated tangled context tree to a reducer + selector pattern',
+        'Reduced unnecessary re-renders on the dashboard from ~40 to 6 per interaction',
+      ],
+    },
+    {
+      dimension: 'Responsive UI',
+      score: 0.74,
+      confidence: 0.80,
+      uncertainty: 0.20,
+      evidence_snippets: [
+        'Rebuilt onboarding flow as a single fluid layout, no separate mobile codepath',
+        'Audited and fixed 12 horizontal-overflow bugs flagged by QA',
+      ],
+    },
+    {
+      dimension: 'API Integration',
+      score: 0.80,
+      confidence: 0.87,
+      uncertainty: 0.13,
+      evidence_snippets: [
+        'Wrapped a noisy REST API in a typed client with retry + backoff',
+        'Modeled optimistic updates so writes felt instant on the candidate dashboard',
+        'Coordinated contract changes with backend team via shared OpenAPI spec',
+      ],
+    },
+    {
+      dimension: 'Performance Optimization',
+      score: 0.72,
+      confidence: 0.78,
+      uncertainty: 0.22,
+      evidence_snippets: [
+        'Code-split the editor route, dropping initial JS payload from 480KB to 190KB',
+        'Memoized an expensive list virtualization path that was re-running on every keystroke',
+      ],
+    },
+    {
+      dimension: 'Testing Discipline',
+      score: 0.58,
+      confidence: 0.66,
+      uncertainty: 0.34,
+      evidence_snippets: [
+        'Added Playwright smoke tests for the checkout happy path',
+      ],
+    },
+    {
+      dimension: 'Product Communication',
+      score: 0.69,
+      confidence: 0.74,
+      uncertainty: 0.26,
+      evidence_snippets: [
+        'Reframed a vague PM ask into three concrete UI states the team could estimate',
+        'Wrote a one-pager comparing two approaches before kicking off a build',
+      ],
+    },
+    {
+      dimension: 'System Design Breadth',
+      score: 0.52,
+      confidence: 0.61,
+      uncertainty: 0.39,
+      evidence_snippets: [],
+    },
   ],
 };
 
