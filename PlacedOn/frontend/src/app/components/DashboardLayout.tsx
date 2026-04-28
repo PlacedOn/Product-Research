@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { Bell, Shield, Home, Briefcase, User, Settings, CheckCircle, Zap, Crosshair, Calendar, FileText, AlignRight, Search, Activity, ChevronDown, Check } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -7,6 +7,7 @@ import { Orb } from "./ui/Orb";
 import { AnimatedContent } from "./ui/AnimatedContent";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import Dock from "./Dock";
+import { demoApi, CandidateIdentity, getDemoModeActive } from "../lib/demoApi";
 
 const dockItems = [
   { icon: <Home size={20} strokeWidth={2.5} />, label: "Home", path: "/candidate" },
@@ -18,8 +19,41 @@ const dockItems = [
 ];
 
 export function DashboardLayout() {
+  // HMR trigger
   const navigate = useNavigate();
   const [isAvailable, setIsAvailable] = useState(true);
+  const [candidate, setCandidate] = useState<CandidateIdentity | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(getDemoModeActive());
+
+  useEffect(() => {
+    const handleDemoModeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<boolean>;
+      setIsDemoMode(customEvent.detail);
+    };
+
+    window.addEventListener('demo-mode-changed', handleDemoModeChange);
+    setIsDemoMode(getDemoModeActive());
+
+    return () => {
+      window.removeEventListener('demo-mode-changed', handleDemoModeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    async function loadCandidate() {
+      try {
+        setIsLoading(true);
+        const data = await demoApi.getCandidate();
+        setCandidate(data);
+      } catch (error) {
+        console.error('Failed to load candidate data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadCandidate();
+  }, []);
 
   const dockNavItems = dockItems.map((item) => ({
     icon: item.icon,
@@ -60,7 +94,7 @@ export function DashboardLayout() {
       <div className="noise-overlay" />
 
       {/* Main Content Wrapper */}
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 pt-8 pb-32">
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 pt-8 pb-40 md:pb-36">
         
         {/* Top Header */}
         <AnimatedContent direction="vertical" distance={20} delay={0}>
@@ -82,16 +116,21 @@ export function DashboardLayout() {
               </div>
               
               <div>
-                <div className="flex items-center gap-2 mb-1.5">
+                <div className="flex flex-wrap items-center gap-2 mb-1.5">
                   <h1 className="font-[Manrope,sans-serif] text-xl md:text-2xl font-bold text-[#1F2430] leading-none">
-                    Alex Chen
+                    {isLoading ? "Loading..." : candidate?.name || "Aisha Sharma"}
                   </h1>
                   <span className="px-2 py-0.5 rounded-md bg-[#10B981]/10 text-[#10B981] text-[11px] font-bold uppercase tracking-wider border border-[#10B981]/20 flex items-center gap-1">
                     <Shield className="w-3 h-3" /> Verified
                   </span>
+                  {isDemoMode && (
+                    <span className="px-2 py-0.5 rounded-md bg-[#F59E0B]/10 text-[#F59E0B] text-[11px] font-bold uppercase tracking-wider border border-[#F59E0B]/20">
+                      Demo Data
+                    </span>
+                  )}
                 </div>
                 <p className="text-[14px] font-medium text-[#1F2430]/60 flex items-center gap-1.5">
-                  Senior Frontend Engineer
+                  {isLoading ? "..." : candidate?.target_role || "Frontend Engineer"}
                 </p>
               </div>
             </div>
@@ -100,7 +139,7 @@ export function DashboardLayout() {
             <div className="flex flex-wrap items-center gap-3">
               
               {/* Availability Toggle */}
-              <div className="flex items-center gap-3 px-4 py-2 bg-white/60 rounded-xl border border-white/80 shadow-sm mr-2">
+              <div className="flex items-center gap-3 px-4 py-2.5 bg-white/60 rounded-xl border border-white/80 shadow-sm mr-2">
                 <span className="text-[13px] font-bold text-[#1F2430]/80">Available</span>
                 <button 
                   onClick={() => setIsAvailable(!isAvailable)}

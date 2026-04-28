@@ -1,223 +1,327 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { 
   Sparkles, ChevronRight, Briefcase, Zap, Shield, ArrowRight, Play, 
   Search, Code2, LayoutTemplate, Database, LineChart, ShieldCheck,
-  BrainCircuit, Lock
+  BrainCircuit, Lock, Link2, Copy, BarChart3, TrendingUp, Clock, Eye, Send, FileText, AlertCircle
 } from 'lucide-react';
 import { AnimatedContent } from './ui/AnimatedContent';
 import { BlurText } from './ui/BlurText';
-import { Stepper } from './ui/Stepper';
-import { TiltedCard } from './ui/TiltedCard';
 import { motion } from 'motion/react';
+import { NextBestActionCard, NextActionState } from './NextBestActionCard';
+import { demoApi, CandidateIdentity, DashboardResponse, getDemoModeActive } from '../lib/demoApi';
+import { toast } from 'sonner';
 
 export function UserDashboard() {
   const navigate = useNavigate();
+  const [candidate, setCandidate] = useState<CandidateIdentity | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState(getDemoModeActive());
 
-  const preparationSteps = [
-    { title: 'Choose a track', description: 'Select a technical focus that best matches your expertise.' },
-    { title: '30-minute conversation', description: 'Chat with our AI interviewer. No trick questions, just deep technical discussions.' },
-    { title: 'Get verified', description: 'We generate an evidence-backed skill profile to send to top companies.' }
-  ];
+  useEffect(() => {
+    const handleDemoModeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<boolean>;
+      setIsDemoMode(customEvent.detail);
+    };
 
-  const roleTracks = [
-    { id: 'frontend', title: 'Frontend Engineer', icon: <LayoutTemplate className="w-5 h-5" />, color: 'text-[#3E63F5]', bg: 'bg-[#3E63F5]/10', border: 'border-[#3E63F5]/20', tags: ['React', 'Architecture', 'CSS'] },
-    { id: 'backend', title: 'Backend Engineer', icon: <Database className="w-5 h-5" />, color: 'text-[#10B981]', bg: 'bg-[#10B981]/10', border: 'border-[#10B981]/20', tags: ['Node.js', 'System Design', 'APIs'] },
-    { id: 'fullstack', title: 'Full Stack Engineer', icon: <Code2 className="w-5 h-5" />, color: 'text-[#8B5CF6]', bg: 'bg-[#8B5CF6]/10', border: 'border-[#8B5CF6]/20', tags: ['End-to-end', 'Databases', 'UI'] },
-    { id: 'data', title: 'Data Engineer', icon: <LineChart className="w-5 h-5" />, color: 'text-[#F59E0B]', bg: 'bg-[#F59E0B]/10', border: 'border-[#F59E0B]/20', tags: ['Pipelines', 'SQL', 'Analytics'] },
-  ];
+    window.addEventListener('demo-mode-changed', handleDemoModeChange);
+    setIsDemoMode(getDemoModeActive());
+
+    return () => {
+      window.removeEventListener('demo-mode-changed', handleDemoModeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const [candidateData, dashboardData] = await Promise.all([
+          demoApi.getCandidate(),
+          demoApi.getDashboard(),
+        ]);
+        setCandidate(candidateData);
+        setDashboard(dashboardData);
+      } catch (err) {
+        console.error('Failed to load dashboard:', err);
+        setError('Unable to load dashboard data. Please check your connection.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadDashboard();
+  }, []);
+
+  const handleShareProfile = async () => {
+    if (candidate?.share_url) {
+      try {
+        await navigator.clipboard.writeText(candidate.share_url);
+        toast.success('Profile link copied to clipboard!');
+      } catch (err) {
+        toast.error('Failed to copy link');
+      }
+    }
+  };
+
+  const handleEmailShare = () => {
+    if (candidate?.share_url) {
+      const subject = encodeURIComponent(`Check out my PlacedOn profile - ${candidate.name}`);
+      const body = encodeURIComponent(`I'd like to share my verified technical profile with you:\n\n${candidate.share_url}\n\nThis profile was generated through AI-powered technical interviews and shows evidence-backed skills.`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 animate-[pulse-glow_0.5s_ease-out]">
+        <div className="rounded-[2.5rem] glass-card p-8 h-64 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-[#3E63F5]/20 border-t-[#3E63F5] rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-[14px] font-medium text-[#1F2430]/60">Loading your dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error || !dashboard || !candidate) {
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="rounded-[2.5rem] glass-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start md:items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/10 flex items-center justify-center text-[#F59E0B] shrink-0">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="font-[Manrope,sans-serif] text-[18px] font-bold text-[#1F2430] mb-1">
+                Demo Data Unavailable
+              </h3>
+              <p className="text-[14px] text-[#1F2430]/60">
+                {error || 'Could not connect to the backend. Please ensure the server is running.'}
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="w-full md:w-auto px-6 py-3 md:py-2.5 rounded-xl bg-[#3E63F5] text-white text-[15px] md:text-[14px] font-bold shadow-sm hover:bg-[#2A44B0] transition-colors whitespace-nowrap shrink-0 mt-2 md:mt-0"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-[pulse-glow_0.5s_ease-out]">
       
-      {/* Global Search Bar (Pill style) */}
-      <AnimatedContent direction="vertical" distance={10} delay={0.05}>
-        <div className="mb-6 flex justify-center w-full z-20 relative">
-          <div className="flex items-center w-full max-w-2xl bg-white/70 backdrop-blur-xl rounded-full p-2 border border-white/80 shadow-[0_16px_40px_rgba(30,35,60,0.06),inset_0_1px_1px_rgba(255,255,255,1)] transition-transform focus-within:scale-[1.01] duration-300">
+      {isDemoMode && (
+        <div className="bg-[#1F2430] text-white px-4 py-3 rounded-xl flex items-center justify-between shadow-lg">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-[#F59E0B]" />
+            <div>
+              <p className="text-[14px] font-bold">Demo Data</p>
+              <p className="text-[13px] text-white/70">Backend connection unavailable. Showing fallback preview data.</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-[13px] font-medium transition-colors"
+          >
+            Retry Connection
+          </button>
+        </div>
+      )}
+
+      {/* Top Header / Stage Aware Info */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 z-20 relative">
+        <div>
+          <h1 className="font-[Manrope,sans-serif] text-[28px] font-bold text-[#1F2430] tracking-tight">
+            <BlurText 
+              text={`Welcome back, ${candidate.name.split(' ')[0]}`}
+              delay={0.03}
+              animateBy="words"
+              direction="bottom"
+            />
+          </h1>
+          <p className="text-[15px] font-medium text-[#1F2430]/60 mt-1">
+            Your profile is currently <strong className="text-[#1F2430]">{candidate.visibility}</strong>. {dashboard.profile_snapshot.completion < 100 ? 'Complete your review to get matched.' : 'You\'re ready for matches!'}
+          </p>
+        </div>
+        
+        {/* Subtle Search & Actions */}
+        <div className="flex items-center gap-3">
+          <div className="relative group/search">
+            <Search className="w-4 h-4 text-[#1F2430]/40 absolute left-3 top-1/2 -translate-y-1/2 group-focus-within/search:text-[#3E63F5] transition-colors" />
             <input 
               type="text"
-              placeholder="Search available roles and tracks..."
-              className="flex-1 bg-transparent border-none outline-none pl-6 pr-4 py-3 text-[16px] font-medium text-[#1F2430] placeholder:text-[#1F2430]/40 font-[Manrope,sans-serif]"
+              placeholder="Search companies, roles..."
+              className="w-full md:w-64 bg-white/60 backdrop-blur-md border border-[#1F2430]/10 rounded-xl py-2.5 pl-9 pr-4 text-[13px] font-medium text-[#1F2430] placeholder:text-[#1F2430]/40 focus:outline-none focus:ring-2 focus:ring-[#3E63F5]/20 focus:bg-white transition-all"
             />
-            <button className="w-12 h-12 rounded-full bg-[#1F2430] hover:bg-[#2A3040] transition-colors flex items-center justify-center text-white shadow-md flex-shrink-0">
-              <Search className="w-5 h-5" />
-            </button>
           </div>
         </div>
-      </AnimatedContent>
+      </div>
 
-      {/* Hero: Build Your Profile */}
-      <AnimatedContent direction="vertical" distance={30} delay={0.15}>
-        <div className="relative overflow-hidden rounded-[2.5rem] glass-card p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-12 group border border-white/80 shadow-[0_16px_40px_rgba(62,99,245,0.05)]">
-          {/* Glowing action orb */}
-          <div className="absolute top-1/2 left-[20%] -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-[#3E63F5] to-[#B392F0] rounded-full blur-[100px] opacity-20 pointer-events-none animate-pulse-glow" />
-          
-          {/* Left: Copy & CTAs */}
-          <div className="relative z-10 lg:w-[55%]">
-            <div className="flex items-center gap-2.5 mb-6">
-              <div className="px-3 py-1.5 rounded-full bg-[#3E63F5]/10 text-[#3E63F5] text-[12px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] border border-[#3E63F5]/20 backdrop-blur-sm">
-                <Sparkles className="w-3.5 h-3.5" />
-                First Steps
-              </div>
-            </div>
-            
-            <h2 className="font-[Manrope,sans-serif] text-3xl md:text-[44px] font-bold text-[#1F2430] tracking-tight mb-5 leading-[1.1]">
-              <BlurText 
-                text="Build your verified profile with one AI interview."
-                delay={0.03}
-                animateBy="words"
-                direction="bottom"
-              />
-            </h2>
-            <p className="text-[16px] md:text-[18px] text-[#1F2430]/70 font-medium mb-8 max-w-xl leading-relaxed">
-              Choose a role, complete a 30-minute conversation, and PlacedOn turns your answers into an evidence-backed skill profile that top companies trust.
-            </p>
-            
-            <div className="flex flex-wrap items-center gap-4">
-              <motion.button 
-                whileHover={{ scale: 1.02 }} 
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/pre-interview')}
-                className="px-8 py-4 rounded-2xl bg-[#3E63F5] text-white text-[16px] font-bold shadow-[0_8px_24px_rgba(62,99,245,0.3)] hover:bg-[#2A44B0] transition-colors flex items-center justify-center gap-2 group/btn"
-              >
-                <Play className="w-5 h-5 fill-current" />
-                Start Interview
-              </motion.button>
-              <button className="px-8 py-4 rounded-2xl bg-white/60 text-[#1F2430] text-[15px] font-bold shadow-sm border border-white hover:bg-white transition-colors flex items-center gap-2 group/browse">
-                Browse Roles <ArrowRight className="w-4 h-4 group-hover/browse:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </div>
-
-          {/* Right: Abstract Profile Preview */}
-          <div className="relative z-10 lg:w-[45%] flex justify-center lg:justify-end w-full perspective-[1000px]">
-            <div className="w-full max-w-[380px] aspect-[4/3] rounded-[2rem] relative">
-              <TiltedCard 
-                imageSrc="https://images.unsplash.com/photo-1689028294160-e78a88abcb19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGdsYXNzJTIwZ2VvbWV0cnl8ZW58MXx8fHwxNzc2NTk4NzA0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                altText="Abstract Glass Geometry representing a verified profile"
-                captionText="Sample Verified Profile"
-                containerWidth="100%"
-                containerHeight="100%"
-                rotateAmplitude={8}
-                scaleOnHover={1.02}
-                showTooltip={true}
-                displayOverlayContent={true}
-                overlayContent={
-                  <div className="flex flex-col items-center text-center w-full h-full justify-center">
-                    <div className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md shadow-xl flex items-center justify-center mb-4 border border-white">
-                      <ShieldCheck className="w-8 h-8 text-[#10B981]" />
-                    </div>
-                    <div className="w-3/4 h-3 bg-white/60 rounded-full mb-2 blur-[1px]" />
-                    <div className="w-1/2 h-3 bg-white/60 rounded-full mb-6 blur-[1px]" />
-                    <div className="grid grid-cols-2 gap-2 w-full px-6">
-                      <div className="h-12 bg-white/40 rounded-xl blur-[2px]" />
-                      <div className="h-12 bg-white/40 rounded-xl blur-[2px]" />
-                      <div className="h-12 bg-white/40 rounded-xl blur-[2px]" />
-                      <div className="h-12 bg-white/40 rounded-xl blur-[2px]" />
-                    </div>
-                  </div>
-                }
-              />
-              
-              {/* Floating badges around the tilted card */}
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -right-4 top-10 px-4 py-2 bg-white/90 backdrop-blur-xl rounded-xl border border-white shadow-xl flex items-center gap-2 z-20"
-              >
-                <div className="w-2 h-2 rounded-full bg-[#10B981]" />
-                <span className="text-[12px] font-bold text-[#1F2430]">Top 5% Frontend</span>
-              </motion.div>
-              
-              <motion.div 
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -left-6 bottom-12 px-4 py-2 bg-[#1F2430] rounded-xl shadow-xl flex items-center gap-2 z-20"
-              >
-                <BrainCircuit className="w-4 h-4 text-white" />
-                <span className="text-[12px] font-bold text-white">System Design: Strong</span>
-              </motion.div>
-            </div>
-          </div>
-        </div>
+      {/* 1. Next Best Action */}
+      <AnimatedContent direction="vertical" distance={20} delay={0.1}>
+        <NextBestActionCard state={dashboard.next_best_action.type as NextActionState} />
       </AnimatedContent>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Role Selection Tracks */}
-        <AnimatedContent direction="vertical" distance={30} delay={0.25} className="lg:col-span-2 flex flex-col">
-          <div className="h-full rounded-[2.5rem] glass-card p-8 flex flex-col">
+        {/* 2. Profile Snapshot */}
+        <AnimatedContent direction="vertical" distance={20} delay={0.15} className="lg:col-span-2 flex flex-col">
+          <div className="h-full rounded-[2.5rem] glass-card p-6 md:p-8 flex flex-col relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#3E63F5]/10 to-transparent pointer-events-none rounded-tr-[2.5rem]" />
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-[Manrope,sans-serif] text-[20px] font-bold text-[#1F2430]">Choose a Track</h3>
+              <h3 className="font-[Manrope,sans-serif] text-[20px] font-bold text-[#1F2430] flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-[#10B981]" /> Profile Snapshot
+              </h3>
+              <button onClick={() => navigate('/candidate/profile')} className="text-[13px] font-bold text-[#3E63F5] hover:text-[#2A44B0] transition-colors flex items-center gap-1">
+                View Full <ChevronRight className="w-3 h-3" />
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-              {roleTracks.map((role) => (
-                <div 
-                  key={role.id}
-                  className="group relative bg-white/50 backdrop-blur-sm border border-white/80 rounded-2xl p-5 hover:bg-white/80 transition-all cursor-pointer hover:shadow-[0_8px_24px_rgba(30,35,60,0.06)] hover:-translate-y-1 flex flex-col justify-between overflow-hidden"
-                >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/60 to-transparent pointer-events-none rounded-tr-2xl" />
-                  
-                  <div>
-                    <div className="flex items-center justify-between mb-4 relative z-10">
-                      <div className={`w-10 h-10 rounded-xl ${role.bg} ${role.color} ${role.border} border flex items-center justify-center shadow-sm`}>
-                        {role.icon}
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-[#1F2430]/30 group-hover:text-[#1F2430] group-hover:bg-[#F3F2F0] transition-colors">
-                        <ChevronRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                    <h4 className="text-[16px] font-bold text-[#1F2430] leading-tight mb-2 relative z-10">
-                      {role.title}
-                    </h4>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2 mt-2 relative z-10">
-                    {role.tags.map((tag, i) => (
-                      <span key={i} className="px-2 py-1 rounded-md bg-white/60 text-[#1F2430]/60 text-[11px] font-bold tracking-wide border border-white shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+            <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start mb-6">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#EEF1F8] to-[#EAEAFE] flex items-center justify-center shrink-0 border border-[#3E63F5]/10 shadow-inner text-[#3E63F5] text-2xl font-bold tracking-tighter">
+                AC
+              </div>
+              <div>
+                <h4 className="text-[18px] font-bold text-[#1F2430] mb-1">{candidate.name}</h4>
+                <p className="text-[14px] font-medium text-[#1F2430]/70 mb-3">{candidate.target_role} • {candidate.location}</p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 rounded-md bg-[#10B981]/10 text-[#10B981] text-[11px] font-bold tracking-wide">{dashboard.profile_snapshot.evidence_strength}</span>
+                  <span className="px-2 py-1 rounded-md bg-[#1F2430]/5 text-[#1F2430]/70 text-[11px] font-bold tracking-wide border border-[#1F2430]/10">{dashboard.profile_snapshot.skills_count} Skills</span>
+                  <span className="px-2 py-1 rounded-md bg-[#1F2430]/5 text-[#1F2430]/70 text-[11px] font-bold tracking-wide border border-[#1F2430]/10">{dashboard.profile_snapshot.interviews_completed} Interviews</span>
                 </div>
-              ))}
+              </div>
             </div>
+
+            <div className="p-4 rounded-2xl bg-[#F8F9FC] border border-[#1F2430]/[0.04] mt-auto">
+              <p className="text-[13px] text-[#1F2430]/70 font-medium italic leading-relaxed">
+                "Aisha is a frontend-focused engineer who explains technical decisions clearly and approaches UI problems with structure. Shows strong thinking around component reuse and state management."
+              </p>
+            </div>
+          </div>
+        </AnimatedContent>
+
+        {/* 3. Share Profile */}
+        <AnimatedContent direction="vertical" distance={20} delay={0.2} className="flex flex-col">
+          <div className="h-full rounded-[2.5rem] glass-card p-6 md:p-8 flex flex-col border-[#3E63F5]/20 bg-gradient-to-b from-white/60 to-[#F8F9FC]/80 shadow-[0_8px_32px_rgba(62,99,245,0.05)]">
+            <div className="w-12 h-12 rounded-xl bg-[#3E63F5]/10 border border-[#3E63F5]/20 flex items-center justify-center text-[#3E63F5] mb-4">
+              <Link2 className="w-6 h-6" />
+            </div>
+            <h3 className="font-[Manrope,sans-serif] text-[20px] font-bold text-[#1F2430] mb-2">Share Profile</h3>
+            <p className="text-[14px] text-[#1F2430]/60 font-medium mb-6 flex-1">
+              Send your verified profile directly to recruiters to bypass initial technical screens.
+            </p>
             
-            <div className="mt-6 pt-4 border-t border-[#1F2430]/5 flex items-center justify-between">
-              <p className="text-[13px] font-medium text-[#1F2430]/60">Don't see your track?</p>
-              <button className="text-[13px] font-bold text-[#3E63F5] hover:text-[#2A44B0] transition-colors">
-                View all 12 tracks
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-white border border-[#1F2430]/10 shadow-sm relative overflow-hidden group">
+                <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white via-white to-transparent" />
+                <span className="text-[13px] font-medium text-[#1F2430]/60 truncate select-all pl-1">{candidate.share_url}</span>
+                <button 
+                  onClick={handleShareProfile}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-[#F8F9FC] hover:bg-[#EEF1F8] flex items-center justify-center text-[#1F2430] transition-colors border border-[#1F2430]/10 shadow-sm opacity-0 group-hover:opacity-100"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <button
+                onClick={handleEmailShare}
+                className="w-full py-3 rounded-xl bg-white text-[#1F2430] text-[13px] font-bold shadow-sm border border-[#1F2430]/[0.06] hover:bg-[#F3F2F0] transition-colors flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" /> Send via Email
               </button>
             </div>
           </div>
         </AnimatedContent>
 
-        {/* Expectations & Trust */}
-        <div className="flex flex-col gap-6 lg:col-span-1">
-          <AnimatedContent direction="vertical" distance={30} delay={0.35} className="flex-1">
-            <div className="h-full rounded-[2.5rem] glass-card p-8 flex flex-col">
-              <h3 className="font-[Manrope,sans-serif] text-[20px] font-bold text-[#1F2430] mb-8">What to Expect</h3>
-              <div className="flex-1">
-                <Stepper steps={preparationSteps} currentStep={0} />
-              </div>
+        {/* 4. Matches */}
+        <AnimatedContent direction="vertical" distance={20} delay={0.25} className="flex flex-col">
+          <div className="h-full rounded-[2.5rem] glass-card p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-[Manrope,sans-serif] text-[18px] font-bold text-[#1F2430] flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#3E63F5]" /> Matches
+              </h3>
+              <span className="w-6 h-6 rounded-full bg-[#3E63F5] text-white text-[12px] font-bold flex items-center justify-center">{dashboard.matches_summary.total}</span>
             </div>
-          </AnimatedContent>
+            
+            <div className="space-y-3 flex-1">
+              <div className="text-center py-8 text-[13px] text-[#1F2430]/60 font-medium">
+                <Sparkles className="w-8 h-8 text-[#3E63F5]/40 mx-auto mb-2" />
+                {dashboard.matches_summary.new_count} new matches available
+              </div>
+              <button 
+                onClick={() => navigate('/candidate/matches')}
+                className="w-full py-2.5 rounded-xl bg-[#3E63F5] text-white text-[12px] font-bold shadow-sm hover:bg-[#2A44B0] transition-colors"
+              >
+                View All Matches
+              </button>
+            </div>
+          </div>
+        </AnimatedContent>
 
-          <AnimatedContent direction="vertical" distance={30} delay={0.45}>
-            <div className="rounded-[2rem] bg-white/40 backdrop-blur-xl border border-white/60 p-6 flex gap-4 shadow-sm items-center">
-              <div className="w-10 h-10 rounded-full bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center flex-shrink-0 text-[#10B981]">
-                <Lock className="w-5 h-5" />
+        {/* 5. Pipeline */}
+        <AnimatedContent direction="vertical" distance={20} delay={0.3} className="flex flex-col">
+          <div className="h-full rounded-[2.5rem] glass-card p-6 flex flex-col">
+            <h3 className="font-[Manrope,sans-serif] text-[18px] font-bold text-[#1F2430] flex items-center gap-2 mb-6">
+              <Briefcase className="w-4 h-4 text-[#8B5CF6]" /> Pipeline
+            </h3>
+            <div className="flex-1 flex flex-col justify-center gap-4">
+              <div className="flex justify-between items-center pb-3 border-b border-[#1F2430]/5">
+                <span className="text-[13px] font-medium text-[#1F2430]/70 flex items-center gap-2"><Clock className="w-3.5 h-3.5" /> Active Applications</span>
+                <span className="text-[14px] font-bold text-[#1F2430]">{dashboard.pipeline_summary.active_applications}</span>
               </div>
-              <div>
-                <h4 className="text-[14px] font-bold text-[#1F2430] mb-0.5">Your data is private</h4>
-                <p className="text-[12px] font-medium text-[#1F2430]/60 leading-snug">
-                  Companies only see your profile after you approve their match request.
-                </p>
+              <div className="flex justify-between items-center pb-3 border-b border-[#1F2430]/5">
+                <span className="text-[13px] font-medium text-[#1F2430]/70 flex items-center gap-2"><Code2 className="w-3.5 h-3.5" /> Upcoming Interviews</span>
+                <span className="text-[14px] font-bold text-[#1F2430]">{dashboard.pipeline_summary.upcoming_interviews}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[13px] font-medium text-[#1F2430]/70 flex items-center gap-2"><FileText className="w-3.5 h-3.5" /> Pending Responses</span>
+                <span className="text-[14px] font-bold text-[#10B981]">{dashboard.pipeline_summary.pending_responses}</span>
               </div>
             </div>
-          </AnimatedContent>
-        </div>
+            <button onClick={() => navigate('/candidate/applications')} className="mt-6 w-full py-2.5 rounded-xl bg-white/60 text-[#1F2430] text-[12px] font-bold shadow-sm border border-white hover:bg-white transition-colors">
+              View All Applications
+            </button>
+          </div>
+        </AnimatedContent>
+
+        {/* 6. Activity & Growth (Combined or Split) */}
+        <AnimatedContent direction="vertical" distance={20} delay={0.35} className="flex flex-col">
+          <div className="h-full rounded-[2.5rem] glass-card p-6 flex flex-col relative overflow-hidden">
+             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#F59E0B]/10 rounded-full blur-[30px] pointer-events-none" />
+            <h3 className="font-[Manrope,sans-serif] text-[18px] font-bold text-[#1F2430] flex items-center gap-2 mb-6">
+              <TrendingUp className="w-4 h-4 text-[#F59E0B]" /> Growth Activity
+            </h3>
+            
+            <div className="space-y-4 flex-1">
+              {dashboard.growth_activity.recent_improvements.slice(0, 3).map((improvement, i) => (
+                <div key={i} className="flex gap-3">
+                  <div className={`w-8 h-8 rounded-full ${
+                    i === 0 ? 'bg-[#10B981]/10 text-[#10B981]' :
+                    i === 1 ? 'bg-[#3E63F5]/10 text-[#3E63F5]' :
+                    'bg-[#8B5CF6]/10 text-[#8B5CF6]'
+                  } flex items-center justify-center shrink-0`}>
+                    {i === 0 ? <Eye className="w-4 h-4" /> :
+                     i === 1 ? <BarChart3 className="w-4 h-4" /> :
+                     <BrainCircuit className="w-4 h-4" />}
+                  </div>
+                  <div>
+                    <div className="text-[13px] font-bold text-[#1F2430]">{improvement}</div>
+                    <div className="text-[11px] font-medium text-[#1F2430]/50">Recently</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </AnimatedContent>
 
       </div>
     </div>

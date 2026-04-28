@@ -1,0 +1,439 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: P
+        - generic [ref=e8]: PlacedOn
+      - generic [ref=e9]:
+        - link "How It Works" [ref=e10] [cursor=pointer]:
+          - /url: "#how"
+        - link "For Candidates" [ref=e11] [cursor=pointer]:
+          - /url: "#candidates"
+        - link "For Companies" [ref=e12] [cursor=pointer]:
+          - /url: "#companies"
+        - link "Trust" [ref=e13] [cursor=pointer]:
+          - /url: "#trust"
+      - generic [ref=e14]:
+        - button "Log In" [ref=e15]
+        - button "Get Started" [ref=e16]:
+          - text: Get Started
+          - img [ref=e17]
+    - generic [ref=e19]:
+      - generic [ref=e22]: The New Standard for Hiring
+      - generic [ref=e23]:
+        - paragraph [ref=e24]:
+          - generic [ref=e25]: Your
+          - generic [ref=e26]: skills
+          - generic [ref=e27]: should
+          - generic [ref=e28]: get
+          - generic [ref=e29]: you
+          - generic [ref=e30]: hired.
+        - paragraph [ref=e31]:
+          - generic [ref=e32]: Not
+          - generic [ref=e33]: your
+          - generic [ref=e34]: resume.
+      - paragraph [ref=e35]: Have a friendly 35-minute conversation about your past work. We'll generate a verified, evidence-backed candidate dossier that helps you showcase your true capabilities to employers.
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - button "Start Free Conversation" [ref=e38]:
+            - text: Start Free Conversation
+            - img [ref=e39]
+          - button "Preview Sample Profile" [ref=e41]:
+            - text: Preview Sample Profile
+            - img [ref=e42]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - img [ref=e47]
+            - text: Role-based AI interview
+          - generic [ref=e50]:
+            - img [ref=e51]
+            - text: No trick questions
+          - generic [ref=e55]:
+            - img [ref=e56]
+            - text: Review your profile before employers see it
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - img [ref=e62]
+        - heading "Verified Skills" [level=4] [ref=e65]
+        - paragraph [ref=e66]: No resume fluff
+      - generic [ref=e67]:
+        - img [ref=e69]
+        - heading "Standardized & Fair" [level=4] [ref=e72]
+        - paragraph [ref=e73]: Level playing field
+      - generic [ref=e74]:
+        - img [ref=e76]
+        - heading "You Control Visibility" [level=4] [ref=e79]
+        - paragraph [ref=e80]: Stay completely anonymous
+      - generic [ref=e81]:
+        - img [ref=e83]
+        - heading "Evidence-backed" [level=4] [ref=e84]
+        - paragraph [ref=e85]: Showcases real project context
+    - generic [ref=e88]:
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]: AI
+            - generic [ref=e94]: Conversation
+          - generic [ref=e95]: 14:22
+        - paragraph [ref=e97]: "\"Walk me through how you handled state management in that high-traffic e-commerce project.\""
+        - generic [ref=e98]:
+          - img [ref=e100]
+          - generic [ref=e112]: Speaking...
+      - img [ref=e113]
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - img [ref=e118]
+          - text: Candidate reviewed
+        - generic [ref=e121]:
+          - img [ref=e124]
+          - generic [ref=e128]:
+            - heading "Anonymous Profile" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Senior Frontend Engineer
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - generic [ref=e133]:
+              - img [ref=e134]
+              - text: Evidence Strength
+            - generic [ref=e137]: 94%
+          - generic [ref=e138]:
+            - paragraph [ref=e139]: Verified Signals
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - img [ref=e142]
+                - text: Clarifies ambiguity
+              - generic [ref=e144]:
+                - img [ref=e145]
+                - text: React state architecture
+              - generic [ref=e147]:
+                - img [ref=e148]
+                - text: Explains trade-offs clearly
+      - img [ref=e150]
+      - generic [ref=e153]:
+        - generic [ref=e154]:
+          - generic [ref=e155]:
+            - img [ref=e157]
+            - generic [ref=e160]: Employer Dashboard
+          - generic [ref=e161]: New Match
+        - generic [ref=e162] [cursor=pointer]:
+          - generic [ref=e163]:
+            - generic [ref=e164]: Strong Match
+            - img [ref=e165]
+          - paragraph [ref=e167]: Matches your exact requirements for complex React state architecture.
+          - generic [ref=e168]:
+            - generic [ref=e169]:
+              - img [ref=e171]
+              - generic [ref=e173]: Play Evidence Clip
+            - generic [ref=e174]: 1:45
+    - generic [ref=e175]:
+      - generic [ref=e176]:
+        - heading "Your interview becomes a profile you can actually use." [level=2] [ref=e177]
+        - paragraph [ref=e178]: PlacedOn turns your answers into an evidence-backed skill profile that you review, control, and share with employers.
+      - generic [ref=e179]:
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - generic [ref=e183]:
+              - img [ref=e186]
+              - generic [ref=e190]:
+                - heading "Anonymous Candidate" [level=3] [ref=e191]
+                - generic [ref=e192]:
+                  - generic [ref=e193]: Frontend Engineer
+                  - generic [ref=e195]:
+                    - img [ref=e196]
+                    - text: Candidate reviewed
+            - paragraph [ref=e200]: "\"Explains technical decisions clearly, breaks complex UI problems into manageable systems, and shows strong ownership when discussing past project trade-offs.\""
+          - generic [ref=e201]:
+            - heading "Verified Capabilities" [level=4] [ref=e202]:
+              - img [ref=e203]
+              - text: Verified Capabilities
+            - generic [ref=e205]:
+              - generic [ref=e206]: React architecture
+              - generic [ref=e207]: State management
+              - generic [ref=e208]: API integration
+              - generic [ref=e209]: Debugging approach
+              - generic [ref=e210]: Communication clarity
+          - generic [ref=e211]:
+            - heading "Evidence Strength" [level=4] [ref=e212]:
+              - img [ref=e213]
+              - text: Evidence Strength
+            - generic [ref=e214]:
+              - generic [ref=e215]: 94%
+              - generic [ref=e216]:
+                - img [ref=e217]
+                - text: Strong Evidence
+          - generic [ref=e221]:
+            - heading "Verified Evidence Clips" [level=4] [ref=e222]:
+              - img [ref=e223]
+              - text: Verified Evidence Clips
+            - generic [ref=e225]:
+              - generic [ref=e226] [cursor=pointer]:
+                - generic [ref=e227]: State management trade-off
+                - generic [ref=e228]:
+                  - img [ref=e230]
+                  - generic [ref=e232]: Evidence clip
+              - generic [ref=e233] [cursor=pointer]:
+                - generic [ref=e234]: Debugging production issue
+                - generic [ref=e235]:
+                  - img [ref=e237]
+                  - generic [ref=e239]: Evidence clip
+              - generic [ref=e240] [cursor=pointer]:
+                - generic [ref=e241]: Explaining ambiguity
+                - generic [ref=e242]:
+                  - img [ref=e244]
+                  - generic [ref=e246]: Evidence clip
+        - generic [ref=e247]:
+          - generic [ref=e248]:
+            - img [ref=e250]
+            - generic [ref=e253]:
+              - heading "Review before publishing" [level=3] [ref=e254]
+              - paragraph [ref=e255]: Listen to your own interview clips and read the AI's synthesis. If you don't feel it represents your best work, simply don't share it.
+          - generic [ref=e256]:
+            - img [ref=e258]
+            - generic [ref=e261]:
+              - heading "Add context" [level=3] [ref=e262]
+              - paragraph [ref=e263]: Was there a technical constraint you forgot to mention? Add personal annotations to the generated profile before any employer sees it.
+          - generic [ref=e264]:
+            - img [ref=e266]
+            - generic [ref=e269]:
+              - heading "Stay anonymous & control visibility" [level=3] [ref=e270]
+              - paragraph [ref=e271]: Your profile is fully anonymized. Employers see your verified skills and evidence clips, but you decide when to reveal your identity.
+          - generic [ref=e272]:
+            - img [ref=e274]
+            - generic [ref=e276]:
+              - heading "Dispute inaccuracies" [level=3] [ref=e277]
+              - paragraph [ref=e278]: If our AI misinterprets an answer, you can flag it for human review or completely remove that specific insight from your dossier.
+    - generic [ref=e280]:
+      - generic [ref=e281]:
+        - heading "Candidate-first. Built on trust and control." [level=2] [ref=e282]
+        - paragraph [ref=e283]: We built PlacedOn because the standard hiring process is broken. Resumes don't show capability, and take-home tests are unpaid labor. You deserve better.
+        - generic [ref=e284]:
+          - generic [ref=e285]:
+            - img [ref=e287]
+            - generic [ref=e289]:
+              - heading "No surveillance or policing" [level=4] [ref=e290]
+              - paragraph [ref=e291]: No screen recording, no proctoring, and no eye-tracking. Just a relaxed conversation.
+          - generic [ref=e292]:
+            - img [ref=e294]
+            - generic [ref=e296]:
+              - heading "You own your profile data" [level=4] [ref=e297]
+              - paragraph [ref=e298]: You decide if your dossier is published, kept private, or completely deleted. We never sell your data.
+          - generic [ref=e299]:
+            - img [ref=e301]
+            - generic [ref=e303]:
+              - heading "You control your visibility" [level=4] [ref=e304]
+              - paragraph [ref=e305]: Stay completely anonymous until you actively choose to accept a direct interview request.
+      - generic [ref=e306]:
+        - generic [ref=e308]:
+          - img [ref=e310]
+          - generic [ref=e313]:
+            - paragraph [ref=e314]: Profile Visibility
+            - paragraph [ref=e315]: Anonymous Mode Active
+        - paragraph [ref=e319]: "\"Your identity is hidden from employers. They only see your verified skills and match percentage. You decide when to reveal yourself.\""
+    - generic [ref=e320]:
+      - generic [ref=e321]:
+        - heading "You stay in control." [level=2] [ref=e322]
+        - paragraph [ref=e323]: PlacedOn is built to help candidates be understood, not silently judged.
+      - generic [ref=e324]:
+        - generic [ref=e325]:
+          - img [ref=e327]
+          - generic [ref=e330]:
+            - heading "Review before employers see it" [level=4] [ref=e331]
+            - paragraph [ref=e332]: You see your generated profile first.
+        - generic [ref=e333]:
+          - img [ref=e335]
+          - generic [ref=e338]:
+            - heading "Add your own context" [level=4] [ref=e339]
+            - paragraph [ref=e340]: Clarify anything the AI missed.
+        - generic [ref=e341]:
+          - img [ref=e343]
+          - generic [ref=e345]:
+            - heading "Dispute incorrect traits" [level=4] [ref=e346]
+            - paragraph [ref=e347]: Flag anything that does not feel accurate.
+        - generic [ref=e348]:
+          - img [ref=e350]
+          - generic [ref=e353]:
+            - heading "Stay anonymous" [level=4] [ref=e354]
+            - paragraph [ref=e355]: Reveal your identity only when you choose.
+        - generic [ref=e356]:
+          - img [ref=e358]
+          - generic [ref=e363]:
+            - heading "No facial analysis" [level=4] [ref=e364]
+            - paragraph [ref=e365]: We evaluate answers and evidence, not appearance.
+        - generic [ref=e366]:
+          - img [ref=e368]
+          - generic [ref=e371]:
+            - heading "No trick questions" [level=4] [ref=e372]
+            - paragraph [ref=e373]: The interview is role-based and conversational.
+    - generic [ref=e374]:
+      - generic [ref=e375]:
+        - heading "How PlacedOn works" [level=2] [ref=e376]
+        - paragraph [ref=e377]: Three steps to build an evidence-backed profile and showcase what you can actually do.
+      - generic [ref=e378]:
+        - generic [ref=e379]:
+          - generic [ref=e380]:
+            - img [ref=e382]
+            - generic [ref=e385]: "01"
+          - heading "Choose Path" [level=3] [ref=e386]
+          - paragraph [ref=e387]: Select your target role and configure your baseline experience level. No resume upload required.
+          - generic [ref=e388]:
+            - img [ref=e389]
+            - generic [ref=e392]: Takes 2 mins
+        - generic [ref=e393]:
+          - generic [ref=e394]:
+            - img [ref=e396]
+            - generic [ref=e399]: "02"
+          - heading "Have a Conversation" [level=3] [ref=e400]
+          - paragraph [ref=e401]: Chat with our AI about your past projects. No proctoring, no whiteboarding, and no trick questions. Just peer-to-peer discussion.
+          - generic [ref=e402]:
+            - img [ref=e403]
+            - generic [ref=e406]: 35-40 mins
+        - generic [ref=e407]:
+          - generic [ref=e408]:
+            - img [ref=e410]
+            - generic [ref=e413]: "03"
+          - heading "Get Your Dossier" [level=3] [ref=e414]
+          - paragraph [ref=e415]: Review your generated evidence-backed profile. You control who sees it. Stay anonymous and choose when interested employers can contact you.
+          - generic [ref=e416]:
+            - img [ref=e417]
+            - generic [ref=e420]: Instant
+    - generic [ref=e421]:
+      - heading "Everything you need to stand out" [level=2] [ref=e423]
+      - generic [ref=e424]:
+        - generic [ref=e425]:
+          - img [ref=e427]
+          - heading "Evidence-backed skills" [level=4] [ref=e429]
+          - paragraph [ref=e430]: We extract real capability from your project stories.
+        - generic [ref=e431]:
+          - img [ref=e433]
+          - heading "Concrete Dossier" [level=4] [ref=e436]
+          - paragraph [ref=e437]: An evidence-backed candidate dossier written for you.
+        - generic [ref=e438]:
+          - img [ref=e440]
+          - heading "Growth over time" [level=4] [ref=e443]
+          - paragraph [ref=e444]: Update your dossier with quick micro-conversations as you learn.
+        - generic [ref=e445]:
+          - img [ref=e447]
+          - heading "Visibility controls" [level=4] [ref=e450]
+          - paragraph [ref=e451]: Stay completely anonymous from current employers.
+        - generic [ref=e452]:
+          - img [ref=e454]
+          - heading "Offer tracking" [level=4] [ref=e457]
+          - paragraph [ref=e458]: Manage all direct interview requests in one place.
+        - generic [ref=e459]:
+          - img [ref=e461]
+          - heading "Verified achievements" [level=4] [ref=e464]
+          - paragraph [ref=e465]: Badges that prove you can actually do the work.
+    - generic [ref=e467]:
+      - generic [ref=e468]:
+        - generic [ref=e469]: For Employers
+        - heading "Hire signal, not noise." [level=2] [ref=e470]
+        - paragraph [ref=e471]: Review candidates through evidence-backed profiles instead of keyword-matched resumes.
+        - generic [ref=e472]:
+          - generic [ref=e473]:
+            - img [ref=e475]
+            - generic [ref=e478]:
+              - heading "See the evidence behind every claim" [level=4] [ref=e479]
+              - paragraph [ref=e480]: Each skill signal links back to interview moments.
+          - generic [ref=e481]:
+            - img [ref=e483]
+            - generic [ref=e484]:
+              - heading "Compare candidates by role fit" [level=4] [ref=e485]
+              - paragraph [ref=e486]: Evaluate capabilities against the actual requirements of the role.
+          - generic [ref=e487]:
+            - img [ref=e489]
+            - generic [ref=e492]:
+              - heading "Reduce resume screening time" [level=4] [ref=e493]
+              - paragraph [ref=e494]: Use PlacedOn before human interviews to surface stronger candidates faster.
+          - generic [ref=e495]:
+            - img [ref=e497]
+            - generic [ref=e500]:
+              - heading "Pilot with your own applicants" [level=4] [ref=e501]
+              - paragraph [ref=e502]: Run a small batch and compare PlacedOn profiles against your hiring team's judgment.
+        - button "Pilot PlacedOn for Hiring" [ref=e503]:
+          - text: Pilot PlacedOn for Hiring
+          - img [ref=e504]
+      - generic [ref=e507]:
+        - generic [ref=e513]: Candidate Pipeline
+        - generic [ref=e514]:
+          - generic [ref=e515]:
+            - generic [ref=e516]:
+              - img [ref=e519]
+              - generic [ref=e523]:
+                - generic [ref=e525]: Candidate 84A
+                - generic [ref=e526]: Frontend Engineer
+            - generic [ref=e527]:
+              - generic [ref=e528]:
+                - generic [ref=e529]: Role Fit
+                - generic [ref=e530]: 94%
+              - generic [ref=e531] [cursor=pointer]:
+                - img [ref=e532]
+                - generic [ref=e534]: Evidence
+          - generic [ref=e535]:
+            - generic [ref=e536]:
+              - img [ref=e539]
+              - generic [ref=e543]:
+                - generic [ref=e545]: Candidate 29C
+                - generic [ref=e546]: Frontend Engineer
+            - generic [ref=e547]:
+              - generic [ref=e548]:
+                - generic [ref=e549]: Role Fit
+                - generic [ref=e550]: 88%
+              - generic [ref=e551] [cursor=pointer]:
+                - img [ref=e552]
+                - generic [ref=e554]: Evidence
+          - generic [ref=e555]:
+            - generic [ref=e556]:
+              - img [ref=e559]
+              - generic [ref=e563]:
+                - generic [ref=e565]: Candidate 55F
+                - generic [ref=e566]: Frontend Engineer
+            - generic [ref=e567]:
+              - generic [ref=e568]:
+                - generic [ref=e569]: Role Fit
+                - generic [ref=e570]: 81%
+              - generic [ref=e571] [cursor=pointer]:
+                - img [ref=e572]
+                - generic [ref=e574]: Evidence
+    - generic [ref=e575]:
+      - heading "Start with one interview. Let your skills do the talking." [level=2] [ref=e576]:
+        - text: Start with one interview.
+        - text: Let your skills do the talking.
+      - paragraph [ref=e577]: Build an evidence-backed profile you control, then use it to be evaluated for what you can actually do.
+      - generic [ref=e578]:
+        - generic [ref=e579]:
+          - button "Start Free Interview" [ref=e580]:
+            - text: Start Free Interview
+            - img [ref=e581]
+          - button "Preview Sample Profile" [ref=e583]:
+            - text: Preview Sample Profile
+            - img [ref=e584]
+        - generic [ref=e587]:
+          - generic [ref=e588]:
+            - img [ref=e589]
+            - text: No trick questions
+          - generic [ref=e593]:
+            - img [ref=e594]
+            - text: Candidate-reviewed profile
+          - generic [ref=e598]:
+            - img [ref=e599]
+            - text: Anonymous until you choose
+    - contentinfo [ref=e602]:
+      - generic [ref=e603]:
+        - generic [ref=e604]:
+          - generic [ref=e605]: P
+          - generic [ref=e606]: PlacedOn
+        - paragraph [ref=e607]: The new standard for technical hiring.
+      - generic [ref=e608]:
+        - link "About" [ref=e609] [cursor=pointer]:
+          - /url: "#"
+        - link "Candidates" [ref=e610] [cursor=pointer]:
+          - /url: "#candidates"
+        - link "Companies" [ref=e611] [cursor=pointer]:
+          - /url: "#companies"
+        - link "Trust" [ref=e612] [cursor=pointer]:
+          - /url: "#trust"
+        - link "Pricing" [ref=e613] [cursor=pointer]:
+          - /url: "#"
+        - link "Contact" [ref=e614] [cursor=pointer]:
+          - /url: "#"
+      - paragraph [ref=e615]: © 2026 PlacedOn Inc.
+  - region "Notifications alt+T"

@@ -1,7 +1,7 @@
 
-  # Design UI Screens
+  # PlacedOn
 
-  This is a code bundle for Design UI Screens. The original project is available at https://www.figma.com/design/sDNkPtAVmkvNBYPjR85vEd/Design-UI-Screens.
+  This is a code bundle for PlacedOn. The original project is available at https://www.figma.com/design/sDNkPtAVmkvNBYPjR85vEd/PlacedOn.
 
   ## Running the code
 

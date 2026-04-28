@@ -10,14 +10,14 @@ This document consolidates research findings and translates them into engineerin
 
 ### Build (Text-Based First)
 
-| Component | Priority | Notes |
-|---|---|---|
-| Markov decompose/contract/judge loop | 🔴 Critical | Core engine — if this doesn't work, nothing works |
-| Interview orchestration (state management) | 🔴 Critical | Save state per segment, enable resume-after-disconnect |
-| Candidate profile generation | 🔴 Critical | Transform final state into atomic traits |
-| Basic text chat UI | 🔴 Critical | Don't wait for voice — get the logic working first |
-| ABLEIST bias check integration | 🔴 Critical | Run on every state contraction — catch bias early |
-| Candidate self-validation flow | 🔴 Critical | "Does this profile feel accurate?" → essential for Phase 2 proof |
+| Component                                  | Priority    | Notes                                                            |
+| ------------------------------------------ | ----------- | ---------------------------------------------------------------- |
+| Markov decompose/contract/judge loop       | 🔴 Critical | Core engine — if this doesn't work, nothing works                |
+| Interview orchestration (state management) | 🔴 Critical | Save state per segment, enable resume-after-disconnect           |
+| Candidate profile generation               | 🔴 Critical | Transform final state into atomic traits                         |
+| Basic text chat UI                         | 🔴 Critical | Don't wait for voice — get the logic working first               |
+| ABLEIST bias check integration             | 🔴 Critical | Run on every state contraction — catch bias early                |
+| Candidate self-validation flow             | 🔴 Critical | "Does this profile feel accurate?" → essential for Phase 2 proof |
 
 ### Test (What Must Be Validated)
 

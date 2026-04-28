@@ -10,6 +10,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+.external/
 
 PlacedOn-Research/docs/*
 acedOn/frontend/node_modules/
