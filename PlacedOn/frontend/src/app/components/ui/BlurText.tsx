@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useInView } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 
 interface BlurTextProps {
   text: string;
@@ -21,8 +21,6 @@ export const BlurText: React.FC<BlurTextProps> = ({
   rootMargin = '0px',
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
-  const ref = useRef<HTMLParagraphElement>(null);
-  const isInView = useInView(ref, { once: true, margin: rootMargin as any });
 
   const container = {
     hidden: { opacity: 0 },
@@ -48,11 +46,10 @@ export const BlurText: React.FC<BlurTextProps> = ({
 
   return (
     <motion.p
-      ref={ref}
       variants={container}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      className={`inline-block ${className}`}
+      animate="visible"
+      className={`inline-block ${className ?? ''}`}
     >
       {elements.map((element, index) => (
         <motion.span

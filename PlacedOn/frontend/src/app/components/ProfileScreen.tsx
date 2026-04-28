@@ -583,7 +583,7 @@ interface ProfileConstellationProps {
   onSelectTrait: (trait: EvidenceDimension) => void;
 }
 
-function ProfileConstellation({ dimensions, selectedTrait, onSelectTrait }: ProfileConstellationProps) {
+export function ProfileConstellation({ dimensions, selectedTrait, onSelectTrait }: ProfileConstellationProps) {
   const { nodes: rawNodes, edges: rawEdges } = useMemo(() => buildProfileGraph(dimensions), [dimensions]);
   const nodes = useMemo(() => relaxGraphLayout(rawNodes, rawEdges), [rawNodes, rawEdges]);
   const edges = rawEdges;
@@ -644,11 +644,17 @@ function ProfileConstellation({ dimensions, selectedTrait, onSelectTrait }: Prof
     }
   }, [interactive]);
 
-  // Click outside or Escape exits interactive mode.
+  // Escape, or a click outside both the sky AND any open drawer, exits interactive mode.
+  // The first click that dismisses the trait drawer is ignored so the graph stays interactive;
+  // a subsequent click outside the sky then deactivates it.
   useEffect(() => {
     if (!interactive) return;
     const onDown = (e: MouseEvent) => {
-      if (skyRef.current && !skyRef.current.contains(e.target as Node)) setInteractive(false);
+      const target = e.target as Node | null;
+      if (skyRef.current && target && skyRef.current.contains(target)) return;
+      const drawerOpen = !!document.querySelector('[role="dialog"][aria-modal="true"]');
+      if (drawerOpen) return;
+      setInteractive(false);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setInteractive(false);

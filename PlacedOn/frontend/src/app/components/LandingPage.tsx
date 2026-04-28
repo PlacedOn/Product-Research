@@ -1,19 +1,71 @@
 import { useNavigate } from 'react-router';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { 
+import {
   ArrowRight, ShieldCheck, CheckCircle2,
   Play, Sparkles, Briefcase, Eye, Award, TrendingUp,
-  BarChart, Lock, UserCheck, Check, Clock, Mic, 
+  BarChart, Lock, UserCheck, Check, Clock, Mic,
   ChevronRight, ArrowDown, FileText, Search, Edit, Shield, CameraOff
 } from 'lucide-react';
 import { BlurText } from './ui/BlurText';
 import { AnimatedContent } from './ui/AnimatedContent';
+import { mockHCV } from '../lib/mockData';
+
+const ProfileConstellation = lazy(() =>
+  import('./ProfileScreen').then((m) => ({ default: m.ProfileConstellation }))
+);
+
+function useInViewOnce<T extends HTMLElement>(rootMargin = '200px') {
+  const ref = useRef<T | null>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    if (!ref.current || inView) return;
+    const el = ref.current;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [inView, rootMargin]);
+  return [ref, inView] as const;
+}
+
+function LazyProfileGraph() {
+  const [ref, inView] = useInViewOnce<HTMLDivElement>('300px');
+  return (
+    <div ref={ref} className="min-h-[520px]">
+      {inView ? (
+        <Suspense fallback={<GraphSkeleton />}>
+          <ProfileConstellation
+            dimensions={mockHCV.dimensions}
+            selectedTrait={null}
+            onSelectTrait={() => {}}
+          />
+        </Suspense>
+      ) : (
+        <GraphSkeleton />
+      )}
+    </div>
+  );
+}
+
+function GraphSkeleton() {
+  return (
+    <div className="w-full h-[520px] bg-gradient-to-b from-[#EAF1FA] to-[#F5EFE6] animate-pulse" />
+  );
+}
 
 export function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen w-full bg-[#F3F2F0] relative overflow-hidden font-[Inter,sans-serif] selection:bg-[#3E63F5] selection:text-white">
+    <div className="min-h-screen w-full bg-[#F3F2F0] relative overflow-x-hidden font-[Inter,sans-serif] selection:bg-[#3E63F5] selection:text-white">
       {/* Global CSS for floating animations and noise */}
       <style>{`
         @keyframes float-slow {
@@ -27,6 +79,21 @@ export function LandingPage() {
         
         .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
         .animate-pulse-glow { animation: pulse-glow 8s ease-in-out infinite; }
+
+        /* Hero floating cards — pure CSS, GPU-only, no JS each frame */
+        @keyframes hero-float-a { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -6px, 0); } }
+        @keyframes hero-float-b { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -4px, 0); } }
+        @keyframes hero-float-c { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -8px, 0); } }
+        @keyframes hero-wave { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.45); } }
+
+        .hero-float-a { animation: hero-float-a 6s ease-in-out infinite; will-change: transform; }
+        .hero-float-b { animation: hero-float-b 5s ease-in-out infinite 0.3s; will-change: transform; }
+        .hero-float-c { animation: hero-float-c 7s ease-in-out infinite 0.6s; will-change: transform; }
+        .hero-wave { animation: hero-wave 1.4s ease-in-out infinite; transform-origin: bottom; will-change: transform; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-float-a, .hero-float-b, .hero-float-c, .hero-wave { animation: none; }
+        }
         
         .noise-overlay {
           position: absolute;
@@ -100,66 +167,193 @@ export function LandingPage() {
           </div>
         </nav>
 
-        {/* 2. Hero Section */}
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-20 md:mb-28 pt-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-white/60 mb-8 shadow-sm"
-          >
-            <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-            <span className="text-[13px] font-bold text-[#1F2430] uppercase tracking-wider">The New Standard for Hiring</span>
-          </motion.div>
-          
-          <div className="font-[Manrope,sans-serif] text-[40px] md:text-[72px] font-extrabold text-[#1F2430] tracking-tight leading-[1.1] mb-6 flex flex-col items-center">
-            <BlurText text="Your skills should get you hired." delay={0.04} />
-            <BlurText text="Not your resume." delay={0.04} className="text-[#1F2430]/90" />
-          </div>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg md:text-[22px] text-[#1F2430]/70 font-medium mb-12 max-w-2xl leading-relaxed text-balance"
-          >
-            Have a friendly 35-minute conversation about your past work. We'll generate a verified, evidence-backed candidate dossier that helps you showcase your true capabilities to employers.
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center gap-5 w-full justify-center mb-6"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-              <motion.button 
-                whileHover={{ scale: 1.02 }} 
-                whileTap={{ scale: 0.98 }} 
-                onClick={() => navigate('/auth')} 
-                className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-[#3E63F5] text-white text-[16px] font-bold hover:bg-[#2A44B0] transition-all shadow-[0_8px_32px_rgba(62,99,245,0.3)] hover:-translate-y-1 flex items-center justify-center gap-2 group"
-              >
-                Start Free Conversation 
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-              
-              <motion.button 
-                whileHover={{ scale: 1.02 }} 
-                whileTap={{ scale: 0.98 }} 
-                onClick={() => document.getElementById('sample-profile')?.scrollIntoView({ behavior: 'smooth' })} 
-                className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-2xl bg-white/70 text-[#1F2430] text-[16px] font-bold hover:bg-white transition-all shadow-sm border border-white/80 hover:-translate-y-1 flex items-center justify-center gap-2 backdrop-blur-md whitespace-nowrap"
-              >
-                Preview Sample Profile
-                <Eye className="w-5 h-5 text-[#1F2430]/60 flex-shrink-0" />
-              </motion.button>
+        {/* 2. Hero Section — two-column on desktop, stacked on mobile */}
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-10 lg:gap-16 items-center mb-20 md:mb-28 pt-4">
+          {/* Left column — copy + CTAs */}
+          <div className="flex flex-col items-start text-left max-w-xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-white/60 mb-8 shadow-sm"
+            >
+              <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+              <span className="text-[13px] font-bold text-[#1F2430] uppercase tracking-wider">The New Standard for Hiring</span>
+            </motion.div>
+
+            <div className="font-[Manrope,sans-serif] text-[40px] md:text-[60px] lg:text-[64px] font-extrabold text-[#1F2430] tracking-tight leading-[1.05] mb-6 flex flex-col items-start">
+              <BlurText text="Your skills should get you hired." delay={0.04} />
+              <BlurText text="Not your resume." delay={0.04} className="text-[#1F2430]/90" />
             </div>
-            
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[13.5px] font-bold text-[#1F2430]/60 bg-white/40 px-6 py-3 rounded-2xl md:rounded-full border border-white/60 shadow-sm backdrop-blur-md text-center">
-              <span className="flex items-center gap-1.5 text-[#1F2430]"><Sparkles className="w-4 h-4 text-[#10B981]" /> Role-based AI interview</span>
-              <span className="hidden md:block w-1 h-1 rounded-full bg-[#1F2430]/20" />
-              <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-[#10B981]" /> No trick questions</span>
-              <span className="hidden md:block w-1 h-1 rounded-full bg-[#1F2430]/20" />
-              <span className="flex items-center gap-1.5"><Eye className="w-4 h-4 text-[#10B981]" /> Review your profile before employers see it</span>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="text-lg md:text-[20px] text-[#1F2430]/70 font-medium mb-10 leading-relaxed text-balance"
+            >
+              Have a friendly 35-minute conversation about your past work. PlacedOn turns it into a verified, evidence-backed candidate profile that you review and control.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-start gap-5 w-full mb-2"
+            >
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate('/auth')}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#3E63F5] text-white text-[16px] font-bold hover:bg-[#2A44B0] transition-all shadow-[0_8px_32px_rgba(62,99,245,0.3)] hover:-translate-y-1 flex items-center justify-center gap-2 group"
+                >
+                  Start Free Conversation
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => document.getElementById('sample-profile')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/70 text-[#1F2430] text-[16px] font-bold hover:bg-white transition-all shadow-sm border border-white/80 hover:-translate-y-1 flex items-center justify-center gap-2 backdrop-blur-md whitespace-nowrap"
+                >
+                  Preview Sample Profile
+                  <Eye className="w-5 h-5 text-[#1F2430]/60 flex-shrink-0" />
+                </motion.button>
+              </div>
+
+              <div className="flex items-center gap-2 text-[13px] font-semibold text-[#1F2430]/60 mt-1">
+                <ShieldCheck className="w-4 h-4 text-[#10B981] flex-shrink-0" />
+                <span>Role-based AI interview. No trick questions. Review before employers see it.</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right column — layered product graphic */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full h-[520px] sm:h-[560px] lg:h-[600px]"
+            aria-hidden
+          >
+            {/* Soft accent washes behind cards */}
+            <div className="absolute top-[8%] right-[6%] w-[55%] h-[55%] rounded-full bg-[#3E63F5]/10 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-[6%] left-[2%] w-[45%] h-[45%] rounded-full bg-[#10B981]/10 blur-3xl pointer-events-none" />
+
+            {/* Connector arrow trails — subtle */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 500" fill="none" preserveAspectRatio="none">
+              <path d="M 110 130 C 160 170, 180 200, 215 235" stroke="#3E63F5" strokeWidth="1.5" strokeDasharray="3 5" strokeOpacity="0.35" strokeLinecap="round" />
+              <path d="M 230 295 C 235 330, 240 355, 245 385" stroke="#10B981" strokeWidth="1.5" strokeDasharray="3 5" strokeOpacity="0.35" strokeLinecap="round" />
+            </svg>
+
+            {/* AI Interview Card — sits behind/above */}
+            <div
+              className="hero-float-a absolute top-0 left-[2%] w-[260px] sm:w-[290px] bg-white rounded-2xl border border-[#1F2430]/5 shadow-[0_18px_50px_rgba(30,35,60,0.08)] p-5 z-10"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#3E63F5]">
+                  <Mic className="w-3.5 h-3.5" /> Conversation
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#1F2430]/60">
+                  <Clock className="w-3 h-3" /> 14:22
+                </div>
+              </div>
+              <p className="text-[13px] leading-relaxed text-[#1F2430] font-medium mb-4">
+                "Walk me through how you handled state management in a high-traffic product."
+              </p>
+              {/* Mic waveform — pure CSS animation, GPU-only */}
+              <div className="flex items-end gap-[3px] h-7 mb-3">
+                {[6, 14, 22, 18, 26, 12, 20, 28, 16, 22, 10, 24, 18, 14, 22, 8, 16].map((h, i) => (
+                  <span
+                    key={i}
+                    className="hero-wave w-[3px] rounded-full bg-[#3E63F5]"
+                    style={{
+                      height: h,
+                      animationDuration: `${1.2 + (i % 4) * 0.15}s`,
+                      animationDelay: `${i * 0.05}s`,
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center gap-2 text-[11px] font-bold text-[#10B981]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                Speaking
+              </div>
+            </div>
+
+            {/* Skill Signal chips — float between */}
+            <div className="hero-float-b absolute top-[40%] left-[18%] z-20 flex flex-col gap-2">
+              {[
+                { label: "React architecture", icon: <Sparkles className="w-3 h-3" />, tone: "blue" },
+                { label: "Clarifies ambiguity", icon: <Check className="w-3 h-3" />, tone: "mint" },
+                { label: "Explains trade-offs", icon: <Sparkles className="w-3 h-3" />, tone: "blush" },
+              ].map((chip, i) => {
+                const styles =
+                  chip.tone === "blue"
+                    ? "bg-[#3E63F5]/8 text-[#3E63F5] border-[#3E63F5]/20"
+                    : chip.tone === "mint"
+                    ? "bg-[#10B981]/10 text-[#0F8A65] border-[#10B981]/25"
+                    : "bg-[#F4EBE3]/80 text-[#1F2430] border-[#1F2430]/10";
+                return (
+                  <motion.div
+                    key={chip.label}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + i * 0.18, duration: 0.5 }}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border bg-white shadow-[0_6px_20px_rgba(30,35,60,0.06)] text-[12px] font-semibold ${styles}`}
+                    style={{ alignSelf: i === 1 ? "flex-end" : i === 2 ? "center" : "flex-start" }}
+                  >
+                    {chip.icon}
+                    {chip.label}
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Verified Profile Card — largest, most prominent */}
+            <div className="hero-float-c absolute bottom-0 right-0 w-[300px] sm:w-[340px] lg:w-[360px] bg-white rounded-3xl border border-[#1F2430]/5 shadow-[0_30px_80px_rgba(30,35,60,0.14)] p-6 z-30">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#10B981]">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Verified Profile
+                </div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[#1F2430]/40">Anonymous</div>
+              </div>
+
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E3E8F8] to-[#F4EBE3] flex items-center justify-center">
+                  <UserCheck className="w-6 h-6 text-[#3E63F5]" />
+                </div>
+                <div>
+                  <div className="font-[Manrope,sans-serif] text-[15px] font-extrabold text-[#1F2430] leading-tight">Candidate · A.S.</div>
+                  <div className="text-[12px] font-semibold text-[#1F2430]/60">Frontend Engineer</div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-[#F8F7F4] p-4 mb-4 border border-[#1F2430]/5">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#1F2430]/55">Evidence Strength</span>
+                  <span className="font-[Manrope,sans-serif] text-[18px] font-extrabold text-[#1F2430]">94%</span>
+                </div>
+                <div className="h-2 rounded-full bg-[#1F2430]/10 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "94%" }}
+                    transition={{ duration: 1.4, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-full rounded-full bg-gradient-to-r from-[#3E63F5] to-[#10B981]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#10B981]/10 text-[#0F8A65] text-[11px] font-bold border border-[#10B981]/25">
+                  <Eye className="w-3 h-3" /> Candidate reviewed
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#3E63F5]/10 text-[#3E63F5] text-[11px] font-bold border border-[#3E63F5]/20">
+                  <Lock className="w-3 h-3" /> Visibility controlled
+                </span>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -330,116 +524,29 @@ export function LandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start max-w-7xl mx-auto px-4">
-            
-            {/* Left side: Polished Candidate Profile Card (Bento Grid) */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+          <div className="max-w-7xl mx-auto px-4 flex flex-col gap-8 lg:gap-12">
+
+            {/* Full-width evidence graph preview (read-only — no node click) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              
-              {/* Main Identity Box */}
-              <div className="md:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/60 shadow-[0_12px_40px_rgba(30,35,48,0.06)] bg-white/70 backdrop-blur-xl relative overflow-hidden group hover:shadow-[0_16px_50px_rgba(62,99,245,0.08)] transition-all duration-500">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#3E63F5]/10 to-transparent rounded-bl-full opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="flex flex-col md:flex-row gap-6 items-start md:items-center relative z-10">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#1F2430] to-[#3E63F5] p-[2px] shadow-sm flex-shrink-0">
-                    <div className="w-full h-full rounded-[14px] bg-white flex items-center justify-center">
-                      <UserCheck className="w-8 h-8 text-[#1F2430]/40" />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-[Manrope,sans-serif] text-[24px] font-bold text-[#1F2430] mb-2">Anonymous Candidate</h3>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="text-[15px] font-bold text-[#3E63F5]">Frontend Engineer</span>
-                      <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#1F2430]/20" />
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#10B981]/10 text-[#10B981] text-[12px] font-bold">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Candidate reviewed
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 p-5 rounded-2xl bg-white/50 border border-black/5 shadow-sm relative z-10">
-                  <p className="text-[15px] leading-relaxed text-[#1F2430]/80 font-medium">
-                    "Explains technical decisions clearly, breaks complex UI problems into manageable systems, and shows strong ownership when discussing past project trade-offs."
-                  </p>
-                </div>
+              <div className="rounded-[1.75rem] overflow-hidden border border-[#1F2430]/8 shadow-[0_12px_40px_rgba(30,35,48,0.06)]">
+                <LazyProfileGraph />
               </div>
-
-              {/* Verified Capabilities */}
-              <div className="glass-card p-6 rounded-3xl border border-white/60 shadow-[0_8px_32px_rgba(30,35,48,0.04)] bg-white/70 backdrop-blur-xl hover:shadow-[0_12px_40px_rgba(30,35,48,0.08)] transition-shadow duration-300">
-                <h4 className="text-[12px] font-bold text-[#1F2430]/50 uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#3E63F5]" /> Verified Capabilities
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {['React architecture', 'State management', 'API integration', 'Debugging approach', 'Communication clarity'].map(skill => (
-                    <span key={skill} className="px-3 py-1.5 rounded-xl bg-white text-[#1F2430]/90 text-[13px] font-bold border border-black/5 shadow-sm">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Evidence Strength */}
-              <div className="glass-card p-6 rounded-3xl border border-white/60 shadow-[0_8px_32px_rgba(30,35,48,0.04)] bg-white/70 backdrop-blur-xl flex flex-col justify-center hover:shadow-[0_12px_40px_rgba(30,35,48,0.08)] transition-shadow duration-300">
-                <h4 className="text-[12px] font-bold text-[#1F2430]/50 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <BarChart className="w-4 h-4 text-[#3E63F5]" /> Evidence Strength
-                </h4>
-                <div className="flex items-end gap-3 mt-2">
-                  <span className="text-[42px] font-[Manrope,sans-serif] font-extrabold text-[#1F2430] leading-none tracking-tight">94%</span>
-                  <span className="text-[13px] font-bold text-[#10B981] mb-1.5 flex items-center gap-1 bg-[#10B981]/10 px-2 py-1 rounded-lg">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Strong Evidence
-                  </span>
-                </div>
-                <div className="mt-5 w-full h-2 bg-black/5 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    whileInView={{ width: '94%' }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-                    className="h-full bg-gradient-to-r from-[#3E63F5] to-[#B392F0] rounded-full" 
-                  />
-                </div>
-              </div>
-
-              {/* Evidence Blocks */}
-              <div className="md:col-span-2 glass-dark p-6 rounded-3xl border border-white/10 shadow-[0_12px_40px_rgba(30,35,48,0.2)] text-white overflow-hidden relative group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-b from-white/5 to-transparent rounded-bl-full pointer-events-none transition-opacity duration-500 opacity-50 group-hover:opacity-100" />
-                <h4 className="text-[12px] font-bold text-white/50 uppercase tracking-wider mb-5 flex items-center gap-2 relative z-10">
-                  <Play className="w-4 h-4 text-[#10B981]" /> Verified Evidence Clips
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
-                  {[
-                    "State management trade-off",
-                    "Debugging production issue",
-                    "Explaining ambiguity"
-                  ].map((clip, i) => (
-                    <div key={i} className="p-4 rounded-2xl bg-white/10 border border-white/5 hover:bg-white/15 transition-all duration-300 cursor-pointer hover:-translate-y-1 flex flex-col justify-between h-[110px]">
-                      <span className="text-[13px] font-bold text-white/90 leading-snug">{clip}</span>
-                      <div className="flex items-center justify-between mt-2">
-                        <div className="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center shadow-[0_0_12px_rgba(16,185,129,0.3)]">
-                          <Play className="w-3.5 h-3.5 text-white ml-0.5" />
-                        </div>
-                        <span className="text-[11px] font-bold text-white/40">Evidence clip</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
             </motion.div>
 
-            {/* Right side: Explanation Cards (Candidate Controls) */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+            {/* Explanation cards — full-width row below the graph */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="lg:col-span-5 flex flex-col gap-4"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
             >
-              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex gap-5 items-start">
+              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex flex-col gap-4 items-start">
                 <div className="w-12 h-12 rounded-2xl bg-[#3E63F5]/10 flex items-center justify-center border border-[#3E63F5]/20 flex-shrink-0">
                   <Eye className="w-5 h-5 text-[#3E63F5]" />
                 </div>
@@ -451,7 +558,7 @@ export function LandingPage() {
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex gap-5 items-start">
+              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex flex-col gap-4 items-start">
                 <div className="w-12 h-12 rounded-2xl bg-[#3E63F5]/10 flex items-center justify-center border border-[#3E63F5]/20 flex-shrink-0">
                   <FileText className="w-5 h-5 text-[#3E63F5]" />
                 </div>
@@ -463,7 +570,7 @@ export function LandingPage() {
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex gap-5 items-start">
+              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex flex-col gap-4 items-start">
                 <div className="w-12 h-12 rounded-2xl bg-[#3E63F5]/10 flex items-center justify-center border border-[#3E63F5]/20 flex-shrink-0">
                   <Lock className="w-5 h-5 text-[#3E63F5]" />
                 </div>
@@ -475,7 +582,7 @@ export function LandingPage() {
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex gap-5 items-start">
+              <div className="bg-white/80 backdrop-blur-md border border-white/60 shadow-sm hover:shadow-md transition-shadow rounded-3xl p-6 lg:p-7 flex flex-col gap-4 items-start">
                 <div className="w-12 h-12 rounded-2xl bg-[#3E63F5]/10 flex items-center justify-center border border-[#3E63F5]/20 flex-shrink-0">
                   <Shield className="w-5 h-5 text-[#3E63F5]" />
                 </div>
@@ -865,6 +972,176 @@ export function LandingPage() {
           <p className="text-[13px] text-[#1F2430]/40 font-medium">© 2026 PlacedOn Inc.</p>
         </footer>
 
+      </div>
+    </div>
+  );
+}
+
+// ---------- Sample Profile Graph Preview ----------
+// A miniature, non-interactive version of the candidate constellation graph used on
+// the /candidate/profile page. Mirrors the same visual language: warm gold for
+// behavioral traits, cool cobalt for technical traits, gray dashed for
+// insufficient-evidence gaps; bottom-anchored labels.
+const SAMPLE_TRAITS: Array<{
+  name: string;
+  family: 'behavioral' | 'technical';
+  score: number;       // 0..1 — controls blob size + brightness
+  confidence: number;  // 0..1 — controls opacity
+  gap?: boolean;
+}> = [
+  { name: 'Communication clarity', family: 'behavioral', score: 0.92, confidence: 0.95 },
+  { name: 'Ownership', family: 'behavioral', score: 0.85, confidence: 0.88 },
+  { name: 'Clarifies ambiguity', family: 'behavioral', score: 0.74, confidence: 0.70 },
+  { name: 'Mentorship', family: 'behavioral', score: 0.30, confidence: 0.35, gap: true },
+  { name: 'React architecture', family: 'technical', score: 0.94, confidence: 0.92 },
+  { name: 'State management', family: 'technical', score: 0.88, confidence: 0.86 },
+  { name: 'API integration', family: 'technical', score: 0.78, confidence: 0.74 },
+  { name: 'Performance tuning', family: 'technical', score: 0.40, confidence: 0.45, gap: true },
+];
+
+function SampleProfileGraphPreview() {
+  const WARM = '#D4A537';
+  const TECH = '#3E63F5';
+  const GRAY = '#9CA3AF';
+  const cx = 50;
+  const cy = 52;
+  const rx = 28;
+  const ry = 30;
+
+  const behavioral = SAMPLE_TRAITS.filter(t => t.family === 'behavioral');
+  const technical = SAMPLE_TRAITS.filter(t => t.family === 'technical');
+
+  // Behavioral on left arc (top → left → bottom), technical on right arc.
+  const placed = [
+    ...behavioral.map((t, i) => {
+      const u = behavioral.length === 1 ? 0.5 : i / (behavioral.length - 1);
+      const angle = -Math.PI / 2 - u * Math.PI;
+      return { ...t, x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry };
+    }),
+    ...technical.map((t, i) => {
+      const u = technical.length === 1 ? 0.5 : i / (technical.length - 1);
+      const angle = -Math.PI / 2 + u * Math.PI;
+      return { ...t, x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry };
+    }),
+  ];
+
+  return (
+    <div className="relative w-full rounded-[1.75rem] overflow-hidden bg-[#F3F2F0] border border-[#1F2430]/8 shadow-[0_12px_40px_rgba(30,35,48,0.06)]" style={{ minHeight: 560 }}>
+      {/* Slim title block */}
+      <div className="px-6 sm:px-8 pt-7 pb-2 relative z-10">
+        <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#1F2430]/45">
+          <Sparkles className="w-3.5 h-3.5" /> Sample Profile
+        </div>
+        <h3 className="font-[Manrope,sans-serif] text-[22px] sm:text-[24px] font-extrabold text-[#1F2430] tracking-tight mt-1.5 leading-tight">
+          Your Evidence Graph
+        </h3>
+        <p className="text-[13px] text-[#1F2430]/60 font-medium mt-1.5 max-w-2xl leading-relaxed">
+          Each blob is a trait inferred from interview behavior. Gold = behavioral, blue = technical.
+        </p>
+      </div>
+
+      {/* Sky region */}
+      <div className="absolute inset-0 top-[120px] bottom-[64px]">
+        {/* Subtle background dots */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
+          {Array.from({ length: 24 }).map((_, i) => {
+            const h = (i * 1103515245 + 12345) & 0x7fffffff;
+            return (
+              <circle
+                key={i}
+                cx={`${(h % 1000) / 10}%`}
+                cy={`${((h >> 7) % 1000) / 10}%`}
+                r={0.4 + ((h >> 13) % 10) / 20}
+                fill="#1F2430"
+                fillOpacity={0.04}
+              />
+            );
+          })}
+          {/* Same-family connector edges (nearest two within family) */}
+          {(['behavioral', 'technical'] as const).flatMap(fam => {
+            const members = placed.filter(p => p.family === fam && !p.gap);
+            const edges: Array<{ a: typeof members[number]; b: typeof members[number] }> = [];
+            members.forEach((a, i) => {
+              const sorted = members
+                .filter((_, j) => j !== i)
+                .map(b => ({ b, d: Math.hypot(a.x - b.x, a.y - b.y) }))
+                .sort((p, q) => p.d - q.d)
+                .slice(0, 2);
+              sorted.forEach(({ b }) => edges.push({ a, b }));
+            });
+            return edges.map((e, i) => (
+              <line
+                key={`${fam}-edge-${i}`}
+                x1={`${e.a.x}%`}
+                y1={`${e.a.y}%`}
+                x2={`${e.b.x}%`}
+                y2={`${e.b.y}%`}
+                stroke={fam === 'technical' ? TECH : WARM}
+                strokeWidth={0.6}
+                strokeOpacity={0.12}
+              />
+            ));
+          })}
+        </svg>
+
+        {/* Trait blobs + bottom labels */}
+        {placed.map((t) => {
+          const color = t.gap ? GRAY : t.family === 'technical' ? TECH : WARM;
+          const radius = t.gap ? 5 : 6 + Math.round(t.score * 4);
+          const brightness = 0.6 + t.score * 0.4;
+          return (
+            <div key={t.name} className="absolute" style={{ left: `${t.x}%`, top: `${t.y}%` }}>
+              {/* Glow */}
+              <span
+                aria-hidden
+                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+                style={{
+                  width: radius * 2 + 14,
+                  height: radius * 2 + 14,
+                  background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+                  opacity: 0.18,
+                }}
+              />
+              {/* Core */}
+              <span
+                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
+                style={{
+                  width: radius * 2,
+                  height: radius * 2,
+                  background: t.gap ? '#FFFCF6' : color,
+                  border: t.gap ? `1.5px dashed ${GRAY}` : 'none',
+                  filter: `brightness(${brightness})`,
+                  opacity: t.confidence,
+                  boxShadow: t.gap ? 'none' : `0 0 4px ${color}`,
+                }}
+              />
+              {/* Label below the blob */}
+              <span
+                className="absolute -translate-x-1/2 whitespace-nowrap text-[11px] font-bold leading-none text-[#1F2430]/80 pointer-events-none"
+                style={{
+                  left: 0,
+                  top: radius + 10,
+                  textShadow: '0 1px 4px rgba(255,252,246,0.95), 0 0 6px rgba(255,252,246,0.85)',
+                }}
+              >
+                {t.name}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Legend + CTA */}
+      <div className="absolute left-0 right-0 bottom-0 px-6 sm:px-8 py-4 flex flex-wrap items-center gap-x-4 gap-y-2 z-10 bg-gradient-to-t from-[#F3F2F0] via-[#F3F2F0]/90 to-transparent">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#1F2430]/70">
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: WARM }} /> Gold = behavioral
+        </div>
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#1F2430]/70">
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: TECH }} /> Blue = technical
+        </div>
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#1F2430]/70">
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: GRAY }} /> Gray = insufficient evidence
+        </div>
       </div>
     </div>
   );
