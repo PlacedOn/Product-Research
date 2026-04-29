@@ -1,0 +1,25 @@
+- generic [ref=e2] [box=0,0,390,844]:
+  - generic [ref=e3] [box=0,0,390,1847]:
+    - banner [ref=e8] [box=0,0,390,65]:
+      - generic [ref=e10] [box=24,16,217,32]:
+        - generic [ref=e11] [box=24,16,32,32]: P
+        - generic [ref=e12] [box=68,20,71,24]: PlacedOn
+        - generic [ref=e14] [box=159,22,82,21]: Demo Data
+    - generic [ref=e23] [box=0,65,390,1782]:
+      - generic [ref=e25] [box=16,97,358,221]:
+        - generic [ref=e26] [box=16,97,358,110]:
+          - heading "Evidence-backed candidate discovery" [level=1] [ref=e27] [box=16,97,358,60]
+          - paragraph [ref=e28] [box=16,165,358,42]: Find candidates based on verified interview performance, not resume claims.
+        - generic [ref=e29] [box=16,231,358,87]:
+          - generic [ref=e30] [box=16,231,130,79]
+          - generic [ref=e37] [box=158,231,158,79]
+          - generic [ref=e43] [box=328,231,162,79]
+      - generic [ref=e69] [box=16,350,358,1465]:
+        - generic [ref=e71] [box=16,350,358,118]:
+          - generic [ref=e72] [box=25,359,340,44]
+          - generic [ref=e77] [box=25,411,340,48]
+        - generic [ref=e85] [box=16,488,358,1327]:
+          - generic [ref=e87] [box=16,488,358,429]
+          - generic [ref=e133] [box=16,932,358,394]
+          - generic [ref=e179] [box=16,1342,358,393]
+  - region "Notifications alt+T" [box=0,1847,390,0]

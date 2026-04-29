@@ -1,32 +1,16 @@
 <claude-mem-context>
 # Memory Context
 
-# [08-PlacedOn] recent context, 2026-04-28 6:24pm GMT+5:30
+# [08-PlacedOn] recent context, 2026-04-29 2:02am GMT+5:30
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 41 obs (21,614t read) | 680,863t work | 97% savings
+Stats: 50 obs (19,258t read) | 2,056,002t work | 99% savings
 
-### Apr 19, 2026
-1 4:28p 🔵 PlacedOn Frontend Dashboard Architecture Inspected
-### Apr 20, 2026
-33 11:36a ⚖️ PlacedOn Integrity Engine — 5 New AI-Copilot Detection Layers from 2023–2025 Research
-35 11:45a ⚖️ PlacedOn Anti-Copilot Integrity Engine — Research-Backed 5-Layer Architecture Finalized
-38 11:46a 🔵 PlacedOn Frontend — Complete UI Shell with 5 Routes, No Backend Integration
-39 11:49a 🔵 PlacedOn Frontend Has Zero Backend Integration — Figma Make Origin, node_modules Missing
-41 11:59a ⚖️ PlacedOn — Frontend-Only Development Constraint Set
-54 9:59p ⚖️ PlacedOn V1 Assessment Dimensions — IO Psychology Critique and Validity Audit
-56 10:00p ⚖️ PlacedOn V1 Assessment Dimensions — Ethics, Bias, and Legal Risk Critique
-57 10:02p 🔵 codex-gita Directory Does Not Exist on This Machine
-58 " ⚖️ PlacedOn V1 Assessment Dimensions — Recruiter Product Value Critique
-60 10:04p ⚖️ PlacedOn V1 Assessment Report — UX Architecture and Component Blueprint
-62 10:05p 🔵 PlacedOn Figma-Context Directory — Full Frontend Spec and Data Contract Surface
 ### Apr 26, 2026
-177 9:04p ⚖️ PlacedOn Landing Page — Premium "Illumination" Pivot Strategy
-179 9:05p 🔵 PlacedOn Frontend — Complete File Structure and Existing UI Components Confirmed
-181 " 🔵 PlacedOn Landing Page — Existing Design Spec Directly Contradicts Proposed 3D Illumination Direction
+181 9:05p 🔵 PlacedOn Landing Page — Existing Design Spec Directly Contradicts Proposed 3D Illumination Direction
 182 " 🔵 PlacedOn Business Context — GTM, Competitive Positioning, and Critical Risks Fully Read
 185 9:13p ⚖️ PlacedOn — "Illumination" Premium Landing Page Technical Brief Defined
 187 " 🔵 PlacedOn Frontend — Vite + Figma Make Stack Confirmed, No Three.js Present
@@ -54,6 +38,31 @@ Stats: 41 obs (21,614t read) | 680,863t work | 97% savings
 246 9:52p 🔵 PlacedOn Frontend — UserDashboard Crashes at Runtime Due to Backend Contract Field Name Mismatch
 249 9:54p 🔴 PlacedOn Backend — demo_routes.py Fixed to Emit Frontend TypeScript Contract Shape
 250 9:59p ⚖️ PlacedOn — Replace Frontend Hardcoding With Backend Demo JSON API (Implementation Plan)
+### Apr 28, 2026
+262 8:52p 🔵 PlacedOn Repo — On proposed-frontend Branch with Gone Remote Tracking
+263 " 🔵 PlacedOn Git Branch State — proposed-frontend 3 Commits Ahead of Local main, Already Merged to origin/main via PR
+264 " 🔵 PlacedOn Git Operations Blocked — .git Directory on Read-Only Filesystem
+267 " 🔵 Git Fetch Succeeded with Escalated Sandbox Permissions
+268 " 🔵 PlacedOn proposed-frontend — 6 Files Ahead of origin/main Not Yet Merged
+271 8:53p 🔵 Git Write Operations Still Blocked — .git/index.lock Cannot Be Created Without Escalated Permissions
+272 8:55p ✅ PlacedOn Branch Switched to main — Pulled, Cherry-Picked, and Pushed Successfully
+273 8:57p 🔵 PlacedOn Frontend — Vite Dev Server Running at 127.0.0.1:5173 for UI Audit
+274 9:51p 🔵 PlacedOn Git Branch Switch — Requested: proposed-frontend → main with Pull/Push
+### Apr 29, 2026
+275 1:33a 🔵 PlacedOn Employer Portal — Visual Inspection via Playwright
+276 1:34a 🔵 PlacedOn EmployerDashboard.tsx — Full Implementation Mapped
+277 " 🔵 Vite Dev Server Not Running on Port 5173 — Needed Manual Restart
+278 " 🔵 Playwright MCP Browser Conflict — Single Instance Limitation
+281 1:36a 🔵 PlacedOn EmployerDashboard.tsx — Full 460-Line Implementation Mapped
+282 " 🔵 Vite Dev Server Started on 127.0.0.1:5173 — Playwright Browser Blocked by Existing Instance
+283 1:39a 🔵 PlacedOn Employer Page — Full Visual Inspection via Playwright at Mobile and Desktop Viewports
+284 " 🔵 PlacedOn Employer Page — Console Errors: FastAPI Backend Unreachable, Mock Fallback Active
+285 " 🔵 PlacedOn Employer Page — Interactive Behaviors Verified: Pass, Request Intro, Search Filter All Work
+286 " 🔵 PlacedOn Frontend Build — Production Build Succeeds with Bundle Size Warning
+287 1:56a ⚖️ PlacedOn Employer Dashboard — UX Design Direction Initiated
+288 " 🔵 PlacedOn Employer Dashboard — Full Design Spec and Persona Documented
+290 1:57a 🔵 PlacedOn Employer Dashboard — Full Product Spec and Route Contract Read
+295 " ⚖️ PlacedOn Employer Dashboard — Primary Audience Set to Recruiter / HR Ops
 
-Access 681k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 2056k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>

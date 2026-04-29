@@ -1,0 +1,34 @@
+- generic [ref=e2] [box=0,0,1440,1000]:
+  - generic [ref=e3] [box=0,0,1440,1354]:
+    - banner [ref=e8] [box=0,0,1440,65]:
+      - generic [ref=e9] [box=0,0,1440,64]:
+        - generic [ref=e10] [box=24,16,317,32]:
+          - generic [ref=e11] [box=24,16,32,32]: P
+          - generic [ref=e12] [box=68,20,71,24]: PlacedOn
+          - generic [ref=e13] [box=159,22,80,21]: Employer
+          - generic [ref=e14] [box=260,22,82,21]: Demo Data
+        - generic [ref=e16] [box=1123,22,229,20]:
+          - generic [ref=e17] [cursor=pointer] [box=1123,22,63,20]: Discovery
+          - generic [ref=e18] [cursor=pointer] [box=1210,22,66,20]: Interviews
+          - generic [ref=e19] [cursor=pointer] [box=1300,22,52,20]: Settings
+    - generic [ref=e23] [box=0,65,1440,1289]:
+      - generic [ref=e25] [box=24,97,1392,79]:
+        - generic [ref=e26] [box=24,109,557,67]:
+          - heading "Evidence-backed candidate discovery" [level=1] [ref=e27] [box=24,109,557,38]
+          - paragraph [ref=e28] [box=24,155,557,21]: Find candidates based on verified interview performance, not resume claims.
+        - generic [ref=e29] [box=942,97,474,79]:
+          - generic [ref=e30] [box=942,97,130,79]
+          - generic [ref=e37] [box=1084,97,158,79]
+          - generic [ref=e43] [box=1254,97,162,79]
+      - generic [ref=e50] [box=24,208,1392,1114]:
+        - generic [ref=e52] [box=24,208,240,276]:
+          - heading "Active Roles" [level=3] [ref=e53] [box=24,208,240,18]
+          - generic [ref=e54] [box=24,238,240,188]
+          - button "Add New Role" [ref=e65] [box=24,442,240,42]
+        - generic [ref=e69] [box=296,208,788,1114]:
+          - generic [ref=e71] [box=296,208,788,58]
+          - generic [ref=e85] [box=296,286,788,1036]
+        - generic [ref=e224] [box=1116,208,300,602]:
+          - generic [ref=e226] [box=1116,208,300,320]
+          - generic [ref=e247] [box=1116,552,300,258]
+  - region "Notifications alt+T" [box=0,1354,1440,0]
