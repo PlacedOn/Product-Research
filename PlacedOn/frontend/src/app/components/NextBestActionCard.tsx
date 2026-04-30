@@ -144,7 +144,7 @@ const actionData: Record<NextActionState, {
 
 export function NextBestActionCard({ state }: NextBestActionCardProps) {
   const navigate = useNavigate();
-  const data = actionData[state];
+  const data = actionData[state] ?? actionData.start_interview;
 
   const handleAction = () => {
     if (state === 'start_interview' || state === 'recover_interview') navigate('/pre-interview');
