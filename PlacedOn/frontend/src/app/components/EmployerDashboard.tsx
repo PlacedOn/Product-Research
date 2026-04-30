@@ -1,458 +1,529 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router";
+import { motion } from "motion/react";
 import {
-  Search, Filter, Briefcase, Bookmark, UserPlus, ShieldCheck,
-  ChevronRight, Lock, MapPin, Zap, CheckCircle2, TrendingUp, X, Loader2, AlertCircle
+  Plus, Search, Building2, Bell, ArrowRight, Users,
+  AlertTriangle, Briefcase, X, MoreHorizontal, Pencil, Copy,
+  SlidersHorizontal, Pause, XCircle, Archive, Play,
 } from "lucide-react";
-import { AnimatedContent } from "./ui/AnimatedContent";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { DotGrid } from "./ui/DotGrid";
-import { Orb } from "./ui/Orb";
-import { demoApi, type EmployerResponse, type Job, type DiscoveryCandidate, getDemoModeActive } from "../lib/demoApi";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
+import { useEmployerStore, type RoleStatus } from "../lib/employerStore";
+import type { Role } from "../lib/employerTypes";
+import { ConfirmModal } from "./employer/ConfirmModal";
+import { EditCriteriaDrawer } from "./CreateJobDrawer";
+import type { JobListing } from "../lib/jobListingTypes";
+
+type StatusFilter = "all" | "healthy" | "needs_attention" | "critical";
 
 export function EmployerDashboard() {
-  const [employerData, setEmployerData] = useState<EmployerResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeJobId, setActiveJobId] = useState<string | null>(null);
-  const [savedCandidates, setSavedCandidates] = useState<string[]>([]);
-  const [passedCandidates, setPassedCandidates] = useState<string[]>([]);
-  const [requestedIntros, setRequestedIntros] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isDemoMode, setIsDemoMode] = useState(getDemoModeActive());
+  const navigate = useNavigate();
+  const {
+    roles, candidates, jobs, roleStatuses,
+    updateRoleStatus, duplicateJob, updateJob,
+  } = useEmployerStore();
 
-  useEffect(() => {
-    const handleDemoModeChange = (e: Event) => {
-      const customEvent = e as CustomEvent<boolean>;
-      setIsDemoMode(customEvent.detail);
-    };
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [showAlerts, setShowAlerts] = useState(false);
+  const [tuneJob, setTuneJob] = useState<JobListing | null>(null);
+  const [confirm, setConfirm] = useState<
+    | { type: "close" | "archive"; role: Role }
+    | null
+  >(null);
 
-    window.addEventListener('demo-mode-changed', handleDemoModeChange);
-    setIsDemoMode(getDemoModeActive());
+  const goCreate = () => navigate("/employer/jobs");
 
-    return () => {
-      window.removeEventListener('demo-mode-changed', handleDemoModeChange);
-    };
-  }, []);
+  const alerts = useMemo(() => roles.filter((r) => r.healthStatus !== "healthy"), [roles]);
 
-  useEffect(() => {
-    async function loadEmployerData() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await demoApi.getEmployer();
-        setEmployerData(data);
-
-        // Set first job as active by default
-        if (data.jobs.length > 0) {
-          setActiveJobId(data.jobs[0].id);
-        }
-
-        // Initialize saved candidates from shortlist
-        setSavedCandidates(data.shortlist.map(c => c.id));
-
-        // Initialize requested intros
-        setRequestedIntros(data.intro_requests.map(r => r.candidate_id));
-      } catch (err) {
-        console.error('Failed to load employer data:', err);
-        setError('Unable to load employer dashboard');
-      } finally {
-        setIsLoading(false);
-      }
+  const filteredRoles = useMemo(() => {
+    let list = roles;
+    if (statusFilter !== "all") list = list.filter((r) => r.healthStatus === statusFilter);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (r) =>
+          r.title.toLowerCase().includes(q) ||
+          r.department.toLowerCase().includes(q) ||
+          r.level.toLowerCase().includes(q)
+      );
     }
-    loadEmployerData();
-  }, []);
+    return list;
+  }, [roles, statusFilter, search]);
 
-  const handleSave = (id: string) => {
-    setSavedCandidates(prev =>
-      prev.includes(id) ? prev.filter(cId => cId !== id) : [...prev, id]
-    );
+  const totals = useMemo(
+    () => ({
+      activeRoles: roles.filter((r) => r.isActive).length,
+      newCandidates: roles.reduce((s, r) => s + r.counts.newCandidates, 0),
+      highFit: roles.reduce((s, r) => s + r.counts.highFit, 0),
+      pendingIntros: roles.reduce((s, r) => s + r.counts.pendingIntros, 0),
+    }),
+    [roles]
+  );
+
+  const openPipeline = (role: Role, view?: string) => {
+    const params = new URLSearchParams({ role: role.title });
+    if (view) params.set("view", view);
+    navigate(`/employer/pipeline?${params.toString()}`);
   };
 
-  const handlePass = (id: string) => {
-    setPassedCandidates(prev => [...prev, id]);
+  const findJobForRole = (role: Role): JobListing | undefined =>
+    jobs.find((j) => j.title === role.title);
+
+  const handleEdit = (role: Role) => {
+    const job = findJobForRole(role);
+    if (job) navigate(`/employer/jobs?edit=${job.id}`);
+    else navigate("/employer/jobs");
   };
 
-  const handleRequestIntro = (id: string) => {
-    setRequestedIntros(prev => [...prev, id]);
+  const handleDuplicate = (role: Role) => {
+    const job = findJobForRole(role);
+    if (!job) return;
+    const copy = duplicateJob(job.id);
+    if (copy) navigate(`/employer/jobs?edit=${copy.id}`);
   };
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen w-full bg-[#F8F7F5] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-10 h-10 text-[#3E63F5] animate-spin" />
-          <p className="text-[14px] font-semibold text-[#1F2430]/60">Loading employer dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+  const handleTune = (role: Role) => {
+    const job = findJobForRole(role);
+    if (job) setTuneJob(job);
+  };
 
-  // Error state
-  if (error || !employerData) {
-    return (
-      <div className="min-h-screen w-full bg-[#F8F7F5] flex items-center justify-center p-4 md:p-6">
-        <div className="glass-card rounded-[2.5rem] p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-2xl w-full border border-white shadow-sm">
-          <div className="flex items-start md:items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/10 flex items-center justify-center text-[#F59E0B] shrink-0">
-              <AlertCircle className="w-6 h-6" />
+  const setStatus = (role: Role, status: RoleStatus) => {
+    updateRoleStatus(role.title, status);
+  };
+
+  const nudgeAction = (role: Role) => {
+    if (role.healthStatus === "critical") {
+      openPipeline(role, "needs_review");
+    } else {
+      openPipeline(role, "high_fit");
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen font-[Inter,sans-serif]"
+      style={{ backgroundColor: "#F3F2F0" }}
+    >
+      <header
+        className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-30"
+        style={{ borderColor: "rgba(31, 36, 48, 0.08)" }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: "#1F2430" }}
+            >
+              <Building2 className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h3 className="font-[Manrope,sans-serif] text-[18px] font-bold text-[#1F2430] mb-1">
-                Demo Data Unavailable
-              </h3>
-              <p className="text-[14px] text-[#1F2430]/60">
-                {error || 'Could not connect to the backend. Please check your connection and try again.'}
+              <p className="text-sm" style={{ color: "#1F2430" }}>PlacedOn</p>
+              <p className="text-xs" style={{ color: "#1F2430", opacity: 0.6 }}>
+                Hiring dashboard
               </p>
             </div>
           </div>
-          <button
-            onClick={() => window.location.reload()}
-            className="w-full md:w-auto px-6 py-3 md:py-2.5 rounded-xl bg-[#3E63F5] text-white text-[15px] md:text-[14px] font-bold shadow-sm hover:bg-[#2A44B0] transition-colors whitespace-nowrap shrink-0 mt-2 md:mt-0"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Filter out passed candidates from the discovery feed
-  const candidates = employerData.discovery_feed.filter(c => !passedCandidates.includes(c.id));
-  const jobs = employerData.jobs;
-
-  return (
-    <div className="min-h-screen w-full bg-[#F8F7F5] relative overflow-hidden font-[Inter,sans-serif] selection:bg-[#10B981] selection:text-white">
-      {/* Background & Textures */}
-      <style>{`
-        .glass-card {
-          background: rgba(255, 255, 255, 0.45);
-          backdrop-filter: blur(40px);
-          -webkit-backdrop-filter: blur(40px);
-          border: 1px solid rgba(255, 255, 255, 0.7);
-          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 12px 40px rgba(30, 35, 60, 0.04);
-        }
-        .noise-overlay {
-          position: absolute;
-          inset: 0;
-          opacity: 0.15;
-          mix-blend-mode: overlay;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          pointer-events: none;
-          z-index: 1;
-        }
-      `}</style>
-
-      {/* Corporate/Restrained ambient orbs */}
-      <Orb color="#10B981" size={500} opacity={0.06} blur={130} className="top-[-10%] left-[-5%]" duration={25} />
-      <Orb color="#3E63F5" size={400} opacity={0.04} blur={120} className="bottom-[10%] right-[-5%]" duration={20} />
-
-      <DotGrid opacity={0.06} size={1} spacing={28} />
-      <div className="noise-overlay" />
-
-      {/* Top Navigation Bar */}
-      <header className="relative z-10 w-full border-b border-[#1F2430]/5 bg-white/60 backdrop-blur-xl">
-        <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#10B981] flex items-center justify-center text-white font-bold font-[Manrope,sans-serif] shadow-sm">P</div>
-            <span className="font-[Manrope,sans-serif] text-[16px] font-bold text-[#1F2430] tracking-tight">PlacedOn</span>
-            <span className="px-2 py-0.5 rounded-md bg-[#1F2430]/5 text-[#1F2430]/60 text-[11px] font-bold uppercase tracking-wider ml-2 hidden sm:block">Employer</span>
-            {isDemoMode && (
-              <span className="px-2 py-0.5 rounded-md bg-[#F59E0B]/10 text-[#F59E0B] text-[10px] font-bold uppercase tracking-wider border border-[#F59E0B]/20 ml-2">
-                Demo Data
-              </span>
-            )}
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-6 mr-4 text-[13px] font-semibold text-[#1F2430]/60">
-              <span className="hover:text-[#1F2430] cursor-pointer transition-colors text-[#1F2430]">Discovery</span>
-              <span className="hover:text-[#1F2430] cursor-pointer transition-colors">Interviews</span>
-              <span className="hover:text-[#1F2430] cursor-pointer transition-colors">Settings</span>
-            </div>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#1F2430] to-[#3E63F5] p-[1.5px] cursor-pointer">
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-                <div className="w-full h-full bg-[#E2E8F0]" />
-              </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant={showAlerts ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowAlerts((v) => !v)}
+              className="h-9 px-3 relative"
+              aria-label="Notifications"
+            >
+              <Bell className="w-4 h-4" />
+              {alerts.length > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] flex items-center justify-center text-white"
+                  style={{ backgroundColor: "#EF4444" }}
+                >
+                  {alerts.length}
+                </span>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/employer/jobs")}
+              className="h-9 px-3"
+            >
+              <Briefcase className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Manage jobs</span>
+            </Button>
+            <Button
+              size="sm"
+              onClick={goCreate}
+              className="h-9 px-3 text-white"
+              style={{ backgroundColor: "#3E63F5" }}
+            >
+              <Plus className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">New role</span>
+            </Button>
           </div>
         </div>
       </header>
 
-      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 md:px-6 py-8">
-        
-        {/* Page Header */}
-        <AnimatedContent direction="vertical" distance={20} delay={0}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-            <div>
-              <h1 className="font-[Manrope,sans-serif] text-2xl md:text-3xl font-extrabold text-[#1F2430] mb-2 leading-tight">
-                Evidence-backed candidate discovery
-              </h1>
-              <p className="text-[14px] text-[#1F2430]/60 font-medium">
-                Find candidates based on verified interview performance, not resume claims.
-              </p>
-            </div>
-            
-            {/* Metrics */}
-            <div className="flex gap-3 overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
-              {[
-                { label: "Open Jobs", value: jobs.length.toString(), icon: <Briefcase className="w-4 h-4" /> },
-                { label: "Saved Profiles", value: savedCandidates.length.toString(), icon: <Bookmark className="w-4 h-4" /> },
-                { label: "Intro Requests", value: employerData.intro_requests.length.toString(), icon: <UserPlus className="w-4 h-4" /> },
-              ].map((metric, i) => (
-                <div key={i} className="glass-card rounded-xl px-4 py-3 min-w-[130px] shrink-0 border border-white flex flex-col justify-between">
-                  <div className="flex items-center gap-2 text-[#1F2430]/50 mb-2">
-                    {metric.icon}
-                    <span className="text-[11px] font-bold uppercase tracking-wider">{metric.label}</span>
-                  </div>
-                  <span className="font-[Manrope,sans-serif] text-xl font-bold text-[#1F2430]">{metric.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </AnimatedContent>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <section className="mb-8">
+          <h1 className="text-3xl mb-1" style={{ color: "#1F2430" }}>
+            Your hiring pipeline
+          </h1>
+          <p className="text-sm" style={{ color: "#1F2430", opacity: 0.7 }}>
+            Manage every open role and dive into its pipeline of {candidates.length} verified candidates.
+          </p>
+        </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)_300px] gap-6 xl:gap-8 items-start">
-          
-          {/* Left Sidebar: Job Selection */}
-          <AnimatedContent direction="horizontal" distance={-20} delay={0.1} className="hidden lg:block sticky top-24">
-            <div className="mb-4">
-              <h3 className="text-[12px] font-bold text-[#1F2430]/50 uppercase tracking-wider mb-3 px-1">Active Roles</h3>
-              <div className="space-y-1.5">
-                {jobs.map((job) => (
-                  <button
-                    key={job.id}
-                    onClick={() => setActiveJobId(job.id)}
-                    className={`w-full text-left px-3 py-2.5 rounded-xl transition-all ${
-                      activeJobId === job.id
-                        ? "bg-white shadow-sm border border-white/80"
-                        : "hover:bg-white/40 text-[#1F2430]/60 hover:text-[#1F2430]"
-                    }`}
-                  >
-                    <div className="font-semibold text-[13px] truncate mb-0.5" style={{ color: activeJobId === job.id ? "#1F2430" : "inherit" }}>
-                      {job.title}
-                    </div>
-                    <div className="text-[11px] font-medium opacity-60 flex items-center justify-between">
-                      {job.department}
-                      {activeJobId === job.id && <div className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />}
-                    </div>
-                  </button>
-                ))}
-              </div>
-              <button className="w-full mt-4 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-dashed border-[#1F2430]/20 text-[13px] font-bold text-[#1F2430]/50 hover:bg-[#1F2430]/5 hover:text-[#1F2430] transition-colors">
-                <Briefcase className="w-3.5 h-3.5" /> Add New Role
-              </button>
-            </div>
-          </AnimatedContent>
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          <SummaryTile label="Active roles" value={totals.activeRoles} accent="#1F2430" />
+          <SummaryTile label="New candidates" value={totals.newCandidates} accent="#3E63F5" />
+          <SummaryTile label="High-fit (≥85)" value={totals.highFit} accent="#10B981" />
+          <SummaryTile label="Pending intros" value={totals.pendingIntros} accent="#F59E0B" />
+        </section>
 
-          {/* Middle: Feed & Filters */}
-          <div className="flex flex-col gap-5 min-w-0">
-            
-            {/* Filter Bar */}
-            <AnimatedContent direction="vertical" distance={20} delay={0.15}>
-              <div className="glass-card rounded-[1.25rem] p-2 flex flex-col md:flex-row items-center gap-2 shadow-sm border border-white sticky top-24 z-30">
-                <div className="relative flex-1 w-full">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1F2430]/40" />
-                  <input 
-                    type="text" 
-                    placeholder="Search traits, skills, or locations..." 
-                    className="w-full bg-white/50 border border-transparent focus:border-white/80 focus:bg-white focus:ring-2 focus:ring-[#10B981]/20 rounded-xl py-2 pl-10 pr-4 text-[13px] font-medium outline-none transition-all placeholder:text-[#1F2430]/40 text-[#1F2430]"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 hide-scrollbar px-1">
-                  <button className="px-3 py-2.5 rounded-lg bg-white/60 border border-white/80 text-[12px] font-bold text-[#1F2430]/70 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5" /> Match &gt; 90%
-                  </button>
-                  <button className="px-3 py-2.5 rounded-lg bg-white/60 border border-white/80 text-[12px] font-bold text-[#1F2430]/70 hover:bg-white transition-colors whitespace-nowrap">
-                    Remote Only
-                  </button>
-                  <button className="px-3 py-2.5 rounded-lg bg-[#1F2430]/5 text-[12px] font-bold text-[#1F2430]/60 hover:bg-[#1F2430]/10 transition-colors whitespace-nowrap flex items-center gap-1.5 ml-auto">
-                    <Filter className="w-3.5 h-3.5" /> All Filters
-                  </button>
-                </div>
-              </div>
-            </AnimatedContent>
-
-            {/* Candidate Feed */}
-            <div className="space-y-4 pb-20">
-              {candidates.map((candidate, i) => (
-                <AnimatedContent key={candidate.id} direction="vertical" distance={20} delay={0.2 + (i * 0.05)}>
-                  <motion.div
-                    className="glass-card rounded-[1.5rem] p-5 md:p-6 border border-white relative overflow-hidden group hover:shadow-[0_16px_48px_rgba(30,35,60,0.06)] transition-all"
-                  >
-                    {/* Top Row: Anonymous ID & Match Score */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#1F2430] to-[#4A5568] flex items-center justify-center p-[2px] shadow-sm">
-                          <div className="w-full h-full rounded-full bg-[#1F2430] border-2 border-white flex items-center justify-center">
-                            <Lock className="w-4 h-4 text-white/50" />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-[Manrope,sans-serif] font-bold text-[#1F2430] text-[15px]">{candidate.name}</h3>
-                            <span className="w-2 h-2 rounded-full bg-[#3E63F5] shadow-[0_0_8px_rgba(62,99,245,0.6)]" />
-                          </div>
-                          <p className="text-[12px] text-[#1F2430]/50 font-medium flex items-center gap-1.5 mt-0.5">
-                            <TrendingUp className="w-3 h-3" /> {candidate.target_role}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col items-end">
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20">
-                          <Zap className="w-4 h-4 text-[#10B981]" />
-                          <span className="font-bold text-[14px] text-[#10B981]">{candidate.match_score}% Fit</span>
-                        </div>
-                        <span className="text-[11px] font-bold text-[#1F2430]/40 uppercase tracking-wider mt-1.5 mr-1">{candidate.evidence_strength}</span>
-                      </div>
-                    </div>
-
-                    {/* Middle Row: Key Signals */}
-                    <div className="bg-white/50 rounded-2xl p-4 border border-white/60 mb-5">
-                      <div>
-                        <p className="text-[11px] font-bold text-[#1F2430]/40 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" /> Key Signals
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {candidate.key_signals.map((signal, idx) => (
-                            <span key={idx} className="px-2 py-1 rounded-md bg-white border border-[#1F2430]/5 text-[12px] font-bold text-[#1F2430]/80 shadow-sm">
-                              {signal}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Row: Metadata & Actions */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                      <div className="flex flex-wrap items-center gap-4 text-[12px] font-medium text-[#1F2430]/60 w-full sm:w-auto">
-                        <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> {candidate.location}</span>
-                        <span className="flex items-center gap-1.5">Available from {candidate.available_from}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-                        <button
-                          onClick={() => handlePass(candidate.id)}
-                          className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white/60 border border-white text-[#1F2430]/60 text-[13px] font-bold hover:bg-white hover:text-[#1F2430] transition-colors shadow-sm"
-                        >
-                          Pass
-                        </button>
-                        <button
-                          onClick={() => handleSave(candidate.id)}
-                          className={`flex-none w-11 h-11 rounded-xl flex items-center justify-center transition-all shadow-sm border ${
-                            savedCandidates.includes(candidate.id)
-                              ? "bg-[#1F2430] border-[#1F2430] text-white"
-                              : "bg-white border-white/80 text-[#1F2430]/50 hover:text-[#1F2430]"
-                          }`}
-                        >
-                          <Bookmark className="w-5 h-5" fill={savedCandidates.includes(candidate.id) ? "currentColor" : "none"} />
-                        </button>
-                        <button
-                          onClick={() => handleRequestIntro(candidate.id)}
-                          disabled={requestedIntros.includes(candidate.id)}
-                          className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 ${
-                            requestedIntros.includes(candidate.id)
-                              ? "bg-[#1F2430]/10 text-[#1F2430] border border-[#1F2430]/20 cursor-default"
-                              : "bg-[#10B981] text-white shadow-[0_4px_16px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_24px_rgba(16,185,129,0.4)]"
-                          }`}
-                        >
-                          {requestedIntros.includes(candidate.id) ? (
-                            <>
-                              <CheckCircle2 className="w-4 h-4" /> Intro Requested
-                            </>
-                          ) : (
-                            <>
-                              Request Intro
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                  </motion.div>
-                </AnimatedContent>
-              ))}
-            </div>
-
-          </div>
-
-          {/* Right Sidebar: Trust/Privacy & Shortlist */}
-          <div className="hidden xl:flex flex-col gap-6 sticky top-24">
-            
-            <AnimatedContent direction="horizontal" distance={20} delay={0.2}>
-              <div className="glass-card rounded-[1.5rem] p-5 border border-white shadow-[0_16px_40px_rgba(30,35,60,0.03)] bg-gradient-to-b from-white/60 to-white/30">
-                <div className="w-10 h-10 rounded-xl bg-[#1F2430] text-white flex items-center justify-center mb-4 shadow-md">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <h3 className="font-[Manrope,sans-serif] text-[15px] font-bold text-[#1F2430] mb-2">Evidence First, Bias Last</h3>
-                <p className="text-[13px] text-[#1F2430]/60 font-medium leading-relaxed mb-4">
-                  Candidates remain completely anonymous. You evaluate verified skills, match scores, and interview performance before seeing demographic data.
+        {showAlerts && alerts.length > 0 && (
+          <section className="mb-6 space-y-2">
+            {alerts.map((r) => (
+              <div
+                key={r.id}
+                className="flex items-center gap-3 p-3 rounded-lg border bg-amber-50 border-amber-200"
+              >
+                <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
+                <p className="text-sm text-amber-900 flex-1">
+                  <span className="font-medium">{r.title}:</span>{" "}
+                  {r.healthMessage ?? "Needs attention"}
                 </p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[12px] font-semibold text-[#1F2430]/70">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" /> Processed profile, no raw transcript
-                  </div>
-                  <div className="flex items-center gap-2 text-[12px] font-semibold text-[#1F2430]/70">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" /> Identity hidden until candidate approval
-                  </div>
-                  <div className="flex items-center gap-2 text-[12px] font-semibold text-[#1F2430]/70">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" /> Two-way opt-in for intro requests
-                  </div>
-                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-amber-800 hover:bg-amber-100 h-8"
+                  onClick={() => nudgeAction(r)}
+                >
+                  Review <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                </Button>
               </div>
-            </AnimatedContent>
+            ))}
+          </section>
+        )}
 
-            <AnimatedContent direction="horizontal" distance={20} delay={0.3}>
-              <div className="glass-card rounded-[1.5rem] p-5 border border-white shadow-[0_8px_32px_rgba(30,35,60,0.03)]">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-[Manrope,sans-serif] text-[14px] font-bold text-[#1F2430]">Saved Shortlist</h3>
-                  <span className="w-6 h-6 rounded-full bg-[#1F2430]/10 flex items-center justify-center text-[11px] font-bold text-[#1F2430]">{savedCandidates.length}</span>
-                </div>
-                
-                {employerData.shortlist.length === 0 ? (
-                  <div className="text-center py-6 text-[13px] font-medium text-[#1F2430]/40 border border-dashed border-[#1F2430]/10 rounded-xl bg-white/30">
-                    No candidates saved yet
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {employerData.shortlist.map(candidate => (
-                      <div key={candidate.id} className="flex items-center justify-between p-2.5 rounded-xl bg-white/60 border border-white shadow-sm group">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-[#1F2430] flex items-center justify-center">
-                            <Lock className="w-3 h-3 text-white/50" />
-                          </div>
-                          <div>
-                            <div className="text-[12px] font-bold text-[#1F2430]">{candidate.name}</div>
-                            <div className="text-[10px] font-semibold text-[#10B981]">{candidate.match_score}% Fit</div>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => handleSave(candidate.id)}
-                          className="w-6 h-6 rounded-md flex items-center justify-center text-[#1F2430]/30 hover:bg-[#1F2430]/10 hover:text-[#1F2430] transition-colors"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                {savedCandidates.length > 0 && (
-                  <button className="w-full mt-4 py-2.5 rounded-xl bg-[#1F2430] text-white text-[12px] font-bold shadow-sm hover:shadow-md transition-shadow">
-                    Review Shortlist
-                  </button>
-                )}
-              </div>
-            </AnimatedContent>
-
+        <section className="flex flex-col sm:flex-row gap-3 mb-5">
+          <div
+            className="flex items-center gap-2 flex-1 rounded-lg border bg-white px-3 py-2"
+            style={{ borderColor: "rgba(31, 36, 48, 0.12)" }}
+          >
+            <Search className="w-4 h-4" style={{ color: "#1F2430", opacity: 0.5 }} />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search roles by title, department, or level"
+              className="flex-1 bg-transparent outline-none text-sm"
+              style={{ color: "#1F2430" }}
+            />
+            {search && (
+              <button onClick={() => setSearch("")} className="p-1 rounded hover:bg-black/5">
+                <X className="w-3.5 h-3.5" style={{ color: "#1F2430", opacity: 0.5 }} />
+              </button>
+            )}
           </div>
-        </div>
+          <div className="flex items-center gap-1 bg-white rounded-lg border p-1" style={{ borderColor: "rgba(31, 36, 48, 0.12)" }}>
+            {(
+              [
+                { id: "all", label: "All" },
+                { id: "healthy", label: "Healthy" },
+                { id: "needs_attention", label: "Needs attention" },
+                { id: "critical", label: "Critical" },
+              ] as const
+            ).map((opt) => {
+              const active = statusFilter === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => setStatusFilter(opt.id)}
+                  className="text-xs px-3 py-1.5 rounded-md transition-colors"
+                  style={{
+                    backgroundColor: active ? "#1F2430" : "transparent",
+                    color: active ? "#FFFFFF" : "#1F2430",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
-      </div>
+        {filteredRoles.length === 0 ? (
+          <EmptyRoles onCreate={goCreate} />
+        ) : (
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredRoles.map((role, i) => (
+              <RoleCard
+                key={role.id}
+                role={role}
+                index={i}
+                status={roleStatuses[role.title] ?? "active"}
+                onOpen={() => openPipeline(role)}
+                onEdit={() => handleEdit(role)}
+                onDuplicate={() => handleDuplicate(role)}
+                onTune={() => handleTune(role)}
+                onPauseToggle={() =>
+                  setStatus(role, (roleStatuses[role.title] ?? "active") === "paused" ? "active" : "paused")
+                }
+                onClose={() => setConfirm({ type: "close", role })}
+                onArchive={() => setConfirm({ type: "archive", role })}
+              />
+            ))}
+            <AddRoleCard onClick={goCreate} />
+          </section>
+        )}
+      </main>
+
+      {tuneJob && (
+        <EditCriteriaDrawer
+          existing={tuneJob}
+          onCancel={() => setTuneJob(null)}
+          onSubmit={(updated) => {
+            updateJob(updated);
+            setTuneJob(null);
+          }}
+        />
+      )}
+
+      <ConfirmModal
+        open={!!confirm}
+        title={confirm?.type === "close" ? "Close this role?" : "Archive this role?"}
+        description={
+          confirm?.type === "close"
+            ? "Active candidate movement stops. History stays visible. You can reopen later."
+            : "The role leaves active dashboards. Candidates remain accessible from history."
+        }
+        confirmLabel={confirm?.type === "close" ? "Close role" : "Archive role"}
+        destructive={confirm?.type === "close"}
+        onCancel={() => setConfirm(null)}
+        onConfirm={() => {
+          if (!confirm) return;
+          setStatus(confirm.role, confirm.type === "close" ? "closed" : "archived");
+          setConfirm(null);
+        }}
+      />
     </div>
   );
 }
+
+function SummaryTile({ label, value, accent }: { label: string; value: number; accent: string }) {
+  return (
+    <div
+      className="rounded-2xl border bg-white p-4"
+      style={{ borderColor: "rgba(31, 36, 48, 0.1)" }}
+    >
+      <p className="text-xs mb-1" style={{ color: "#1F2430", opacity: 0.6 }}>{label}</p>
+      <p className="text-2xl" style={{ color: accent }}>{value}</p>
+    </div>
+  );
+}
+
+const STATUS_LABEL: Record<RoleStatus, string> = {
+  active: "Active",
+  paused: "Paused",
+  closed: "Closed",
+  archived: "Archived",
+};
+
+const STATUS_COLOR: Record<RoleStatus, string> = {
+  active: "#10B981",
+  paused: "#F59E0B",
+  closed: "#EF4444",
+  archived: "#1F2430",
+};
+
+function RoleCard({
+  role,
+  index,
+  status,
+  onOpen,
+  onEdit,
+  onDuplicate,
+  onTune,
+  onPauseToggle,
+  onClose,
+  onArchive,
+}: {
+  role: Role;
+  index: number;
+  status: RoleStatus;
+  onOpen: () => void;
+  onEdit: () => void;
+  onDuplicate: () => void;
+  onTune: () => void;
+  onPauseToggle: () => void;
+  onClose: () => void;
+  onArchive: () => void;
+}) {
+  const healthDot =
+    role.healthStatus === "healthy" ? "#10B981" :
+    role.healthStatus === "needs_attention" ? "#F59E0B" : "#EF4444";
+  const healthLabel =
+    role.healthStatus === "healthy" ? "Healthy" :
+    role.healthStatus === "needs_attention" ? "Needs attention" : "Critical";
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, delay: Math.min(index * 0.03, 0.2) }}
+      className="rounded-2xl border bg-white hover:shadow-md transition-all p-5 flex flex-col"
+      style={{ borderColor: "rgba(31, 36, 48, 0.1)" }}
+    >
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+            <span
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: "rgba(31,36,48,0.04)", color: "#1F2430" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: healthDot }} />
+              {healthLabel}
+            </span>
+            <span
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: "rgba(31,36,48,0.04)", color: STATUS_COLOR[status] }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: STATUS_COLOR[status] }} />
+              {STATUS_LABEL[status]}
+            </span>
+          </div>
+          <h3 className="truncate" style={{ color: "#1F2430" }}>{role.title}</h3>
+          <p className="text-sm mt-0.5" style={{ color: "#1F2430", opacity: 0.6 }}>
+            {role.department} · {role.level}
+          </p>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="p-1.5 rounded-md hover:bg-black/5 shrink-0"
+              aria-label="More options"
+            >
+              <MoreHorizontal className="w-4 h-4" style={{ color: "#1F2430", opacity: 0.5 }} />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuItem onClick={onOpen}>
+              <ArrowRight className="w-4 h-4 mr-2" /> Open pipeline
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onEdit}>
+              <Pencil className="w-4 h-4 mr-2" /> Edit job
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onDuplicate}>
+              <Copy className="w-4 h-4 mr-2" /> Duplicate role
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onTune}>
+              <SlidersHorizontal className="w-4 h-4 mr-2" /> Tune matching
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onPauseToggle}>
+              {status === "paused" ? (
+                <><Play className="w-4 h-4 mr-2" /> Resume role</>
+              ) : (
+                <><Pause className="w-4 h-4 mr-2" /> Pause role</>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onClose}>
+              <XCircle className="w-4 h-4 mr-2" /> Close role
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onArchive}>
+              <Archive className="w-4 h-4 mr-2" /> Archive role
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {role.healthMessage && role.healthStatus !== "healthy" && (
+        <div className="mb-3 px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900">
+          {role.healthMessage}
+        </div>
+      )}
+
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        <Stat label="New" value={role.counts.newCandidates} />
+        <Stat label="High-fit" value={role.counts.highFit} accent="#10B981" />
+        <Stat label="Intros" value={role.counts.pendingIntros} accent="#F59E0B" />
+      </div>
+
+      <div
+        className="flex items-center justify-between pt-3 border-t mt-auto"
+        style={{ borderColor: "rgba(31, 36, 48, 0.08)" }}
+      >
+        <span className="text-xs flex items-center gap-1.5" style={{ color: "#1F2430", opacity: 0.6 }}>
+          <Users className="w-3.5 h-3.5" />
+          {role.counts.total} candidates
+        </span>
+        <button
+          onClick={onOpen}
+          className="text-xs flex items-center gap-1 hover:translate-x-0.5 transition-transform"
+          style={{ color: "#3E63F5" }}
+        >
+          Open pipeline
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </motion.article>
+  );
+}
+
+function Stat({ label, value, accent = "#1F2430" }: { label: string; value: number; accent?: string }) {
+  return (
+    <div className="rounded-lg p-2.5" style={{ backgroundColor: "rgba(31, 36, 48, 0.03)" }}>
+      <p className="text-[10px] uppercase tracking-wide mb-0.5" style={{ color: "#1F2430", opacity: 0.55 }}>
+        {label}
+      </p>
+      <p className="text-lg" style={{ color: accent }}>{value}</p>
+    </div>
+  );
+}
+
+function AddRoleCard({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-2xl border-2 border-dashed bg-white/40 hover:bg-white/70 transition-colors p-5 flex flex-col items-center justify-center text-center min-h-[200px]"
+      style={{ borderColor: "rgba(31, 36, 48, 0.2)" }}
+    >
+      <div
+        className="w-10 h-10 rounded-full flex items-center justify-center mb-2"
+        style={{ backgroundColor: "rgba(62, 99, 245, 0.1)" }}
+      >
+        <Plus className="w-5 h-5" style={{ color: "#3E63F5" }} />
+      </div>
+      <p className="text-sm" style={{ color: "#1F2430" }}>Add a new role</p>
+      <p className="text-xs mt-0.5" style={{ color: "#1F2430", opacity: 0.6 }}>
+        Open a job listing and start sourcing
+      </p>
+    </button>
+  );
+}
+
+function EmptyRoles({ onCreate }: { onCreate: () => void }) {
+  return (
+    <div
+      className="rounded-2xl border border-dashed py-16 text-center bg-white/40"
+      style={{ borderColor: "rgba(31, 36, 48, 0.2)" }}
+    >
+      <Briefcase className="w-8 h-8 mx-auto mb-3" style={{ color: "#1F2430", opacity: 0.3 }} />
+      <p className="text-sm mb-3" style={{ color: "#1F2430", opacity: 0.7 }}>
+        No roles match your view.
+      </p>
+      <Button onClick={onCreate} className="text-white" style={{ backgroundColor: "#3E63F5" }}>
+        <Plus className="w-4 h-4 mr-1.5" />
+        Create a role
+      </Button>
+    </div>
+  );
+}
+
+export default EmployerDashboard;

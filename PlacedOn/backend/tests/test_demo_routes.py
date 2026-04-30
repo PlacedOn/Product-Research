@@ -58,7 +58,7 @@ def test_hcv_contract_exposes_evidence_not_raw_vector():
     }
     assert set(hcv["dimensions_by_key"]) == {"technical", "behavioral", "communication", "growth"}
     for dimension in dimensions:
-        assert 0 <= dimension["score"] <= 100
+        assert 0 <= dimension["score"] <= 1
         assert 0 <= dimension["confidence"] <= 1
         assert 0 <= dimension["uncertainty"] <= 1
         assert dimension["evidence_snippets"]

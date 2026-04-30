@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent } from 'react';
 import { motion } from 'motion/react';
 import {
   ArrowRight, ShieldCheck, CheckCircle2,
@@ -63,6 +63,10 @@ function GraphSkeleton() {
 
 export function LandingPage() {
   const navigate = useNavigate();
+  const smoothJump = (id: string) => (e: MouseEvent) => {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="min-h-screen w-full bg-[#F3F2F0] relative overflow-x-hidden font-[Inter,sans-serif] selection:bg-[#3E63F5] selection:text-white">
@@ -154,10 +158,10 @@ export function LandingPage() {
             <span className="font-[Manrope,sans-serif] text-xl font-bold text-[#1F2430] tracking-tight">PlacedOn</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#1F2430]/70">
-            <a href="#how" className="hover:text-[#1F2430] transition-colors">How It Works</a>
-            <a href="#candidates" className="hover:text-[#1F2430] transition-colors">For Candidates</a>
-            <a href="#companies" className="hover:text-[#1F2430] transition-colors">For Companies</a>
-            <a href="#trust" className="hover:text-[#1F2430] transition-colors">Trust</a>
+            <a href="#how" onClick={smoothJump("how")} className="hover:text-[#1F2430] transition-colors">How It Works</a>
+            <a href="#candidates" onClick={smoothJump("candidates")} className="hover:text-[#1F2430] transition-colors">For Candidates</a>
+            <a href="#companies" onClick={smoothJump("companies")} className="hover:text-[#1F2430] transition-colors">For Companies</a>
+            <a href="#trust" onClick={smoothJump("trust")} className="hover:text-[#1F2430] transition-colors">Trust</a>
           </div>
           <div className="flex items-center gap-4">
             <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => navigate('/auth')} className="text-[14px] font-medium text-[#1F2430] hover:text-[#3E63F5] transition-colors hidden sm:block">Log In</motion.button>
@@ -832,9 +836,10 @@ export function LandingPage() {
                 ))}
               </div>
               
-              <motion.button 
-                whileHover={{ scale: 1.02 }} 
-                whileTap={{ scale: 0.98 }} 
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => navigate('/auth')}
                 className="px-8 py-4 rounded-2xl bg-white text-[#1F2430] text-[15px] font-bold shadow-[0_4px_12px_rgba(30,35,48,0.05)] border border-black/10 hover:bg-gray-50 transition-colors flex items-center justify-center w-full sm:w-auto gap-2"
               >
                 Pilot PlacedOn for Hiring <ArrowRight className="w-4 h-4" />
@@ -962,9 +967,9 @@ export function LandingPage() {
           
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[14px] font-medium text-[#1F2430]/60">
             <a href="/about" className="hover:text-[#1F2430] transition-colors">About</a>
-            <a href="#candidates" className="hover:text-[#1F2430] transition-colors">Candidates</a>
-            <a href="#companies" className="hover:text-[#1F2430] transition-colors">Companies</a>
-            <a href="#trust" className="hover:text-[#1F2430] transition-colors">Trust</a>
+            <a href="#candidates" onClick={smoothJump("candidates")} className="hover:text-[#1F2430] transition-colors">Candidates</a>
+            <a href="#companies" onClick={smoothJump("companies")} className="hover:text-[#1F2430] transition-colors">Companies</a>
+            <a href="#trust" onClick={smoothJump("trust")} className="hover:text-[#1F2430] transition-colors">Trust</a>
             <a href="/pricing" className="hover:text-[#1F2430] transition-colors">Pricing</a>
             <a href="/contact" className="hover:text-[#1F2430] transition-colors">Contact</a>
           </div>

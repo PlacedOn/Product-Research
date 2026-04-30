@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Mic, Pause, Keyboard, Phone, Wifi, MoreHorizontal, Video, Pencil, Square, Type, Eraser, Target, Lock, Play, FileText, Code2, Presentation, MessageCircle } from "lucide-react";
+import { Mic, Pause, Keyboard, Phone, Wifi, MoreHorizontal, Video, Pencil, Square, Type, Eraser, Target, Lock, Play, FileText, Code2, Presentation, MessageCircle, Maximize2, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useNavigate } from "react-router";
+import { InterviewWhiteboard } from "./InterviewWhiteboard";
 
 type AIState = "listening" | "thinking" | "speaking";
 type InterviewMode = "conversation" | "whiteboard" | "code";
@@ -18,6 +19,52 @@ export function InterviewRoom() {
   const [aiState, setAiState] = useState<AIState>("listening");
   const [micActive, setMicActive] = useState(true);
   const [activeMode, setActiveMode] = useState<InterviewMode>("conversation");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const requestFullscreen = () => {
+    const el = document.documentElement as any;
+    const fn =
+      el.requestFullscreen ||
+      el.webkitRequestFullscreen ||
+      el.mozRequestFullScreen ||
+      el.msRequestFullscreen;
+    if (fn) {
+      try {
+        Promise.resolve(fn.call(el)).catch(() => {});
+      } catch {}
+    }
+  };
+
+  useEffect(() => {
+    requestFullscreen();
+    const sync = () => {
+      const fsEl =
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement;
+      setIsFullscreen(!!fsEl);
+    };
+    sync();
+    const events = ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"];
+    events.forEach((e) => document.addEventListener(e, sync));
+    return () => {
+      events.forEach((e) => document.removeEventListener(e, sync));
+      const exitFn =
+        (document as any).exitFullscreen ||
+        (document as any).webkitExitFullscreen ||
+        (document as any).mozCancelFullScreen ||
+        (document as any).msExitFullscreen;
+      if (
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement
+      ) {
+        try {
+          exitFn?.call(document);
+        } catch {}
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const cycle = setInterval(() => {
@@ -37,7 +84,7 @@ export function InterviewRoom() {
   };
 
   return (
-    <div className="relative h-screen w-screen bg-[#F5F2EC] overflow-hidden flex items-center justify-center p-3 md:p-6 lg:p-8 font-[Inter,sans-serif] text-[#1F2430] selection:bg-[#EAEAFE] selection:text-[#3E63F5]">
+    <div className="relative h-screen w-screen bg-[#F5F2EC] overflow-hidden font-[Inter,sans-serif] text-[#1F2430] selection:bg-[#EAEAFE] selection:text-[#3E63F5]">
       
       {/* 1. Atmosphere Layer - Ambient Wash */}
       <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#EAEAFE] rounded-full blur-[140px] opacity-70 pointer-events-none z-0" />
@@ -45,10 +92,10 @@ export function InterviewRoom() {
       <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] bg-[#F7F4EF] rounded-full blur-[120px] opacity-80 pointer-events-none z-0" />
 
       {/* 2. Outer Shell */}
-      <div className="relative w-full h-full max-w-[1600px] flex flex-col bg-[#F7F5F1]/95 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3rem] p-3 md:p-4 shadow-[0_30px_80px_rgba(38,35,30,0.08)] ring-1 ring-white/60 overflow-hidden isolate z-10">
-        
+      <div className="relative w-full h-full flex flex-col bg-[#F7F5F1]/95 backdrop-blur-3xl p-3 md:p-4 overflow-hidden isolate z-10">
+
         {/* Subtle Inner Highlight on Shell */}
-        <div className="absolute inset-0 rounded-[3rem] ring-1 ring-inset ring-white/80 pointer-events-none z-0 mix-blend-overlay" />
+        <div className="absolute inset-0 ring-1 ring-inset ring-white/80 pointer-events-none z-0 mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/[0.01] pointer-events-none z-0" />
 
         {/* Header - Integrated into the shell */}
@@ -175,38 +222,7 @@ export function InterviewRoom() {
                     className="absolute inset-0 pt-24 pb-32 px-8 flex flex-col"
                   >
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(31,36,48,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(31,36,48,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0" />
-                    
-                    {/* Floating Toolbar */}
-                    <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-2 p-2 bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_24px_rgba(30,35,60,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] ring-1 ring-[#1F2430]/[0.03] z-20">
-                      <button className="p-2.5 rounded-xl bg-[#EEF1F8] text-[#3E63F5] shadow-[0_2px_4px_rgba(62,99,245,0.1),inset_0_1px_1px_rgba(255,255,255,0.9)] ring-1 ring-[#3E63F5]/10"><Pencil className="w-5 h-5" /></button>
-                      <button className="p-2.5 rounded-xl text-[#1F2430]/50 hover:text-[#1F2430] hover:bg-white transition-colors"><Square className="w-5 h-5" /></button>
-                      <button className="p-2.5 rounded-xl text-[#1F2430]/50 hover:text-[#1F2430] hover:bg-white transition-colors"><Type className="w-5 h-5" /></button>
-                      <div className="w-6 h-[1px] bg-[#1F2430]/[0.06] mx-auto my-1" />
-                      <button className="p-2.5 rounded-xl text-[#1F2430]/50 hover:text-[#1F2430] hover:bg-white transition-colors"><Eraser className="w-5 h-5" /></button>
-                    </div>
-
-                    {/* Fake Drawing / Canvas Area */}
-                    <div className="relative flex-1 rounded-[1.5rem] border border-dashed border-[#1F2430]/10 bg-white/40 shadow-[inset_0_2px_12px_rgba(30,35,60,0.02)] backdrop-blur-sm z-10 overflow-hidden">
-                      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
-                        {/* Connecting Line */}
-                        <path d="M 250 280 C 350 280, 400 180, 500 180" stroke="#3E63F5" strokeWidth="2.5" fill="none" strokeLinecap="round" className="opacity-80 drop-shadow-md" />
-                        
-                        {/* Box 1 */}
-                        <rect x="90" y="250" width="160" height="60" rx="16" fill="white" stroke="#1F2430" strokeWidth="1.5" strokeOpacity="0.1" style={{filter: 'drop-shadow(0 8px 24px rgba(30,35,60,0.06))'}} />
-                        <text x="170" y="285" textAnchor="middle" fill="#1F2430" fontSize="13" fontWeight="600" fontFamily="Inter">API Gateway</text>
-                        
-                        {/* Box 2 */}
-                        <rect x="500" y="150" width="160" height="60" rx="16" fill="#F3F4FB" stroke="#3E63F5" strokeWidth="1.5" strokeOpacity="0.2" style={{filter: 'drop-shadow(0 8px 24px rgba(62,99,245,0.08))'}} />
-                        <text x="580" y="185" textAnchor="middle" fill="#3E63F5" fontSize="13" fontWeight="600" fontFamily="Inter">Validation Service</text>
-                        
-                        {/* AI Cursor */}
-                        <g transform="translate(600, 200)" style={{filter: 'drop-shadow(0 4px 12px rgba(217,123,148,0.2))'}}>
-                          <path d="M0 0 L14 14 L6 16 L0 24 Z" fill="#D97B94" stroke="white" strokeWidth="2" strokeLinejoin="round" />
-                          <rect x="12" y="18" width="80" height="24" rx="12" fill="#D97B94" />
-                          <text x="52" y="34" textAnchor="middle" fill="white" fontSize="10" fontWeight="700" letterSpacing="1px">PlacedOn AI</text>
-                        </g>
-                      </svg>
-                    </div>
+                    <InterviewWhiteboard />
                   </motion.div>
                 )}
 
@@ -443,6 +459,40 @@ export function InterviewRoom() {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {!isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-[#1F2430]/70 backdrop-blur-sm p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 8 }}
+              animate={{ scale: 1, y: 0 }}
+              className="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl ring-1 ring-black/5 text-center"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle className="w-6 h-6 text-amber-600" />
+              </div>
+              <h2 className="font-[Manrope,sans-serif] text-xl font-bold text-[#1F2430] mb-2">
+                Fullscreen required
+              </h2>
+              <p className="text-[14px] text-[#1F2430]/70 mb-6 leading-relaxed">
+                Interviews must run in fullscreen to maintain a realistic, distraction-free environment. Exiting fullscreen pauses the session.
+              </p>
+              <button
+                onClick={requestFullscreen}
+                className="w-full py-3.5 rounded-xl bg-[#3E63F5] text-white font-bold text-[14px] hover:bg-[#2A44B0] transition-colors flex items-center justify-center gap-2"
+              >
+                <Maximize2 className="w-4 h-4" />
+                Re-enter fullscreen
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

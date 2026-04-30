@@ -212,6 +212,15 @@ html, body {
   width: 100%;
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Mobile Touch Target Fallbacks */
 @media (max-width: 640px) {
   button:not(.dock-icon):not([class*="w-4"]):not([class*="w-5"]):not([class*="w-6"]):not([class*="w-8"]):not([class*="w-10"]), 

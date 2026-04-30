@@ -271,7 +271,7 @@ _HCV: dict[str, Any] = {
     },
     "dimensions": {
         "technical": {
-            "score": 86,
+            "score": 0.86,
             "confidence": 0.86,
             "uncertainty": 0.14,
             "label": "Frontend execution",
@@ -281,7 +281,7 @@ _HCV: dict[str, Any] = {
             ],
         },
         "behavioral": {
-            "score": 82,
+            "score": 0.82,
             "confidence": 0.81,
             "uncertainty": 0.19,
             "label": "Ownership under ambiguity",
@@ -291,7 +291,7 @@ _HCV: dict[str, Any] = {
             ],
         },
         "communication": {
-            "score": 88,
+            "score": 0.88,
             "confidence": 0.89,
             "uncertainty": 0.11,
             "label": "Collaborative clarity",
@@ -301,7 +301,7 @@ _HCV: dict[str, Any] = {
             ],
         },
         "growth": {
-            "score": 79,
+            "score": 0.79,
             "confidence": 0.76,
             "uncertainty": 0.24,
             "label": "Learning velocity",

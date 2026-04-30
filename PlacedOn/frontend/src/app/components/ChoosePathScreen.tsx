@@ -217,9 +217,14 @@ export function ChoosePathScreen() {
   const navigate = useNavigate();
   const [showAllRoles, setShowAllRoles] = useState(false);
 
-  const handleStartInterview = (roleName: string) => {
-    // Navigate to the pre-interview step, perhaps passing the selected role
-    navigate('/pre-interview');
+  const handleStartInterview = (role: RoleDef) => {
+    navigate('/pre-interview', {
+      state: {
+        roleName: role.name,
+        duration: role.duration,
+        category: role.category,
+      },
+    });
   };
 
   return (
@@ -345,7 +350,7 @@ export function ChoosePathScreen() {
                           
                           <div className="mt-auto pt-6">
                             <button 
-                              onClick={() => handleStartInterview(role.name)}
+                              onClick={() => handleStartInterview(role)}
                               className="w-full py-3.5 rounded-xl bg-[#3E63F5]/10 text-[#3E63F5] font-bold text-[14px] hover:bg-[#3E63F5] hover:text-white transition-all flex items-center justify-center gap-2 group/btn border border-[#3E63F5]/20 hover:border-[#3E63F5] hover:shadow-[0_4px_20px_rgba(62,99,245,0.3)]"
                             >
                               Start {role.shortName} Interview 

@@ -1,10 +1,44 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 import { Video, Mic, Wifi, Shield, ArrowRight, Keyboard, Pencil, Eye, RefreshCw, CheckCircle2, Sparkles, MessageSquare, Clock, AlertCircle } from 'lucide-react';
+
+interface InterviewConfig {
+  roleName: string;
+  duration: string;
+  category?: string;
+}
 
 export function PreInterviewScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [consentReady, setConsentReady] = useState(false);
+
+  const config = useMemo<InterviewConfig | null>(() => {
+    const s = location.state as Partial<InterviewConfig> | null;
+    if (s && s.roleName && s.duration) {
+      return { roleName: s.roleName, duration: s.duration, category: s.category };
+    }
+    return null;
+  }, [location.state]);
+
+  if (!config) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center p-8 bg-[#F3F2F0] font-[Inter,sans-serif]">
+        <div className="max-w-md text-center bg-white/80 backdrop-blur-xl rounded-3xl p-10 shadow-sm ring-1 ring-[#1F2430]/[0.04]">
+          <h1 className="font-[Manrope,sans-serif] text-2xl font-bold text-[#1F2430] mb-3">No interview selected</h1>
+          <p className="text-[14px] text-[#1F2430]/60 mb-6">Pick a role first to configure your interview.</p>
+          <button
+            onClick={() => navigate('/candidate/start')}
+            className="px-5 py-3 rounded-xl bg-[#3E63F5] text-white font-semibold text-[14px] hover:bg-[#2A44B0] transition-colors"
+          >
+            Choose a role
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const consentMinutes = config.duration.match(/\d+/g)?.pop() ?? "40";
 
   return (
     <div className="min-h-screen w-full flex items-start md:items-center justify-center p-4 py-8 sm:p-8 bg-[#F3F2F0] relative overflow-x-hidden overflow-y-auto font-[Inter,sans-serif]">
@@ -28,9 +62,9 @@ export function PreInterviewScreen() {
               <div>
                 <h2 className="font-[Manrope,sans-serif] font-bold text-[#1F2430] text-[17px] tracking-tight">PlacedOn</h2>
                 <div className="flex items-center gap-2 text-[13px] font-medium text-[#1F2430]/50">
-                  <span>Frontend Engineer</span>
+                  <span>{config.roleName}</span>
                   <div className="w-1 h-1 rounded-full bg-[#1F2430]/20" />
-                  <span>Technical Interview</span>
+                  <span>{config.category ?? "Technical Interview"}</span>
                 </div>
               </div>
             </div>
@@ -43,7 +77,7 @@ export function PreInterviewScreen() {
               <div className="w-[1px] h-3 bg-[#1F2430]/10" />
               <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[#10B981]">
                 <Clock className="w-3.5 h-3.5" />
-                ~35-40 min
+                ~{config.duration}
               </div>
             </div>
           </header>
@@ -113,7 +147,7 @@ export function PreInterviewScreen() {
               <ConsentItem 
                 checked={consentReady} 
                 onChange={() => setConsentReady(!consentReady)} 
-                label="I understand the data usage and confirm I am ready for an uninterrupted 40-minute session." 
+                label={`I understand the data usage and confirm I am ready for an uninterrupted ${consentMinutes}-minute session.`}
               />
             </div>
             

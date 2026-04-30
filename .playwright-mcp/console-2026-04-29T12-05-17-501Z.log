@@ -1,0 +1,237 @@
+[      46ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[      59ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[      66ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at header
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[   67617ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[   67632ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[   67639ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at header
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  144670ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  144690ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  144697ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at header
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  146227ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at div
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  148308ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  148322ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  148327ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at header
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  209248ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  209264ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  209272ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at header
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  263227ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5173/@vite/client:963
+[  263227ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  264229ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  265230ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  266231ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  267232ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  268232ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  269233ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  270234ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  271235ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  272236ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  273237ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  274238ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  275239ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  276239ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  277240ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  278241ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  279244ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  280246ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  281248ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  282251ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  283255ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  284258ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  285262ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  286264ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  287272ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  288279ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  289285ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034
+[  290290ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:1034

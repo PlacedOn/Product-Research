@@ -1,0 +1,196 @@
+[      54ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[      69ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[      75ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[   42476ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[   42491ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[   42496ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  110008ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  110029ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  110035ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  111570ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `SlotClone`. 
+    at Button (http://127.0.0.1:5173/src/app/components/ui/button.tsx:46:3)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:73:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-XDM6AYAJ.js?v=50e52add:54:11
+    at http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:323:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2026:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2353:13
+    at http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3151:13
+    at DropdownMenuTrigger (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:42:6)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at Popper (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2018:11)
+    at Menu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:2307:11)
+    at Provider (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-LHYHT5YC.js?v=50e52add:45:15)
+    at DropdownMenu (http://127.0.0.1:5173/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=45903f26:3117:5)
+    at DropdownMenu (http://127.0.0.1:5173/src/app/components/ui/dropdown-menu.tsx:22:6)
+    at div
+    at div
+    at header
+    at div
+    at PipelineScreen (http://127.0.0.1:5173/src/app/components/PipelineScreen.tsx:75:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  112020ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  112032ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  112038ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  112890ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  112902ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  112907ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  166443ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  166458ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  167505ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  167893ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  167908ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  168589ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  168941ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  168954ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  169505ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
+[  900127ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5173/@vite/client:963
+[  900193ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:21608
+[  900209ms] [LOG] App rendered with RouterProvider @ http://127.0.0.1:5173/src/app/App.tsx:20
+[  900215ms] [ERROR] Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s <button> button 
+    at button
+    at div
+    at button
+    at MotionDOMComponent (http://127.0.0.1:5173/node_modules/.vite/deps/motion_react.js?v=8ba80592:8882:40)
+    at RoleCard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:536:3)
+    at section
+    at main
+    at div
+    at EmployerDashboard (http://127.0.0.1:5173/src/app/components/EmployerDashboard.tsx:37:20)
+    at RenderedRoute (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6209:5)
+    at DataRoutes (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6997:3)
+    at Router (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:7089:13)
+    at RouterProvider (http://127.0.0.1:5173/node_modules/.vite/deps/react-router.js?v=143f55d8:6763:3)
+    at App @ http://127.0.0.1:5173/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=50e52add:520
