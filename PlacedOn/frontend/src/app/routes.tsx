@@ -26,7 +26,17 @@ import { EmployerDataDemo } from "./components/EmployerDataDemo";
 import { EmployerJobListings } from "./components/EmployerJobListings";
 import { EmployerLayout } from "./components/EmployerLayout";
 
-export const router = createBrowserRouter([
+const LANDING_ONLY = import.meta.env.VITE_LANDING_ONLY !== "false";
+
+const publicRoutes = [
+  { path: "/", Component: LandingPage },
+  { path: "/contact", Component: ContactPage },
+  { path: "/terms", Component: TermsPage },
+  { path: "/privacy", Component: PrivacyPage },
+  { path: "*", element: <Navigate to="/" replace /> },
+];
+
+const fullAppRoutes = [
   {
     path: "/",
     Component: LandingPage,
@@ -124,4 +134,8 @@ export const router = createBrowserRouter([
     path: "*",
     element: <Navigate to="/candidate" replace />
   }
-]);
+];
+
+export const router = createBrowserRouter(
+  LANDING_ONLY ? publicRoutes : fullAppRoutes
+);

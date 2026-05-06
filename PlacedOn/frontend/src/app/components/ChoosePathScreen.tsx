@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { AnimatedContent } from './ui/AnimatedContent';
 import { BlurText } from './ui/BlurText';
+import { Logo } from './Logo';
 
 interface RoleDef {
   name: string;
@@ -270,7 +271,7 @@ export function ChoosePathScreen() {
       {/* Top Nav (Minimal) */}
       <div className="relative z-10 w-full max-w-[1200px] mx-auto p-6 md:p-8 flex justify-between items-center mb-4">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <div className="w-8 h-8 rounded-lg bg-[#3E63F5] flex items-center justify-center text-white font-bold font-[Manrope,sans-serif]">P</div>
+          <Logo size={32} />
           <span className="font-[Manrope,sans-serif] text-xl font-bold text-[#1F2430] tracking-tight">PlacedOn</span>
         </div>
         <button 

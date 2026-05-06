@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ArrowRight, Mail, ArrowLeft } from 'lucide-react';
 import { AnimatedContent } from './ui/AnimatedContent';
 import { BlurText } from './ui/BlurText';
+import { Logo } from './Logo';
 
 export function AuthPage() {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export function AuthPage() {
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <div className="w-8 h-8 rounded-lg bg-[#3E63F5] flex items-center justify-center text-white font-bold font-[Manrope,sans-serif]">P</div>
+          <Logo size={32} />
           <span className="font-[Manrope,sans-serif] text-xl font-bold text-[#1F2430] tracking-tight">PlacedOn</span>
         </div>
         <div className="w-20" /> {/* Spacer for centering */}

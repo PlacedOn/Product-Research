@@ -105,6 +105,56 @@
             "Demonstrated practical vector search judgment in a structured interview scenario.",
             "Created rubric-based checks for hallucination, instruction following, and refusal quality."
           ]
+        },
+        {
+          "dimension": "React & TypeScript",
+          "score": 0.82,
+          "confidence": 0.78,
+          "uncertainty": 0.18,
+          "evidence_snippets": [
+            "Refactored a stateful dashboard into typed, composable components with strict prop contracts.",
+            "Used discriminated unions to model async loading states and eliminated a class of runtime errors."
+          ]
+        },
+        {
+          "dimension": "System Architecture",
+          "score": 0.71,
+          "confidence": 0.7,
+          "uncertainty": 0.24,
+          "evidence_snippets": [
+            "Walked through tradeoffs between server components and client islands for a high-traffic feed.",
+            "Proposed a queue-based ingestion pipeline to decouple write spikes from read latency."
+          ]
+        },
+        {
+          "dimension": "API Design",
+          "score": 0.74,
+          "confidence": 0.72,
+          "uncertainty": 0.22,
+          "evidence_snippets": [
+            "Designed a versioned REST contract with explicit pagination and idempotency keys.",
+            "Identified a leaky abstraction in an endpoint and recommended a resource-shaped redesign."
+          ]
+        },
+        {
+          "dimension": "Frontend Performance",
+          "score": 0.69,
+          "confidence": 0.66,
+          "uncertainty": 0.27,
+          "evidence_snippets": [
+            "Cut initial bundle size by code-splitting chart libraries behind route-level lazy boundaries.",
+            "Diagnosed a render storm caused by unstable context values and applied selector memoization."
+          ]
+        },
+        {
+          "dimension": "Testing & Debugging",
+          "score": 0.76,
+          "confidence": 0.74,
+          "uncertainty": 0.2,
+          "evidence_snippets": [
+            "Reproduced an intermittent race condition with a deterministic test harness before fixing it.",
+            "Built integration coverage around the auth boundary instead of mocking critical contracts."
+          ]
         }
       ]
     },

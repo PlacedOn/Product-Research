@@ -10,6 +10,7 @@ import {
 import { BlurText } from './ui/BlurText';
 import { AnimatedContent } from './ui/AnimatedContent';
 import { mockHCV } from '../lib/mockData';
+import { Logo } from './Logo';
 
 const ProfileConstellation = lazy(() =>
   import('./ProfileScreen').then((m) => ({ default: m.ProfileConstellation }))
@@ -63,6 +64,9 @@ function GraphSkeleton() {
 
 export function LandingPage() {
   const navigate = useNavigate();
+  const landingOnly = import.meta.env.VITE_LANDING_ONLY !== "false";
+  const ctaPath = landingOnly ? '/contact' : '/auth';
+  const goToCta = () => navigate(ctaPath);
   const smoothJump = (id: string) => (e: MouseEvent) => {
     e.preventDefault();
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -154,7 +158,7 @@ export function LandingPage() {
         {/* 1. Navbar */}
         <nav className="flex items-center justify-between py-4 mb-16 border-b border-[#1F2430]/5 pb-6 sticky top-0 bg-[#F3F2F0]/80 backdrop-blur-xl z-50">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
-            <div className="w-8 h-8 rounded-lg bg-[#3E63F5] flex items-center justify-center text-white font-bold font-[Manrope,sans-serif]">P</div>
+            <Logo size={32} />
             <span className="font-[Manrope,sans-serif] text-xl font-bold text-[#1F2430] tracking-tight">PlacedOn</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#1F2430]/70">
@@ -164,9 +168,9 @@ export function LandingPage() {
             <a href="#trust" onClick={smoothJump("trust")} className="hover:text-[#1F2430] transition-colors">Trust</a>
           </div>
           <div className="flex items-center gap-4">
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => navigate('/auth')} className="text-[14px] font-medium text-[#1F2430] hover:text-[#3E63F5] transition-colors hidden sm:block">Log In</motion.button>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => navigate('/auth')} className="px-5 py-2.5 rounded-xl bg-[#1F2430] text-white text-[14px] font-semibold hover:bg-[#2A3040] transition-colors shadow-sm flex items-center gap-2 group">
-              Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={goToCta} className="text-[14px] font-medium text-[#1F2430] hover:text-[#3E63F5] transition-colors hidden sm:block">Log In</motion.button>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={goToCta} className="px-5 py-2.5 rounded-xl bg-[#1F2430] text-white text-[14px] font-semibold hover:bg-[#2A3040] transition-colors shadow-sm flex items-center gap-2 group">
+              {landingOnly ? 'Join early access' : 'Get Started'} <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </motion.button>
           </div>
         </nav>
@@ -209,10 +213,10 @@ export function LandingPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate('/auth')}
+                  onClick={goToCta}
                   className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#3E63F5] text-white text-[16px] font-bold hover:bg-[#2A44B0] transition-all shadow-[0_8px_32px_rgba(62,99,245,0.3)] hover:-translate-y-1 flex items-center justify-center gap-2 group"
                 >
-                  Start Free Conversation
+                  {landingOnly ? 'Join early access' : 'Start Free Conversation'}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
 
@@ -613,7 +617,7 @@ export function LandingPage() {
               
               <div className="space-y-6 lg:space-y-8">
                 {[
-                  { title: "No surveillance or policing", desc: "No screen recording, no proctoring, and no eye-tracking. Just a relaxed conversation." },
+                  { title: "Honest, proctored assessments", desc: "We use screen recording, live proctoring, and eye-tracking to keep results trustworthy — applied transparently and only during assessments." },
                   { title: "You own your profile data", desc: "You decide if your dossier is published, kept private, or completely deleted. We never sell your data." },
                   { title: "You control your visibility", desc: "Stay completely anonymous until you actively choose to accept a direct interview request." }
                 ].map((item, i) => (
@@ -725,7 +729,7 @@ export function LandingPage() {
               { 
                 num: "02", 
                 title: "Have a Conversation", 
-                desc: "Chat with our AI about your past projects. No proctoring, no whiteboarding, and no trick questions. Just peer-to-peer discussion.",
+                desc: "Chat with our AI about your past projects. No trick questions — just peer-to-peer discussion.",
                 time: "35-40 mins",
                 icon: <Mic className="w-6 h-6 text-[#3E63F5]" />
               },
@@ -839,10 +843,10 @@ export function LandingPage() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/auth')}
+                onClick={goToCta}
                 className="px-8 py-4 rounded-2xl bg-white text-[#1F2430] text-[15px] font-bold shadow-[0_4px_12px_rgba(30,35,48,0.05)] border border-black/10 hover:bg-gray-50 transition-colors flex items-center justify-center w-full sm:w-auto gap-2"
               >
-                Pilot PlacedOn for Hiring <ArrowRight className="w-4 h-4" />
+                {landingOnly ? 'Request early access' : 'Pilot PlacedOn for Hiring'} <ArrowRight className="w-4 h-4" />
               </motion.button>
             </div>
             
@@ -928,10 +932,10 @@ export function LandingPage() {
               <motion.button 
                 whileHover={{ scale: 1.02 }} 
                 whileTap={{ scale: 0.98 }} 
-                onClick={() => navigate('/auth')} 
+                onClick={goToCta} 
                 className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-2xl bg-[#3E63F5] text-white text-[16px] font-bold hover:bg-[#2A44B0] transition-all shadow-[0_8px_32px_rgba(62,99,245,0.4)] hover:-translate-y-1 flex items-center justify-center gap-2 group whitespace-nowrap"
               >
-                Start Free Interview 
+                {landingOnly ? 'Join early access' : 'Start Free Interview'}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
               </motion.button>
               <motion.button 
@@ -959,7 +963,7 @@ export function LandingPage() {
         <footer className="mt-24 border-t border-[#1F2430]/10 pt-10 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[#1F2430] flex items-center justify-center text-white font-bold font-[Manrope,sans-serif] text-sm">P</div>
+              <Logo size={28} />
               <span className="font-[Manrope,sans-serif] text-[18px] font-bold text-[#1F2430]">PlacedOn</span>
             </div>
             <p className="text-[14px] text-[#1F2430]/50 font-medium">The new standard for technical hiring.</p>
