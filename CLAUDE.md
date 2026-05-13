@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with this product research repository.
 
 ## What This Repository Is
 
@@ -11,33 +11,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Structure
 
 ```
-PlacedOn/
-├── backend/           # FastAPI server — core interview engine
-│   ├── app/           # FastAPI app, WebSocket, session management
-│   │   ├── main.py         # Entry point
-│   │   ├── api_routes.py   # CSV ingestion, rating, JSONL export
-│   │   ├── trust_trigger.py # 5-minute WebSocket trust event
-│   │   └── ...
-│   ├── llm/           # LLM judge + question generator
-│   ├── pipeline/      # Planner, JD parser, conversation orchestrator
-│   ├── schemas/       # Pydantic models
-│   └── tests/         # Backend test suite
-├── layer2/            # Capability extraction (SBERT embeddings + adapter)
-├── layer3/            # Bias guard + behavioral integrity
-├── layer5/            # Profile aggregation + matching + rendering
-├── aot_layer/         # Atom-of-Thought interview orchestration
-├── interaction_layer/ # Real-time voice/session/turn management
-├── interview_system/  # Full-stack orchestrator linking all layers
-├── skill_taxonomy.py  # Central skill registry (behavioral + technical)
-├── train_judge.py     # Offline judge calibration pipeline
-└── training/          # Data adapters + evaluators
+PlacedOn-Research/
+├── product/              # Product specs and architecture notes
+├── business/             # Market, GTM, and unit economics
+├── research/             # Paper notes and source papers
+├── Markovian-Reasoning/  # AoT and reasoning research
+├── personas/             # Candidate and company personas
+├── problems/             # Risks and problem framing
+├── docs/                 # Design specs and technical writeups
+└── Inspo/                # Visual/product inspiration assets
 ```
 
 ## Development Commands
 
 ### Setup
 ```bash
-cd /Users/nishantsingh/Documents/New\ project/product-research
+cd /home/intelligentape/Life/08-PlacedOn/code
 python3 -m pip install -r PlacedOn/backend/requirements.txt
 ```
 

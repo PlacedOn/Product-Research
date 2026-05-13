@@ -4,8 +4,8 @@ An AI-powered interviewer that replaces the resume as the primary signal for hir
 
 ## Layout
 
-- `PlacedOn/` contains runtime code and implementation modules
-- `PlacedOn-Research/` contains product, business, research, and inspiration material
+- This repository contains product, business, research, and inspiration material.
+- Runtime implementation code lives in the sibling `../code` checkout.
 
 ## What This Solves
 
@@ -41,18 +41,8 @@ Built on **Markovian Reasoning** (from the Atom of Thoughts framework, NeurIPS 2
 ## Project Structure
 
 ```
-PlacedOn/
+research/
 ├── README.md
-├── PlacedOn/                  ← implementation code
-│   ├── backend/
-│   ├── interaction_layer/
-│   ├── interview_system/
-│   ├── aot_layer/
-│   ├── layer2/
-│   ├── layer3/
-│   ├── layer5/
-│   ├── tests/
-│   └── training/
 └── PlacedOn-Research/         ← product, research, business, docs, inspiration
     ├── product/
     ├── business/

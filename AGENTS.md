@@ -83,7 +83,7 @@ correct, complete, safe, migrated, wired, or ready.
 For any Supabase migration or remote DB change, run from:
 
 ```bash
-cd /home/intelligentape/Life/08-PlacedOn/PlacedOn
+cd /home/intelligentape/Life/08-PlacedOn/code/PlacedOn
 npx -y supabase migration list
 npx -y supabase db push --dry-run
 ```
